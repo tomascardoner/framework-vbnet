@@ -134,40 +134,4 @@ Module CS_Office_Outlook_EarlyBinding
     Public Sub FindRejectedEmails_AdvancedSearchComplete() Handles motkApp.AdvancedSearchComplete
         mAsynchronousWaiting = False
     End Sub
-
-    ''' <summary>
-    ''' Establece el valor de la propiedad DisplayName del Email1 en Outlook
-    ''' </summary>
-    ''' <param name="otkContact"></param>
-    ''' <param name="EntidadActual"></param>
-    ''' <remarks></remarks>
-    Friend Sub Contact_SetDisplayNameOfEmail1(ByRef otkContact As Outlook.ContactItem, ByRef EntidadActual As Entidad)
-        If EntidadActual.Email1 Is Nothing Then
-            otkContact.Email1DisplayName = Nothing
-        Else
-            If EntidadActual.Email2 Is Nothing Then
-                otkContact.Email1DisplayName = otkContact.LastNameAndFirstName
-            Else
-                otkContact.Email1DisplayName = otkContact.LastNameAndFirstName & " (" & otkContact.Email1Address & ")"
-            End If
-        End If
-    End Sub
-
-    ''' <summary>
-    ''' Establece el valor de la propiedad DisplayName del Email2 en Outlook
-    ''' </summary>
-    ''' <param name="otkContact"></param>
-    ''' <param name="EntidadActual"></param>
-    ''' <remarks></remarks>
-    Friend Sub Contact_SetDisplayNameOfEmail2(ByRef otkContact As Outlook.ContactItem, ByRef EntidadActual As Entidad)
-        If EntidadActual.Email2 Is Nothing Then
-            otkContact.Email2DisplayName = Nothing
-        Else
-            If EntidadActual.Email1 Is Nothing Then
-                otkContact.Email2DisplayName = otkContact.LastNameAndFirstName
-            Else
-                otkContact.Email2DisplayName = otkContact.LastNameAndFirstName & " (" & otkContact.Email1Address & ")"
-            End If
-        End If
-    End Sub
 End Module
