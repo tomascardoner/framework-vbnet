@@ -219,22 +219,35 @@ Module CS_ValueTranslation
     Friend Function FromControlTextBoxToObjectByte(ByVal TextBoxText As String) As Byte?
         Dim ConvertedValue As Byte
 
-        If TextBoxText = "" Then
-            Return Nothing
-        Else
-            Byte.TryParse(TextBoxText.Trim, Globalization.NumberStyles.None, My.Application.Culture, ConvertedValue)
-            Return ConvertedValue
-        End If
-    End Function
-
-    Friend Function FromControlIntegerTextBoxToObjectByte(ByVal TextBoxText As String) As Byte?
-        Dim ConvertedValue As Byte
-
         Byte.TryParse(TextBoxText.Trim, Globalization.NumberStyles.None, My.Application.Culture, ConvertedValue)
         If ConvertedValue = 0 Then
             Return Nothing
         Else
             Return ConvertedValue
+        End If
+    End Function
+
+    Friend Function FromControlSyncfusionIntegerTextBoxToObjectByte(ByVal BindableValue As Object) As Byte?
+        If BindableValue Is Nothing Then
+            Return Nothing
+        Else
+            Return Convert.ToByte(BindableValue)
+        End If
+    End Function
+
+    Friend Function FromControlSyncfusionIntegerTextBoxToObjectShort(ByVal BindableValue As Object) As Short?
+        If BindableValue Is Nothing Then
+            Return Nothing
+        Else
+            Return Convert.ToInt16(BindableValue)
+        End If
+    End Function
+
+    Friend Function FromControlSyncfusionIntegerTextBoxToObjectInteger(ByVal BindableValue As Object) As Integer?
+        If BindableValue Is Nothing Then
+            Return Nothing
+        Else
+            Return Convert.ToInt32(BindableValue)
         End If
     End Function
 
