@@ -27,8 +27,8 @@ Module CS_Constants
     Friend Const KEY_STRINGER As String = "@"
     Friend Const KEY_DELIMITER As String = "|@|"
 
-    Friend Const STRING_LIST_SEPARATOR As String = "|"
-    Friend Const STRING_LIST_DELIMITER As String = "¬"
+    Friend Const STRING_LIST_SEPARATOR As Char = ";"c
+    'Friend Const STRING_LIST_DELIMITER As String = "¬"
 
     '//////////////////
     '    E-MAIL
