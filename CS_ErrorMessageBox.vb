@@ -1,4 +1,5 @@
 Public Class CS_ErrorMessageBox
+
     Private Sub chkDetail_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles chkDetail.CheckedChanged
         If chkDetail.Checked() Then
             Me.Height = txtMessageData.Location.Y + txtMessageData.Height + 50
@@ -16,4 +17,5 @@ Public Class CS_ErrorMessageBox
         Text = My.Application.Info.Title
         chkDetail_CheckedChanged(chkDetail, New System.EventArgs())
     End Sub
+
 End Class

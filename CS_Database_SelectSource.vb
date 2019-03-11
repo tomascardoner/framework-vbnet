@@ -1,4 +1,5 @@
 ﻿Public Class CS_Database_SelectSource
+
     Private Sub Me_Load() Handles Me.Load
 
     End Sub
@@ -27,4 +28,5 @@
     Private Sub buttonCancelar_Click() Handles buttonCancelar.Click
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
     End Sub
+
 End Class

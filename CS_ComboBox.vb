@@ -1,4 +1,5 @@
 Module CS_ComboBox
+
     Friend Enum SelectedItemOptions
         None
         First
@@ -118,4 +119,5 @@ Module CS_ComboBox
     Friend Sub SetSelectedIndexByDisplayValue(ByRef ComboBoxControl As ComboBox, ByVal DisplayValueToSelect As String)
         ComboBoxControl.Text = DisplayValueToSelect
     End Sub
+
 End Module

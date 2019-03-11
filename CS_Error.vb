@@ -12,7 +12,7 @@ Module CS_Error
         ' Prepare Exception Message Text counting for Inner Exceptions
         ExceptionMessageText = Exception.Message
         If Not Exception.InnerException Is Nothing Then
-            If Not Exception.InnerException.InnerException  Is Nothing Then
+            If Not Exception.InnerException.InnerException Is Nothing Then
                 InnerException = Exception.InnerException.InnerException
             Else
                 InnerException = Exception.InnerException
@@ -47,4 +47,5 @@ Module CS_Error
             End If
         End If
     End Sub
+
 End Module

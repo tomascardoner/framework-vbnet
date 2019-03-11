@@ -1,8 +1,8 @@
 ﻿Imports System.IO
 Imports System.Reflection
 
-
 Module CS_Icon
+
     Friend Function GetIconFromEmbeddedResource(ByVal IconName As String, ByVal IconSize As Size) As Icon
         Dim asm As Assembly
         Dim rnames As String()
@@ -22,4 +22,5 @@ Module CS_Icon
 
         Throw New ArgumentException("Icon not found")
     End Function
+
 End Module

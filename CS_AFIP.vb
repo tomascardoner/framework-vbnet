@@ -1,6 +1,7 @@
 ﻿Imports System.Text.RegularExpressions
 
 Module CS_AFIP
+
     Friend Function ObtenerDigitoVerificadorCUIT(ByVal CUIT As String) As Byte?
         Dim CUITLimpio As String
         Dim Total As Integer
@@ -88,4 +89,5 @@ Module CS_AFIP
             Return False
         End If
     End Function
+
 End Module

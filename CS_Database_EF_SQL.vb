@@ -40,4 +40,5 @@ Module CS_Database_EF_SQL
             Return Errors.NoDBError
         End If
     End Function
+
 End Module

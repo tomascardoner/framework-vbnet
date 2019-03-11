@@ -1,4 +1,5 @@
 ﻿Module CS_Form
+
     Friend Sub MDIChild_Show(ByRef MDIForm As Form, ByRef ChildForm As Form, ByVal CenterForm As Boolean)
         MDIForm.Cursor = Cursors.WaitCursor
 
@@ -178,4 +179,5 @@
             End If
         Next ControlCurrent
     End Sub
+
 End Module

@@ -1,9 +1,10 @@
-Imports System.Text.RegularExpressions
 Imports System.Text
+Imports System.Text.RegularExpressions
 
 Module CS_ValueTranslation
 
 #Region "De Objectos a Controles"
+
     Friend Function FromObjectStringToControlTextBox(ByVal ObjectValue As String) As String
         If String.IsNullOrEmpty(ObjectValue) Then
             Return ""
@@ -149,9 +150,11 @@ Module CS_ValueTranslation
             Return FromDateTimeToTime(ObjectValue.Value)
         End If
     End Function
+
 #End Region
 
 #Region "De Controles a Objectos"
+
     Friend Function FromControlCheckBoxToObjectBoolean(ByVal CheckBoxCheckState As CheckState) As Boolean
         Select Case CheckBoxCheckState
             Case CheckState.Indeterminate
@@ -334,9 +337,11 @@ Module CS_ValueTranslation
             Return Nothing
         End If
     End Function
+
 #End Region
 
 #Region "Validación"
+
     Friend Function ValidateCurrency(ByVal Value As String) As Boolean
         Dim ConvertedValue As Decimal
 
@@ -348,9 +353,11 @@ Module CS_ValueTranslation
 
         Return Decimal.TryParse(Value, Globalization.NumberStyles.Float, My.Application.Culture, ConvertedValue)
     End Function
+
 #End Region
 
 #Region "Cambios de Formato"
+
     Friend Function FromDecimalToUString(ByVal Value As Decimal) As String
         Return Value.ToString.Replace(","c, "."c)
     End Function
@@ -374,6 +381,7 @@ Module CS_ValueTranslation
     Friend Function FromDateTimeToDate(ByVal Value As Date) As Date
         Return New Date(Value.Year, Value.Month, Value.Day)
     End Function
+
     Friend Function FromDateTimeToTime(ByVal Value As Date) As Date
         Return New Date(1, 1, 1, Value.Hour, Value.Minute, Value.Second, Value.Millisecond)
     End Function
@@ -389,17 +397,19 @@ Module CS_ValueTranslation
 
         Return Math.Round(CDec(Value), nfi.CurrencyDecimalDigits)
     End Function
+
 #End Region
 
 #Region "Recodificación de Strings"
+
     Friend Function FromOneEncodingToEncoding(ByRef SourceEncoding As Encoding, ByRef DestinationEncoding As Encoding, ByVal SourceString As String) As String
-        ' Convert the string into a byte array. 
+        ' Convert the string into a byte array.
         Dim SourceStringBytes As Byte() = SourceEncoding.GetBytes(SourceString)
 
-        ' Perform the conversion from one encoding to the other. 
+        ' Perform the conversion from one encoding to the other.
         Dim DestinationStringBytes As Byte() = Encoding.Convert(SourceEncoding, DestinationEncoding, SourceStringBytes)
 
-        ' Convert the new byte array into a char array and then into a string. 
+        ' Convert the new byte array into a char array and then into a string.
         Dim DestinationStringChars(DestinationEncoding.GetCharCount(DestinationStringBytes, 0, DestinationStringBytes.Length) - 1) As Char
         DestinationEncoding.GetChars(DestinationStringBytes, 0, DestinationStringBytes.Length, DestinationStringChars, 0)
         Dim DestinationString As New String(DestinationStringChars)
@@ -408,7 +418,7 @@ Module CS_ValueTranslation
     End Function
 
     Friend Function FromStringUnicodeToASCII(ByVal UnicodeString As String) As String
-        ' Create two different encodings. 
+        ' Create two different encodings.
         Dim Unicode As Encoding = Encoding.Unicode
         Dim ASCII As Encoding = Encoding.ASCII
 
@@ -416,7 +426,7 @@ Module CS_ValueTranslation
     End Function
 
     Friend Function FromStringUnicodeToUTF8(ByVal UnicodeString As String) As String
-        ' Create two different encodings. 
+        ' Create two different encodings.
         Dim Unicode As Encoding = Encoding.Unicode
         Dim UTF8 As Encoding = Encoding.UTF8
 
@@ -424,7 +434,7 @@ Module CS_ValueTranslation
     End Function
 
     Friend Function FromStringASCIIToUnicode(ByVal ASCIIString As String) As String
-        ' Create two different encodings. 
+        ' Create two different encodings.
         Dim ASCII As Encoding = Encoding.ASCII
         Dim Unicode As Encoding = Encoding.Unicode
 
@@ -432,7 +442,7 @@ Module CS_ValueTranslation
     End Function
 
     Friend Function FromStringASCIIToUTF8(ByVal ASCIIString As String) As String
-        ' Create two different encodings. 
+        ' Create two different encodings.
         Dim ASCII As Encoding = Encoding.ASCII
         Dim UTF8 As Encoding = Encoding.UTF8
 
@@ -440,7 +450,7 @@ Module CS_ValueTranslation
     End Function
 
     Friend Function FromStringUTF8ToASCII(ByVal UTF8String As String) As String
-        ' Create two different encodings. 
+        ' Create two different encodings.
         Dim UTF8 As Encoding = Encoding.UTF8
         Dim ASCII As Encoding = Encoding.ASCII
 
@@ -448,12 +458,13 @@ Module CS_ValueTranslation
     End Function
 
     Friend Function FromStringUTF8ToUnicode(ByVal UTF8String As String) As String
-        ' Create two different encodings. 
+        ' Create two different encodings.
         Dim UTF8 As Encoding = Encoding.UTF8
         Dim Unicode As Encoding = Encoding.Unicode
 
         Return FromOneEncodingToEncoding(UTF8, Unicode, UTF8String)
     End Function
+
 #End Region
 
 End Module

@@ -66,4 +66,5 @@ Public Class CS_Control_TabControl
             Dispose(False)
         End If
     End Sub
+
 End Class

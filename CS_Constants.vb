@@ -9,6 +9,7 @@ Module CS_Constants
     '    FIELD VALUES
     '////////////////////
     Friend Const FIELD_VALUE_NOTSPECIFIED_BYTE As Byte = 0
+
     Friend Const FIELD_VALUE_NOTSPECIFIED_SHORT As Short = 0
     Friend Const FIELD_VALUE_NOTSPECIFIED_INTEGER As Integer = 0
     Friend Const FIELD_VALUE_NOTSPECIFIED_DATE As Date = #12:00:00 AM#
@@ -25,6 +26,7 @@ Module CS_Constants
     '    STRINGS
     '//////////////////
     Friend Const KEY_STRINGER As String = "@"
+
     Friend Const KEY_DELIMITER As String = "|@|"
 
     Friend Const STRING_LIST_SEPARATOR As Char = ";"c
@@ -34,6 +36,7 @@ Module CS_Constants
     '    E-MAIL
     '//////////////////
     Friend Const EMAIL_CLIENT_NETDLL As String = "NETCLIENT"
+
     Friend Const EMAIL_CLIENT_MSOUTLOOK As String = "MSOUTLOOK"
     Friend Const EMAIL_CLIENT_CRYSTALREPORTSMAPI As String = "CRYSTALMAPI"
 End Module

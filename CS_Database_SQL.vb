@@ -33,4 +33,5 @@ Friend Class CS_Database_SQL
             ConnectionString = .ConnectionString
         End With
     End Sub
+
 End Class
