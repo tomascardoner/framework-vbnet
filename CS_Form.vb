@@ -82,9 +82,10 @@
     End Function
 
     Friend Sub MDIChild_CloseAll(ByRef MDIForm As Form, ParamArray ExceptForms() As String)
-        For Each FormCurrent As Form In MDIForm.MdiChildren
+        For Each FormCurrent As Form In MDIForm.MdiChildren()
             If Not ExceptForms.Contains(FormCurrent.Name) Then
                 FormCurrent.Close()
+                FormCurrent.Dispose()
             End If
         Next
     End Sub
