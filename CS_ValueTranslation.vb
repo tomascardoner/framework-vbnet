@@ -151,6 +151,22 @@ Module CS_ValueTranslation
         End If
     End Function
 
+    Friend Function FromObjectTimeSpanToControlDateTimePicker(ByVal ObjectValue As TimeSpan?, Optional ByRef DateTimePickerControlToCheck As DateTimePicker = Nothing) As Date
+        If Not DateTimePickerControlToCheck Is Nothing Then
+            If ObjectValue Is Nothing Then
+                DateTimePickerControlToCheck.Checked = False
+            Else
+                DateTimePickerControlToCheck.Checked = True
+            End If
+        End If
+
+        If ObjectValue Is Nothing Then
+            Return Date.MinValue
+        Else
+            Return Convert.ToDateTime(ObjectValue.Value)
+        End If
+    End Function
+
 #End Region
 
 #Region "De Controles a Objectos"
@@ -333,6 +349,14 @@ Module CS_ValueTranslation
     Friend Function FromControlTwoDateTimePickerToObjectDate(ByVal DateTimePickerValue_Date As Date, ByVal DateTimePickerValue_Time As Date, Optional DateTimePickerChecked As Boolean = True) As Date?
         If DateTimePickerChecked Then
             Return CDate(DateTimePickerValue_Date.ToShortDateString & " " & DateTimePickerValue_Time.ToShortTimeString)
+        Else
+            Return Nothing
+        End If
+    End Function
+
+    Friend Function FromControlDateTimePickerToObjectTimeSpan(ByVal DateTimePickerValue As Date, Optional DateTimePickerChecked As Boolean = True) As TimeSpan?
+        If DateTimePickerChecked Then
+            Return New TimeSpan(DateTimePickerValue.Ticks)
         Else
             Return Nothing
         End If
