@@ -5,6 +5,8 @@ Module CS_Constants
     Friend Const COMBOBOX_ALLYESNO_YES_LISTINDEX As Byte = 1
     Friend Const COMBOBOX_ALLYESNO_NO_LISTINDEX As Byte = 2
 
+    Friend Const DATETIMEPICKER_MINIMUM_VALUE As Date = #1753/01/01#
+
     '////////////////////
     '    FIELD VALUES
     '////////////////////

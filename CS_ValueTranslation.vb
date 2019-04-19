@@ -131,7 +131,19 @@ Module CS_ValueTranslation
         If ObjectValue Is Nothing Then
             Return DateTime.Today
         Else
-            Return ObjectValue.Value.Date
+            If Not DateTimePickerControlToCheck Is Nothing Then
+                If ObjectValue.Value < DateTimePickerControlToCheck.MinDate Then
+                    If DateTimePickerControlToCheck.MinDate <= Date.Today Then
+                        Return DateTime.Today
+                    Else
+                        Return DateTimePickerControlToCheck.MinDate
+                    End If
+                Else
+                    Return ObjectValue.Value
+                End If
+            Else
+                Return ObjectValue.Value
+            End If
         End If
     End Function
 
@@ -161,12 +173,11 @@ Module CS_ValueTranslation
         End If
 
         If ObjectValue Is Nothing Then
-            Return Date.MinValue
+            Return CS_Constants.DATETIMEPICKER_MINIMUM_VALUE
         Else
-            Return Convert.ToDateTime(ObjectValue.Value)
+            Return CS_Constants.DATETIMEPICKER_MINIMUM_VALUE.AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
         End If
     End Function
-
 #End Region
 
 #Region "De Controles a Objectos"
@@ -356,7 +367,7 @@ Module CS_ValueTranslation
 
     Friend Function FromControlDateTimePickerToObjectTimeSpan(ByVal DateTimePickerValue As Date, Optional DateTimePickerChecked As Boolean = True) As TimeSpan?
         If DateTimePickerChecked Then
-            Return New TimeSpan(DateTimePickerValue.Ticks)
+            Return New TimeSpan(DateTimePickerValue.Hour, DateTimePickerValue.Minute, 0)
         Else
             Return Nothing
         End If
