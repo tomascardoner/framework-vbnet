@@ -128,7 +128,7 @@ Module CS_Office_Outlook_LateBinding
         '    Return True
 
         'Catch ex As Exception
-        '    CS_Error.ProcessError(ex, "Error al enviar el e-mail a través de Microsoft Outlook.")
+        '    CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al enviar el e-mail a través de Microsoft Outlook.")
         '    Return False
         'End Try
         Return False
@@ -148,7 +148,7 @@ Module CS_Office_Outlook_LateBinding
             MsgBox(String.Format("La cuenta de Microsoft Outlook especificada ({0}) no existe.", SMTPAddress), MsgBoxStyle.Critical, My.Application.Info.Title)
             Return Nothing
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al obtener la cuenta de Microsoft Outlook.")
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al obtener la cuenta de Microsoft Outlook.")
             Return Nothing
         End Try
     End Function

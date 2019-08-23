@@ -41,7 +41,7 @@ Module CS_FileLog
                 End Using
 
             Catch ex As Exception
-                CS_Error.ProcessError(ex, "Error al escribir el mensaje de registro (Log).")
+                CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al escribir el mensaje de registro (Log).")
             End Try
         End If
     End Sub
