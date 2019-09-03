@@ -152,7 +152,7 @@ Namespace CardonerSistemas
             Me.lblSource.TabIndex = 16
             Me.lblSource.Text = "Contexto:"
             '
-            'CS_ErrorMessageBox
+            'CardonerSistemas.ErrorHandlerMessageBox
             '
             Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
             Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -171,10 +171,10 @@ Namespace CardonerSistemas
             Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
             Me.MaximizeBox = False
             Me.MinimizeBox = False
-            Me.Name = "CS_ErrorMessageBox"
+            Me.Name = "CardonerSistemas.ErrorHandlerMessageBox"
             Me.ShowIcon = False
             Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-            Me.Text = "CS_ErrorMessageBox"
+            Me.Text = "CardonerSistemas.ErrorHandlerMessageBox"
             Me.TopMost = True
             CType(Me.picError, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)

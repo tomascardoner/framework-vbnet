@@ -39,7 +39,7 @@ Namespace CardonerSistemas.Database
                         Case 207
                             Return Errors.InvalidColumn
                         Case 547
-                            Return Errors.RelatedEntity
+                            Return CardonerSistemas.Database.EntityFramework.Errors.RelatedEntity
                         Case 2601
                             Return CardonerSistemas.Database.EntityFramework.Errors.DuplicatedEntity
                         Case 2627
