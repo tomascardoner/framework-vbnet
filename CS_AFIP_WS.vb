@@ -144,10 +144,10 @@ Module CS_AFIP_WS
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Versión de WSAA: " & WSAA.Version)
 
             Catch ex As Exception
-                If ex.HResult = CS_Error.ACTIVEX_CREATE_ERROR Then
+                If ex.HResult = CardonerSistemas.ErrorHandler.ActiveXCreateError Then
                     MsgBox("La librería PyAfipWs para el Servicio WSAA (wsaa.exe), no está instalada correctamente." & vbCrLf & "Contáctese con el personal de Soporte Técnico.", MsgBoxStyle.Critical, My.Application.Info.Title)
                 Else
-                    CS_Error.ProcessError(ex, "Error al crear el objeto WSAA de la librería PyAfipWs.")
+                    CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al crear el objeto WSAA de la librería PyAfipWs.")
                 End If
                 Return False
             End Try
@@ -207,7 +207,7 @@ Module CS_AFIP_WS
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "URL: " & WSAA_URL)
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlRequest:  " & WSAA.XmlRequest)
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlResponse: " & WSAA.XmlResponse)
-                        CS_Error.ProcessError(New Exception("Excepción: " & WSAA.Excepcion), "Error al iniciar sesión en el Servidor de AFIP.")
+                        CardonerSistemas.ErrorHandler.ProcessError(New Exception("Excepción: " & WSAA.Excepcion), "Error al iniciar sesión en el Servidor de AFIP.")
                         Return False
                     End If
                 End If
@@ -217,7 +217,7 @@ Module CS_AFIP_WS
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ocurrió un error.")
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Excepción: " & WSAA.Excepcion)
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Traza: " & WSAA.Traceback)
-                CS_Error.ProcessError(New Exception("Excepción: " & WSAA.Excepcion), "Error al iniciar sesión en el Servidor de AFIP.")
+                CardonerSistemas.ErrorHandler.ProcessError(New Exception("Excepción: " & WSAA.Excepcion), "Error al iniciar sesión en el Servidor de AFIP.")
                 Return False
             End Try
 
@@ -248,7 +248,7 @@ Module CS_AFIP_WS
                 If ex.HResult = -2146233088 Then
                     MsgBox("La librería PyAfipWs para el Servicio WSFEv1 (wsfev1.exe), no está instalada correctamente." & vbCrLf & "Contáctese con el personal de Soporte Técnico.", MsgBoxStyle.Critical, My.Application.Info.Title)
                 Else
-                    CS_Error.ProcessError(ex, "Error al crear el objeto WSFEv1 de la librería PyAfipWs.")
+                    CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al crear el objeto WSFEv1 de la librería PyAfipWs.")
                 End If
                 WSFEv1 = Nothing
                 Return False
@@ -280,7 +280,7 @@ Module CS_AFIP_WS
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ocurrió un error.")
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Excepción: " & WSFEv1.Excepcion)
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Traza:     " & WSFEv1.Traceback)
-                CS_Error.ProcessError(ex, "Error al conectar con el Servicio de Factura Electrónica.")
+                CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al conectar con el Servicio de Factura Electrónica.")
                 WSFEv1 = Nothing
                 Return False
             End Try
@@ -352,7 +352,7 @@ Module CS_AFIP_WS
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ocurrió un error.")
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Excepción: " & WSFEv1.Excepcion)
                 CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Traza:     " & WSFEv1.Traceback)
-                CS_Error.ProcessError(ex, "Error al crear la Factura Electrónica.")
+                CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al crear la Factura Electrónica.")
                 Return False
             End Try
         End Function

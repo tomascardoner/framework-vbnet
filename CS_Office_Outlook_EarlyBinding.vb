@@ -117,7 +117,7 @@ Module CS_Office_Outlook_EarlyBinding
             Next
 
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error accediendo a Microsoft Outlook.")
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error accediendo a Microsoft Outlook.")
         End Try
 
         ' Close all
