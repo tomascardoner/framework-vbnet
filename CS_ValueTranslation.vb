@@ -502,4 +502,16 @@ Module CS_ValueTranslation
 
 #End Region
 
+#Region "Base de datos"
+
+    Friend Function FromDBValueToDecimalValueOrZeroIfIsNull(ByRef value As Object) As Object
+        If IsDBNull(value) Then
+            Return 0
+        Else
+            Return Convert.ToDecimal(value)
+        End If
+    End Function
+
+#End Region
+
 End Module

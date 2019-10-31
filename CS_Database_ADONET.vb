@@ -19,7 +19,7 @@
                 connection = CType(dataLinks.PromptNew, ADODB.Connection)
                 Return connection.ConnectionString.ToString()
             Catch ex As Exception
-                CS_Error.ProcessError(ex, "Error constructing Connection String.")
+                CardonerSistemas.ErrorHandler.ProcessError(ex, "Error constructing Connection String.")
                 Return connectionstringCurrent
             End Try
         Else
@@ -38,7 +38,7 @@
                 End If
 
             Catch ex As Exception
-                CS_Error.ProcessError(ex, "Error editing Connection String.")
+                CardonerSistemas.ErrorHandler.ProcessError(ex, "Error editing Connection String.")
                 Return connectionstringCurrent
             End Try
 
@@ -73,7 +73,7 @@
             Return True
 
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al crear la conexión a la Base de Datos." & ControlChars.CrLf & ControlChars.CrLf & "ConnectionString: " & ConnectionString)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al crear la conexión a la Base de Datos." & ControlChars.CrLf & ControlChars.CrLf & "ConnectionString: " & ConnectionString)
             Return False
         End Try
     End Function
@@ -89,7 +89,7 @@
             Return True
 
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al cerrar la conexión a la Base de Datos.")
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al cerrar la conexión a la Base de Datos.")
 
             Return False
         End Try
@@ -115,7 +115,7 @@
             Return True
 
         Catch ex As Exception
-            CS_Error.ProcessError(ex, ErrorMessage)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, ErrorMessage)
 
             Return False
         End Try
@@ -136,7 +136,7 @@
             Return True
 
         Catch ex As Exception
-            CS_Error.ProcessError(ex, ErrorMessage)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, ErrorMessage)
             Return False
         End Try
     End Function
@@ -154,7 +154,7 @@
                 Return True
 
             Catch ex As Exception
-                CS_Error.ProcessError(ex, ErrorMessage)
+                CardonerSistemas.ErrorHandler.ProcessError(ex, ErrorMessage)
                 Return False
 
             End Try
