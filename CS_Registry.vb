@@ -16,7 +16,7 @@ Module CSM_Registry
                 LoadUserValue = DefaultValue
             End If
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al obtener el Valor del Registro." & ControlChars.Cr & ControlChars.Cr & "Name: " & Name)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al obtener el Valor del Registro." & ControlChars.Cr & ControlChars.Cr & "Name: " & Name)
             If Not RegistryKey Is Nothing Then
                 RegistryKey.Close()
             End If
@@ -34,7 +34,7 @@ Module CSM_Registry
             Return True
 
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al guardar el Parámetro." & ControlChars.Cr & ControlChars.Cr & "Parameto: " & Name)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al guardar el Parámetro." & ControlChars.Cr & ControlChars.Cr & "Parameto: " & Name)
             If Not RegistryKey Is Nothing Then
                 RegistryKey.Close()
             End If
@@ -57,7 +57,7 @@ Module CSM_Registry
                 LoadApplicationValue = DefaultValue
             End If
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al obtener el Valor del Registro." & ControlChars.Cr & ControlChars.Cr & "Name: " & Name)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al obtener el Valor del Registro." & ControlChars.Cr & ControlChars.Cr & "Name: " & Name)
             If Not RegistryKey Is Nothing Then
                 RegistryKey.Close()
             End If
@@ -74,7 +74,7 @@ Module CSM_Registry
             RegistryKey.Close()
             Return True
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al guardar el Parámetro." & ControlChars.Cr & ControlChars.Cr & "Parameto: " & Name)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al guardar el Parámetro." & ControlChars.Cr & ControlChars.Cr & "Parameto: " & Name)
             If Not RegistryKey Is Nothing Then
                 RegistryKey.Close()
             End If
@@ -97,7 +97,7 @@ Module CSM_Registry
             'LoadValue = DefaultValue
             'End If
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al obtener el Valor del Registro." & ControlChars.Cr & ControlChars.Cr & "Name: " & Name)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al obtener el Valor del Registro." & ControlChars.Cr & ControlChars.Cr & "Name: " & Name)
             If Not RegistryKey Is Nothing Then
                 RegistryKey.Close()
             End If
@@ -114,7 +114,7 @@ Module CSM_Registry
             RegistryKey.Close()
             Return True
         Catch ex As Exception
-            CS_Error.ProcessError(ex, "Error al guardar el Parámetro." & ControlChars.Cr & ControlChars.Cr & "Parameto: " & Name)
+            CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al guardar el Parámetro." & ControlChars.Cr & ControlChars.Cr & "Parameto: " & Name)
             If Not RegistryKey Is Nothing Then
                 RegistryKey.Close()
             End If

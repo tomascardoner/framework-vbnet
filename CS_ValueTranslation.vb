@@ -173,9 +173,9 @@ Module CS_ValueTranslation
         End If
 
         If ObjectValue Is Nothing Then
-            Return CS_Constants.DATETIMEPICKER_MINIMUM_VALUE
+            Return CardonerSistemas.Constants.DATETIMEPICKER_MINIMUM_VALUE
         Else
-            Return CS_Constants.DATETIMEPICKER_MINIMUM_VALUE.AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
+            Return CardonerSistemas.Constants.DATETIMEPICKER_MINIMUM_VALUE.AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
         End If
     End Function
 #End Region
@@ -195,7 +195,7 @@ Module CS_ValueTranslation
         End Select
     End Function
 
-    Friend Function FromControlComboBoxToObjectByte(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Byte = FIELD_VALUE_NOTSPECIFIED_BYTE) As Byte?
+    Friend Function FromControlComboBoxToObjectByte(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Byte = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_BYTE) As Byte?
         If ComboBoxSelectedValue Is Nothing Then
             Return Nothing
         ElseIf CByte(ComboBoxSelectedValue) = ValueForNull Then
@@ -205,7 +205,7 @@ Module CS_ValueTranslation
         End If
     End Function
 
-    Friend Function FromControlComboBoxToObjectShort(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Short = FIELD_VALUE_NOTSPECIFIED_SHORT) As Short?
+    Friend Function FromControlComboBoxToObjectShort(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Short = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_SHORT) As Short?
         If ComboBoxSelectedValue Is Nothing Then
             Return Nothing
         ElseIf CShort(ComboBoxSelectedValue) = ValueForNull Then
@@ -215,7 +215,7 @@ Module CS_ValueTranslation
         End If
     End Function
 
-    Friend Function FromControlComboBoxToObjectInteger(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Integer = FIELD_VALUE_NOTSPECIFIED_INTEGER) As Integer?
+    Friend Function FromControlComboBoxToObjectInteger(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Integer = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_INTEGER) As Integer?
         If ComboBoxSelectedValue Is Nothing Then
             Return Nothing
         ElseIf CInt(ComboBoxSelectedValue) = ValueForNull Then
