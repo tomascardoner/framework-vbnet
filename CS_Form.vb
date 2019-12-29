@@ -34,7 +34,7 @@
         End With
     End Sub
 
-    Friend Sub MDIChild_CenterToClientArea(ByRef MDIForm As Form, ByRef ChildForm As Form, ByVal ClientSize As Drawing.Size)
+    Friend Sub MDIChild_CenterToClientArea(ByRef ChildForm As Form, ByVal ClientSize As Drawing.Size)
         With ChildForm
             If .WindowState <> FormWindowState.Normal Then
                 .WindowState = FormWindowState.Normal

@@ -39,9 +39,9 @@ Namespace CardonerSistemas.Database
                         Case 207
                             Return Errors.InvalidColumn
                         Case 547
-                            Return CardonerSistemas.Database.EntityFramework.Errors.RelatedEntity
+                            Return Errors.RelatedEntity
                         Case 2601
-                            Return CardonerSistemas.Database.EntityFramework.Errors.DuplicatedEntity
+                            Return Errors.DuplicatedEntity
                         Case 2627
                             Return Errors.PrimaryKeyViolation
                         Case 50000
