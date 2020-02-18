@@ -43,7 +43,7 @@ Partial Class CS_Database_SelectSource
         'buttonCancelar
         '
         Me.buttonCancelar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.buttonCancelar.Image = Global.CSPesaje.DesktopApplication.My.Resources.Resources.IMAGE_CANCEL_32
+        Me.buttonCancelar.Image = My.Resources.Resources.IMAGE_CANCEL_32
         Me.buttonCancelar.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.buttonCancelar.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.buttonCancelar.Name = "buttonCancelar"
@@ -53,7 +53,7 @@ Partial Class CS_Database_SelectSource
         'buttonAceptar
         '
         Me.buttonAceptar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.buttonAceptar.Image = Global.CSPesaje.DesktopApplication.My.Resources.Resources.IMAGE_OK_32
+        Me.buttonAceptar.Image = My.Resources.Resources.IMAGE_OK_32
         Me.buttonAceptar.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.buttonAceptar.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.buttonAceptar.Name = "buttonAceptar"
@@ -62,7 +62,7 @@ Partial Class CS_Database_SelectSource
         '
         'pictureboxMain
         '
-        Me.pictureboxMain.Image = Global.CSPesaje.DesktopApplication.My.Resources.Resources.IMAGE_DATABASE_SELECT_48
+        Me.pictureboxMain.Image = My.Resources.Resources.IMAGE_DATABASE_SELECT_48
         Me.pictureboxMain.Location = New System.Drawing.Point(12, 42)
         Me.pictureboxMain.Name = "pictureboxMain"
         Me.pictureboxMain.Size = New System.Drawing.Size(48, 48)
