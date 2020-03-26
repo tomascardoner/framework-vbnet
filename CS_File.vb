@@ -1,19 +1,40 @@
-Module CS_File
-    Friend Function ProcessFilename(ByVal Value As String) As String
-        Dim ProcessedString As String
+Namespace CardonerSistemas
 
-        Const DELIMITER_CHAR As Char = "%"c
+    Friend Module Files
 
-        ProcessedString = Value
-        ProcessedString = ProcessedString.Replace(DELIMITER_CHAR & "DateTimeUniversalNoSlashes" & DELIMITER_CHAR, DateTime.Now.ToString("yyyyMMdd_HHmmss"))
+        Friend Function GetFileNameFromFullPath(ByVal fullPath As String) As String
+            Dim LastSeparator As Integer
 
-        Return ProcessedString
-    End Function
+            LastSeparator = fullPath.LastIndexOf("\")
 
-    Friend Function RemoveInvalidFileNameChars(ByVal UserInput As String) As String
-        For Each invalidChar In IO.Path.GetInvalidFileNameChars
-            UserInput = UserInput.Replace(invalidChar, "")
-        Next
-        Return UserInput
-    End Function
-End Module
+            If LastSeparator < 0 Then
+                Return fullPath
+            End If
+            If LastSeparator >= fullPath.Length - 1 Then
+                Return String.Empty
+            End If
+
+            Return fullPath.Substring(LastSeparator + 1)
+        End Function
+
+        Friend Function ProcessFilename(ByVal Value As String) As String
+            Dim ProcessedString As String
+
+            Const DelimiterCharacter As Char = "%"c
+
+            ProcessedString = Value
+            ProcessedString = ProcessedString.Replace(DelimiterCharacter & "DateTimeUniversalNoSlashes" & DelimiterCharacter, DateTime.Now.ToString("yyyyMMdd_HHmmss"))
+
+            Return ProcessedString
+        End Function
+
+        Friend Function RemoveInvalidFileNameChars(ByVal UserInput As String) As String
+            For Each invalidChar In IO.Path.GetInvalidFileNameChars
+                UserInput = UserInput.Replace(invalidChar, "")
+            Next
+            Return UserInput
+        End Function
+
+    End Module
+
+End Namespace

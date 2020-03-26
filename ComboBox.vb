@@ -17,7 +17,7 @@ Namespace CardonerSistemas
             ValueOrLast
         End Enum
 
-        Friend Sub SetSelectedValue(ByRef ComboBoxControl As Windows.Forms.ComboBox, Optional SelectedItemOption As SelectedItemOptions = SelectedItemOptions.None, Optional ValueToSelect As Object = Nothing, Optional ValueForNull As Object = Nothing)
+        Friend Sub SetSelectedValue(ByRef ComboBoxControl As System.Windows.Forms.ComboBox, Optional SelectedItemOption As SelectedItemOptions = SelectedItemOptions.None, Optional ValueToSelect As Object = Nothing, Optional ValueForNull As Object = Nothing)
             Dim SelectedValue As Object
 
             If ComboBoxControl.Items.Count > 0 Then
@@ -118,7 +118,7 @@ Namespace CardonerSistemas
             End If
         End Sub
 
-        Friend Sub SetSelectedIndexByDisplayValue(ByRef ComboBoxControl As Windows.Forms.ComboBox, ByVal DisplayValueToSelect As String)
+        Friend Sub SetSelectedIndexByDisplayValue(ByRef ComboBoxControl As System.Windows.Forms.ComboBox, ByVal DisplayValueToSelect As String)
             ComboBoxControl.Text = DisplayValueToSelect
         End Sub
 

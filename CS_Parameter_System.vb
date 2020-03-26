@@ -46,6 +46,18 @@
         End If
     End Function
 
+    Friend Function SetIntegerAsInteger(ByVal IDParametro As String, ByVal Value As Integer) As Boolean
+        Dim ParametroCurrent As Parametro
+
+        ParametroCurrent = pParametros.Find(Function(param) param.IDParametro.TrimEnd = IDParametro)
+        If ParametroCurrent Is Nothing Then
+            ParametroCurrent = New Parametro
+            ParametroCurrent.IDParametro = IDParametro
+        End If
+        ParametroCurrent.NumeroEntero = Value
+        Return Parametros.SaveParameter(ParametroCurrent)
+    End Function
+
     Friend Function GetDecimal(ByVal IDParametro As String, Optional ByVal DefaultValue As Decimal = Nothing) As Decimal
         Dim ParametroCurrent As Parametro
 

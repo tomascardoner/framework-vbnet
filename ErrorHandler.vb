@@ -9,6 +9,16 @@ Namespace CardonerSistemas
             Dim formErrorMessageBox As CardonerSistemas.ErrorHandlerMessageBox
             Dim InnerException As Exception
 
+            ' Formatting
+            Const TitleUnderline As String = "========================="
+            Const ColumnSeparator As String = " |#| "
+            Const LabelInnerException As String = "Inner exception:"
+            Const LabelWhere As String = "Where: "
+            Const LabelUserMessage As String = "User message: "
+            Const LabelStackTrace As String = "Stack Trace: "
+            Const LabelError As String = "Error: "
+            Const MessageErrorOccurred As String = "Se ha producido un error."
+
             Cursor.Current = Cursors.WaitCursor
 
             ' Prepare Exception Message Text counting for Inner Exceptions
@@ -19,16 +29,16 @@ Namespace CardonerSistemas
                 Else
                     InnerException = Exception.InnerException
                 End If
-                ExceptionMessageText &= String.Format("{0}{0}{1}{0}INNER EXCEPTION:{0}{2}", vbCrLf, New String("="c, 25), InnerException.Message)
+                ExceptionMessageText &= $"{vbCrLf}{vbCrLf}{TitleUnderline}{vbCrLf}{LabelInnerException}{vbCrLf}{InnerException.Message}"
             End If
 
-            MessageTextToLog = "Where: " & Exception.Source
+            MessageTextToLog = $"{LabelWhere}{Exception.Source}"
 
-            If FriendlyMessageText <> "" Then
-                MessageTextToLog &= String.Format(" |#| User Message: {0}", FriendlyMessageText)
+            If FriendlyMessageText.Length > 0 Then
+                MessageTextToLog &= $"{ColumnSeparator}{LabelUserMessage}{FriendlyMessageText}"
             End If
 
-            MessageTextToLog &= String.Format(" |#| Stack Trace: {0} |#| Error: {1}", Exception.StackTrace, ExceptionMessageText)
+            MessageTextToLog &= $"{ColumnSeparator}{LabelStackTrace}{Exception.StackTrace}{ColumnSeparator}{LabelError}{ExceptionMessageText}"
 
             My.Application.Log.WriteException(Exception, TraceEventType.Error, ExceptionMessageText)
 
@@ -45,7 +55,7 @@ Namespace CardonerSistemas
                         .ShowDialog()
                     End With
                 Else
-                    MsgBox("Se ha producido un error." & vbCr & vbCr & FriendlyMessageText & vbCrLf & vbCrLf & ExceptionMessageText, MsgBoxStyle.Critical, My.Application.Info.Title)
+                    MsgBox($"{MessageErrorOccurred}{vbCrLf}{vbCrLf}{FriendlyMessageText}{vbCrLf}{vbCrLf}{ExceptionMessageText}", MsgBoxStyle.Critical, My.Application.Info.Title)
                 End If
             End If
         End Sub
