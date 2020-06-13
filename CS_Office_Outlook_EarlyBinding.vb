@@ -65,7 +65,7 @@ Module CS_Office_Outlook_EarlyBinding
         Dim RejectedAddressSearchCurrentIndex As Integer
         Dim RejectedAddress As String
         Dim CRejectedAddresses As New Collection
-        Dim FilterString As String = String.Format("{2} >= '{5}' AND {2} <= '{6}'", SCHEMA_MAILHEADER_FIELD_FROM, SCHEMA_MAILHEADER_FIELD_SUBJECT, SCHEMA_MAILHEADER_FIELD_DATE, My.Settings.Email_SMTP_Username, My.Settings.Email_Delivery_Failed_Subject, FechaDesde.Date.ToString, FechaHasta.Date.AddDays(1).AddSeconds(-1).ToString)
+        Dim FilterString As String = String.Format("{2} >= '{5}' AND {2} <= '{6}'", SCHEMA_MAILHEADER_FIELD_FROM, SCHEMA_MAILHEADER_FIELD_SUBJECT, SCHEMA_MAILHEADER_FIELD_DATE, pEmailConfig.SmtpUserName, pEmailConfig.DeliveryFailedSubject, FechaDesde.Date.ToString, FechaHasta.Date.AddDays(1).AddSeconds(-1).ToString)
 
         Try
             motkApp = New Outlook.Application
@@ -84,13 +84,13 @@ Module CS_Office_Outlook_EarlyBinding
 
             For Each otkMessage In otkResults
                 Debug.Print(otkMessage.Sender.Address & " || " & otkMessage.Subject)
-                If otkMessage.Sender.Address = My.Settings.Email_Delivery_Failed_SenderAddress AndAlso otkMessage.Subject = My.Settings.Email_Delivery_Failed_Subject Then
+                If otkMessage.Sender.Address = pEmailConfig.DeliveryFailedSenderAddress AndAlso otkMessage.Subject = pEmailConfig.DeliveryFailedSubject Then
                     MessageBody = otkMessage.Body
-                    If MessageBody.Contains(My.Settings.Email_Delivery_Failed_ErrorText) Then
+                    If MessageBody.Contains(pEmailConfig.DeliveryFailedErrorText) Then
                         ' Get the start index to search for the rejected address
-                        RejectedAddressSearchStartIndex = MessageBody.IndexOf(My.Settings.Email_Delivery_Failed_RejectedAddress_PreviousText)
+                        RejectedAddressSearchStartIndex = MessageBody.IndexOf(pEmailConfig.DeliveryFailedRejectedAddressPreviousText)
                         If RejectedAddressSearchStartIndex > -1 Then
-                            RejectedAddressSearchStartIndex = RejectedAddressSearchStartIndex + My.Settings.Email_Delivery_Failed_RejectedAddress_PreviousText.Length + 1
+                            RejectedAddressSearchStartIndex = RejectedAddressSearchStartIndex + pEmailConfig.DeliveryFailedRejectedAddressPreviousText.Length + 1
 
                             ' Search for the rejected address
                             RejectedAddressSearchCurrentIndex = RejectedAddressSearchStartIndex

@@ -158,7 +158,7 @@ Module CS_AFIP_WS
 
                     ' Generar un Ticket de Requerimiento de Acceso (TRA)
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se generará un Ticket de Requerimiento de Acceso utilizando el método 'CreateTRA'.")
-                    TicketRequerimientoAcceso = WSAA.CreateTRA(ServicioNombre, My.Settings.AFIP_WS_TTLTicketRequerimientoAcceso)
+                    TicketRequerimientoAcceso = WSAA.CreateTRA(ServicioNombre, pAfipWebServicesConfig.TtlTicketRequerimientoAcceso)
                     If TicketRequerimientoAcceso <> "" Then
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Ticket de Requerimiento de Acceso: " & TicketRequerimientoAcceso)
 

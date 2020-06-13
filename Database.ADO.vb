@@ -5,9 +5,9 @@ Namespace CardonerSistemas.Database.ADO
     Friend Class SQLServer
         Friend Property ApplicationName As String
         Friend Property AttachDBFilename As String
-        Friend Property DataSource As String
+        Friend Property Datasource As String
         Friend Property InitialCatalog As String
-        Friend Property UserID As String
+        Friend Property UserId As String
         Friend Property Password As String
         Friend Property MultipleActiveResultsets As Boolean
         Friend Property WorkstationID As String
