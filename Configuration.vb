@@ -1,3 +1,4 @@
+Imports System.ComponentModel
 Imports System.IO
 Imports System.Text.RegularExpressions
 Imports System.Xml.Serialization
@@ -87,7 +88,8 @@ Namespace CardonerSistemas
                                     Else
                                         MsgBox(String.Format("Error en el formato del archivo de configuración '{1}'.{0}{0}{2}", vbCrLf, fileName, ex.InnerException.Message), MsgBoxStyle.Critical, My.Application.Info.Title)
                                     End If
-
+                                Case Else
+                                    CardonerSistemas.ProcessError(ex, String.Format("Error al cargar el archivo de configuración '{0}'.", fileName))
                             End Select
                         End If
                     Case Else
@@ -117,6 +119,34 @@ Namespace CardonerSistemas
         '    End Try
 
         'End Function
+
+        Friend Function ConvertStringToFont(ByVal value As String) As Font
+            Dim converter As TypeConverter
+            Dim convertedFont As Font
+
+            Try
+                converter = TypeDescriptor.GetConverter(GetType(Font))
+                convertedFont = CType(converter.ConvertFromString(value), Font)
+            Catch ex As Exception
+                convertedFont = Nothing
+            End Try
+
+            Return convertedFont
+        End Function
+
+        Friend Function ConvertFontToString(ByVal value As Font) As String
+            Dim converter As TypeConverter
+            Dim convertedString As String
+
+            Try
+                converter = TypeDescriptor.GetConverter(GetType(Font))
+                convertedString = converter.ConvertToString(value)
+            Catch ex As Exception
+                convertedString = ""
+            End Try
+
+            Return convertedString
+        End Function
 
     End Module
 

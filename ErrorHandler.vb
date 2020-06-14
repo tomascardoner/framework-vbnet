@@ -45,7 +45,7 @@ Namespace CardonerSistemas
             Cursor.Current = Cursors.Default
 
             If ShowMessageBox Then
-                If My.Settings.UseCustomDialogForErrorMessage Then
+                If pAppearanceConfig.UseCustomDialogForErrorMessage Then
                     formErrorMessageBox = New CardonerSistemas.ErrorHandlerMessageBox
                     With formErrorMessageBox
                         .lblFriendlyMessage.Text = FriendlyMessageText
