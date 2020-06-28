@@ -1,6 +1,5 @@
 Imports System.Globalization
 Imports System.Text.RegularExpressions
-Imports System.Net.Mail
 
 Module CS_Email
     Private Const EmailValidationRegularExpression As String = "^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z_])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$"
@@ -9,9 +8,11 @@ Module CS_Email
 
     Public Function IsValidEmail(ByVal Value As String, Optional ByVal RegularExpression As String = EMAIL_VALIDATION_REGULAREXPRESSION) As Boolean
         invalid = False
-        If String.IsNullOrEmpty(Value) Then Return False
+        If String.IsNullOrEmpty(Value) Then
+            Return False
+        End If
 
-        ' Use IdnMapping class to convert Unicode domain names. 
+        ' Use IdnMapping class to convert Unicode domain names.
         Try
             Value = Regex.Replace(Value, "(@)(.+)$", AddressOf DomainMapper, RegexOptions.None, TimeSpan.FromMilliseconds(200))
         Catch e As RegexMatchTimeoutException
@@ -20,7 +21,7 @@ Module CS_Email
 
         If invalid Then Return False
 
-        ' Return true if strIn is in valid e-mail format. 
+        ' Return true if strIn is in valid e-mail format.
         Try
             Return Regex.IsMatch(Value, RegularExpression, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250))
 
@@ -30,7 +31,7 @@ Module CS_Email
     End Function
 
     Private Function DomainMapper(match As Match) As String
-        ' IdnMapping class with default property values. 
+        ' IdnMapping class with default property values.
         Dim idn As New IdnMapping()
 
         Dim domainName As String = match.Groups(2).Value
