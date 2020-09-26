@@ -35,14 +35,6 @@ Namespace CardonerSistemas
 
         Friend Const STRING_LIST_SEPARATOR As Char = ";"c
         'Friend Const STRING_LIST_DELIMITER As String = "¬"
-
-        '//////////////////
-        '    E-MAIL
-        '//////////////////
-        Friend Const EMAIL_CLIENT_NETDLL As String = "NETCLIENT"
-
-        Friend Const EMAIL_CLIENT_MSOUTLOOK As String = "MSOUTLOOK"
-        Friend Const EMAIL_CLIENT_CRYSTALREPORTSMAPI As String = "CRYSTALMAPI"
     End Module
 
 End Namespace

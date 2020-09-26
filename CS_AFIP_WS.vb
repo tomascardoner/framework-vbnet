@@ -107,6 +107,7 @@ Module CS_AFIP_WS
 #End Region
 
 #Region "Clase Principal"
+
     Friend Class AFIP_WS
         Friend Property LogPath As String = ""
         Friend Property LogFileName As String = ""
@@ -334,7 +335,7 @@ Module CS_AFIP_WS
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "CAE:               " & CAE)
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Fecha Vencimiento: " & UltimoResultadoCAE.FechaVencimiento.ToShortDateString)
                 Else
-                    'TODO - Arreglar el encoding de las Observaciones y el Mensaje de Error
+                    'TODO: Arreglar el encoding de las Observaciones y el Mensaje de Error
                     UltimoResultadoCAE.Observaciones = WSFEv1.Obs
                     UltimoResultadoCAE.ErrorMessage = WSFEv1.ErrMsg
 
