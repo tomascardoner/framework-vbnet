@@ -23,7 +23,7 @@ Namespace CardonerSistemas
             Const DelimiterCharacter As Char = "%"c
 
             ProcessedString = Value
-            ProcessedString = ProcessedString.Replace(DelimiterCharacter & "DateTimeUniversalNoSlashes" & DelimiterCharacter, DateTime.Now.ToString("yyyyMMdd_HHmmss"))
+            ProcessedString = ProcessedString.Replace(DelimiterCharacter & "DateTimeUniversalNoSlashes" & DelimiterCharacter, System.DateTime.Now.ToString("yyyyMMdd_HHmmss"))
 
             Return ProcessedString
         End Function

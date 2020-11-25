@@ -3,10 +3,24 @@
 Namespace CardonerSistemas
 
     Module AFIP
+        Friend Const CUIT_PEFIJO_MASCULINO As String = "20"
+        Friend Const CUIT_PEFIJO_MASCULINO_ALTERNATIVO As String = "23"
+        Friend Const CUIT_PEFIJO_FEMENINO As String = "27"
+        Friend Const CUIT_PEFIJO_FEMENINO_ALTERNATIVO As String = "24"
+        Friend Const CUIT_PEFIJO_PERSONAJURIDICA As String = "30"
+        Friend Const CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO1 As String = "33"
+        Friend Const CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO2 As String = "34"
+
+        Friend Enum TipoPersonas As Byte
+            Femenino
+            Masculino
+            PersonaJurdica
+        End Enum
 
         Friend Function ObtenerDigitoVerificadorCUIT(ByVal CUIT As String) As Byte?
             Dim CUITLimpio As String
             Dim Total As Integer
+            Dim Digito As Byte
 
             ' Limpio los espacios anterior y posterior que pudiera tener el string
             CUIT = CUIT.Trim
@@ -45,8 +59,71 @@ Namespace CardonerSistemas
             Total += CInt(CUIT.ElementAt(9).ToString) * 2
 
             ' Calcula el dígito verificador
-            Return CByte((11 - (Total Mod 11)) Mod 11)
+            Digito = CByte((11 - (Total Mod 11)) Mod 11)
+            If Digito < 10 Then
+                Return Digito
+            Else
+                Return Nothing
+            End If
         End Function
+
+        Friend Function ObtenerCUIT(ByVal tipoPersona As TipoPersonas, ByVal numeroDocumento As String) As String
+            Dim prefijo As String
+            Dim prefijoAlternativo1 As String
+            Dim prefijoAlternativo2 As String
+            Dim digitoVerificador As Byte?
+
+            ' Selecciono el prefijo estándar
+            Select Case tipoPersona
+                Case TipoPersonas.Femenino
+                    prefijo = CUIT_PEFIJO_FEMENINO
+                    prefijoAlternativo1 = CUIT_PEFIJO_FEMENINO_ALTERNATIVO
+                Case TipoPersonas.Masculino
+                    prefijo = CUIT_PEFIJO_MASCULINO
+                    prefijoAlternativo1 = CUIT_PEFIJO_MASCULINO_ALTERNATIVO
+                Case TipoPersonas.PersonaJurdica
+                    prefijo = CUIT_PEFIJO_PERSONAJURIDICA
+                    prefijoAlternativo1 = CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO1
+                    prefijoAlternativo2 = CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO2
+                Case Else
+                    Return String.Empty
+            End Select
+
+            ' Verifico el largo del número de documento
+            Select Case numeroDocumento.Length
+                Case Is < 8
+                    numeroDocumento = numeroDocumento.PadLeft(8, "0"c)
+                Case > 8
+                    numeroDocumento = numeroDocumento.Substring(0, 8)
+            End Select
+
+            ' Obtengo el dígito verificador
+            digitoVerificador = CardonerSistemas.AFIP.ObtenerDigitoVerificadorCUIT(prefijo + numeroDocumento)
+            If Not digitoVerificador.HasValue Then
+                ' No se pudo obtener, intentar con el prefijo alternativo
+                digitoVerificador = CardonerSistemas.AFIP.ObtenerDigitoVerificadorCUIT(prefijoAlternativo1 + numeroDocumento)
+                If Not digitoVerificador.HasValue Then
+                    ' Tampoco se pudo obtener con el prefijo alternativo. Si es empresa, pruebo con el 2º alternativo
+                    If tipoPersona = TipoPersonas.PersonaJurdica Then
+                        digitoVerificador = CardonerSistemas.AFIP.ObtenerDigitoVerificadorCUIT(prefijoAlternativo2 + numeroDocumento)
+                        If Not digitoVerificador.HasValue Then
+                            ' Tampoco con el alternativo 2
+                            Return String.Empty
+                        End If
+                    Else
+                        Return String.Empty
+                    End If
+                End If
+            End If
+
+            ' Confirmo el CUIT verificándolo
+            If CardonerSistemas.AFIP.VerificarCUIT(prefijo + numeroDocumento + digitoVerificador.ToString()) Then
+                Return prefijo & numeroDocumento & digitoVerificador.ToString()
+            Else
+                Return String.Empty
+            End If
+        End Function
+
 
         Friend Function VerificarCUIT(ByVal CUIT As String) As Boolean
             Dim CUITLimpio As String
@@ -80,7 +157,14 @@ Namespace CardonerSistemas
             CUIT = CUITLimpio
 
             Prefijo = CUIT.Substring(0, 2)
-            If Prefijo = "20" Or Prefijo = "23" Or Prefijo = "24" Or Prefijo = "27" Or Prefijo = "30" Or Prefijo = "33" Or Prefijo = "34" Then
+            If Prefijo = CUIT_PEFIJO_FEMENINO _
+                Or Prefijo = CUIT_PEFIJO_FEMENINO_ALTERNATIVO _
+                Or Prefijo = CUIT_PEFIJO_MASCULINO _
+                Or Prefijo = CUIT_PEFIJO_MASCULINO_ALTERNATIVO _
+                Or Prefijo = CUIT_PEFIJO_PERSONAJURIDICA _
+                Or Prefijo = CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO1 _
+                Or Prefijo = CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO2 Then
+
                 DigitoVerificador = ObtenerDigitoVerificadorCUIT(CUIT.Substring(0, 10))
                 If DigitoVerificador Is Nothing Then
                     Return False

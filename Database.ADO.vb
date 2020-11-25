@@ -382,21 +382,21 @@ Namespace CardonerSistemas.Database.ADO
             End If
         End Function
 
-        Friend Function DataReaderGetDateTime(ByRef dataReader As SqlDataReader, ByVal columnName As String) As DateTime
+        Friend Function DataReaderGetDateTime(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime
             Return dataReader.GetDateTime(dataReader.GetOrdinal(columnName))
         End Function
 
-        Friend Function DataReaderGetDateTimeSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As DateTime
-            Dim result As DateTime? = DataReaderGetDateTimeSafeAsNull(dataReader, columnName)
+        Friend Function DataReaderGetDateTimeSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime
+            Dim result As System.DateTime? = DataReaderGetDateTimeSafeAsNull(dataReader, columnName)
 
             If result.HasValue Then
                 Return result.Value
             Else
-                Return DateTime.MinValue
+                Return System.DateTime.MinValue
             End If
         End Function
 
-        Friend Function DataReaderGetDateTimeSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As DateTime?
+        Friend Function DataReaderGetDateTimeSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime?
             Dim columnIndex As Integer = dataReader.GetOrdinal(columnName)
 
             If dataReader.IsDBNull(columnIndex) Then

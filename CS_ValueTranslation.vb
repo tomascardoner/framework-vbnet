@@ -3,7 +3,7 @@ Imports System.Text.RegularExpressions
 
 Module CS_ValueTranslation
 
-#Region "De Objectos a Controles"
+#Region "De Objectos a Controles - TextBox (standard)"
 
     Friend Function FromObjectStringToControlTextBox(ByVal ObjectValue As String) As String
         If String.IsNullOrEmpty(ObjectValue) Then
@@ -180,7 +180,51 @@ Module CS_ValueTranslation
     End Function
 #End Region
 
-#Region "De Controles a Objectos"
+#Region "De Objectos a Controles - TextBox (SyncFusion)"
+
+    Friend Sub FromValueByteToControlIntegerTextBox(ByVal value As Byte?, ByRef control As Syncfusion.Windows.Forms.Tools.IntegerTextBox)
+        If value.HasValue Then
+            control.IntegerValue = value.Value
+        Else
+            If control.AllowNull Then
+                control.BindableValue = Nothing
+            Else
+                control.IntegerValue = control.MinValue
+            End If
+        End If
+    End Sub
+
+    Friend Function FromValueDecimalToControlCurrencyTextBox(ByVal value As Decimal?, ByRef control As Syncfusion.Windows.Forms.Tools.CurrencyTextBox) As Object
+        If value.HasValue Then
+            control.DecimalValue = value.Value
+        Else
+            If control.AllowNull Then
+                control.BindableValue = Nothing
+            Else
+                control.DecimalValue = control.MinValue
+            End If
+        End If
+    End Function
+
+#End Region
+
+#Region "De Controles a Objectos - Misc"
+
+    Friend Function FromControlUpDownToObjectByte(ByVal UpDownValue As Decimal) As Byte?
+        If UpDownValue = 0 Then
+            Return Nothing
+        Else
+            Return CByte(UpDownValue)
+        End If
+    End Function
+
+    Friend Function FromControlUpDownToObjectShort(ByVal UpDownValue As Decimal) As Short?
+        If UpDownValue = 0 Then
+            Return Nothing
+        Else
+            Return CShort(UpDownValue)
+        End If
+    End Function
 
     Friend Function FromControlCheckBoxToObjectBoolean(ByVal CheckBoxCheckState As CheckState) As Boolean
         Select Case CheckBoxCheckState
@@ -194,6 +238,18 @@ Module CS_ValueTranslation
                 Return Nothing
         End Select
     End Function
+
+    Friend Function FromControlTagToObjectInteger(ByVal TagValue As Object) As Integer?
+        If TypeOf (TagValue) Is Integer Then
+            Return CInt(TagValue)
+        Else
+            Return Nothing
+        End If
+    End Function
+
+#End Region
+
+#Region "De Controles a Objectos - ComboBox"
 
     Friend Function FromControlComboBoxToObjectByte(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Byte = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_BYTE) As Byte?
         If ComboBoxSelectedValue Is Nothing Then
@@ -235,6 +291,10 @@ Module CS_ValueTranslation
         End If
     End Function
 
+#End Region
+
+#Region "De Controles a Objectos - TextBox (standard)"
+
     Friend Function FromControlTextBoxToObjectString(ByVal TextBoxText As String, Optional Conversion As VbStrConv = VbStrConv.None, Optional ByVal TrimText As Boolean = True) As String
         If TrimText Then
             TextBoxText = TextBoxText.Trim
@@ -254,30 +314,6 @@ Module CS_ValueTranslation
             Return Nothing
         Else
             Return ConvertedValue
-        End If
-    End Function
-
-    Friend Function FromControlSyncfusionIntegerTextBoxToObjectByte(ByVal BindableValue As Object) As Byte?
-        If BindableValue Is Nothing Then
-            Return Nothing
-        Else
-            Return Convert.ToByte(BindableValue)
-        End If
-    End Function
-
-    Friend Function FromControlSyncfusionIntegerTextBoxToObjectShort(ByVal BindableValue As Object) As Short?
-        If BindableValue Is Nothing Then
-            Return Nothing
-        Else
-            Return Convert.ToInt16(BindableValue)
-        End If
-    End Function
-
-    Friend Function FromControlSyncfusionIntegerTextBoxToObjectInteger(ByVal BindableValue As Object) As Integer?
-        If BindableValue Is Nothing Then
-            Return Nothing
-        Else
-            Return Convert.ToInt32(BindableValue)
         End If
     End Function
 
@@ -314,40 +350,61 @@ Module CS_ValueTranslation
         End If
     End Function
 
-    Friend Function FromControlDoubleTextBoxToObjectDecimal(ByVal TextBoxText As String) As Decimal?
-        Dim ConvertedValue As Decimal
+#End Region
 
-        Decimal.TryParse(TextBoxText.Trim, Globalization.NumberStyles.Currency, My.Application.Culture, ConvertedValue)
-        If ConvertedValue = 0 Then
+#Region "De Controles a Objectos - TextBox (SyncFusion)"
+
+    Friend Function FromControlIntegerTextBoxToValueByte(ByRef control As Syncfusion.Windows.Forms.Tools.IntegerTextBox) As Byte?
+        If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
-            Return ConvertedValue
+            Return Convert.ToByte(control.IntegerValue)
         End If
     End Function
 
-    Friend Function FromControlUpDownToObjectByte(ByVal UpDownValue As Decimal) As Byte?
-        If UpDownValue = 0 Then
+    Friend Function FromControlIntegerTextBoxToValueShort(ByRef control As Syncfusion.Windows.Forms.Tools.IntegerTextBox) As Short?
+        If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
-            Return CByte(UpDownValue)
+            Return Convert.ToInt16(control.IntegerValue)
         End If
     End Function
 
-    Friend Function FromControlUpDownToObjectShort(ByVal UpDownValue As Decimal) As Short?
-        If UpDownValue = 0 Then
+    Friend Function FromControlIntegerTextBoxToValueInteger(ByRef control As Syncfusion.Windows.Forms.Tools.IntegerTextBox) As Integer?
+        If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
-            Return CShort(UpDownValue)
+            Return Convert.ToInt32(control.IntegerValue)
         End If
     End Function
 
-    Friend Function FromControlTagToObjectInteger(ByVal TagValue As Object) As Integer?
-        If TypeOf (TagValue) Is Integer Then
-            Return CInt(TagValue)
-        Else
+    Friend Function FromControlDoubleTextBoxToObjectDouble(ByVal BindableValue As Object) As Double?
+        If BindableValue Is Nothing Or Not IsNumeric(BindableValue) Then
             Return Nothing
+        Else
+            Return Convert.ToDouble(BindableValue)
         End If
     End Function
+
+    Friend Function FromControlDoubleTextBoxToObjectDecimal(ByVal BindableValue As Object) As Decimal?
+        If BindableValue Is Nothing Or Not IsNumeric(BindableValue) Then
+            Return Nothing
+        Else
+            Return Convert.ToDecimal(BindableValue)
+        End If
+    End Function
+
+    Friend Function FromControlCurrencyTextBoxToObjectDecimal(ByRef control As Syncfusion.Windows.Forms.Tools.CurrencyTextBox) As Decimal?
+        If control.AllowNull AndAlso control.IsNull Then
+            Return Nothing
+        Else
+            Return control.DecimalValue
+        End If
+    End Function
+
+#End Region
+
+#Region "De Controles a Objectos - DateTimePicker"
 
     Friend Function FromControlDateTimePickerToObjectDate(ByVal DateTimePickerValue As Date, Optional DateTimePickerChecked As Boolean = True) As Date?
         If DateTimePickerChecked Then
