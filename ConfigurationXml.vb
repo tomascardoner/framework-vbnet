@@ -26,7 +26,7 @@ Namespace CardonerSistemas
 
     End Class
 
-    Module Configuration
+    Module ConfigurationXml
 
         Private Const ErrorFileBadFormat As Integer = -2146233079
         Private Const ErrorFileBadFormatInnerElement As Integer = -2146232000
@@ -35,7 +35,7 @@ Namespace CardonerSistemas
         Private Const ErrorFileBadFormatPositionLinePattern As String = "\d+"
 
         Private Function CheckFileExist(ByVal configFolder As String, ByVal fileName As String) As Boolean
-            If File.Exists(configFolder & fileName) Then
+            If File.Exists(Path.Combine(configFolder, fileName)) Then
                 Return True
             Else
                 MsgBox(String.Format("No se encontró el archivo de configuración '{1}', el cual debe estar ubicado dentro de la carpeta '{0}'.", configFolder, fileName), MsgBoxStyle.Critical, My.Application.Info.Title)
@@ -53,7 +53,7 @@ Namespace CardonerSistemas
 
             Try
                 serializer = New XmlSerializer(GetType(T))
-                fileStream = New FileStream(configFolder & fileName, FileMode.Open, FileAccess.Read, FileShare.Read)
+                fileStream = New FileStream(Path.Combine(configFolder, fileName), FileMode.Open, FileAccess.Read, FileShare.Read)
                 configObject = DirectCast(serializer.Deserialize(fileStream), T)
                 Return True
 
