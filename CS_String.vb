@@ -1,6 +1,7 @@
 Imports System.Text.RegularExpressions
 Imports System.Text
 Imports System.Globalization
+Imports System.Runtime.CompilerServices
 
 Module CS_String
     Friend Function ReplaceString(ByVal StringToSearchIn As String, ByVal StringToFind As String, ByVal StringToReplace As String, Optional ByVal CaseSensitive As Boolean = False) As String
@@ -143,6 +144,7 @@ Module CS_String
         Return System.Text.RegularExpressions.Regex.Replace(str, "<(.|\n)*?>", String.Empty)
     End Function
 
+    <Extension()>
     Friend Function RemoveDiacritics(ByVal StringValue As String) As String
         Dim NormalizedString As String = StringValue.Normalize(NormalizationForm.FormD)
         Dim StringBuilder As New StringBuilder
@@ -155,9 +157,7 @@ Module CS_String
         Next
 
         Return StringBuilder.ToString().Normalize(NormalizationForm.FormC)
-
     End Function
-
 
     'Public Function ConvertCurrencyToVBNumber(ByVal Value As Decimal) As String
     '    ConvertCurrencyToVBNumber = Replace(Format(Value), pRegionalSettings.CurrencyDecimalSymbol, ".")

@@ -8,14 +8,15 @@ Namespace CardonerSistemas.Database
         Private Const ErrorDuplicatedEntityNumber As Integer = 2601
         Private Const ErrorDuplicatedEntityMessage As String = "Cannot insert duplicate key row in object '{TABLE_NAME}' with unique index '{UNIQUE_INDEX}'. The duplicate key value is ({VALUE})."
 
-        Friend Enum Errors
+        Friend Enum Errors As Integer
             NoDBError
             Unknown
-            InvalidColumn
-            RelatedEntity
-            DuplicatedEntity
-            PrimaryKeyViolation
-            UserDefinedError
+            InvalidColumn = 207
+            RelatedEntity = 547
+            DuplicatedEntity = 2601
+            PrimaryKeyViolation = 2627
+            StringOrBinaryDataWillBeTruncated = 8152
+            UserDefinedError = 50000
         End Enum
 
         Friend Shared Function CreateConnectionString(ByVal Provider As String, ByVal ProviderConnectionString As String, ByVal modelName As String) As String
@@ -35,18 +36,9 @@ Namespace CardonerSistemas.Database
                 SQLException = CType(ex.InnerException.InnerException, SqlClient.SqlException)
 
                 For Each Err As System.Data.SqlClient.SqlError In SQLException.Errors
-                    Select Case Err.Number
-                        Case 207
-                            Return Errors.InvalidColumn
-                        Case 547
-                            Return Errors.RelatedEntity
-                        Case 2601
-                            Return Errors.DuplicatedEntity
-                        Case 2627
-                            Return Errors.PrimaryKeyViolation
-                        Case 50000
-                            Return Errors.UserDefinedError
-                    End Select
+                    If [Enum].IsDefined(GetType(Errors), Err.Number) Then
+                        Return CType([Enum].ToObject(GetType(Errors), Err.Number), Errors)
+                    End If
                 Next
 
                 Return Errors.Unknown

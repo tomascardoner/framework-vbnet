@@ -2,14 +2,29 @@
 
 Namespace CardonerSistemas
 
-    Module AFIP
-        Friend Const CUIT_PEFIJO_MASCULINO As String = "20"
-        Friend Const CUIT_PEFIJO_MASCULINO_ALTERNATIVO As String = "23"
-        Friend Const CUIT_PEFIJO_FEMENINO As String = "27"
-        Friend Const CUIT_PEFIJO_FEMENINO_ALTERNATIVO As String = "24"
-        Friend Const CUIT_PEFIJO_PERSONAJURIDICA As String = "30"
-        Friend Const CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO1 As String = "33"
-        Friend Const CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO2 As String = "34"
+    Module Afip
+        Friend Const CuitPrefijoMasculino As String = "20"
+        Friend Const CuitPrefijoMasculinoAlternativo As String = "23"
+        Friend Const CuitPrefijoFemenino As String = "27"
+        Friend Const CuitPrefijoFemeninoAlternativo As String = "24"
+        Friend Const CuitPrefijoPersonaJuridica As String = "30"
+        Friend Const CuitPrefijoPersonaJuridicaAlternativo1 As String = "33"
+        Friend Const CuitPrefijoPersonaJuridicaAlternativo2 As String = "34"
+
+        ' Códigos QR en comprobantes
+        Friend Const ComprobantesCodigoQRDataField As String = "{DATA}"
+        Friend Const ComprobantesCodigoQRDataFieldFecha As String = "{FECHA}"
+        Friend Const ComprobantesCodigoQRDataFieldCuit As String = "{CUIT}"
+        Friend Const ComprobantesCodigoQRDataFieldPuntoVenta As String = "{PUNTOVENTA}"
+        Friend Const ComprobantesCodigoQRDataFieldTipoComprobante As String = "{TIPOCOMPROBANTE}"
+        Friend Const ComprobantesCodigoQRDataFieldNumeroComprobante As String = "{NUMEROCOMPROBANTE}"
+        Friend Const ComprobantesCodigoQRDataFieldImporte As String = "{IMPORTE}"
+        Friend Const ComprobantesCodigoQRDataFieldMoneda As String = "{MONEDA}"
+        Friend Const ComprobantesCodigoQRDataFieldCotizacion As String = "{COTIZACION}"
+        Friend Const ComprobantesCodigoQRDataFieldTipoDocumento As String = "{TIPODOCUMENTO}"
+        Friend Const ComprobantesCodigoQRDataFieldNumeroDocumento As String = "{NUMERODOCUMENTO}"
+        Friend Const ComprobantesCodigoQRDataFieldTipoCodigoAutorizacion As String = "{TIPOCODIGOAUTORIZACION}"
+        Friend Const ComprobantesCodigoQRDataFieldCodigoAutorizacion As String = "{CODIGOAUTORIZACION}"
 
         Friend Enum TipoPersonas As Byte
             Femenino
@@ -17,25 +32,25 @@ Namespace CardonerSistemas
             PersonaJurdica
         End Enum
 
-        Friend Function ObtenerDigitoVerificadorCUIT(ByVal CUIT As String) As Byte?
-            Dim CUITLimpio As String
+        Friend Function ObtenerDigitoVerificadorCuit(ByVal Cuit As String) As Byte?
+            Dim CuitLimpio As String
             Dim Total As Integer
             Dim Digito As Byte
 
             ' Limpio los espacios anterior y posterior que pudiera tener el string
-            CUIT = CUIT.Trim
-            CUITLimpio = Regex.Replace(CUIT, "[^\d]", "")
+            Cuit = Cuit.Trim
+            CuitLimpio = Regex.Replace(Cuit, "[^\d]", "")
 
             ' Verifico que el número tenga el formato correcto de:
             ' 10 dígitos consecutivos o 12 caracteres con guiones según el formato (99-99999999-)
-            Select Case CUIT.Length
+            Select Case Cuit.Length
                 Case 10
-                    If CUITLimpio.Length < 10 Then
+                    If CuitLimpio.Length < 10 Then
                         Return Nothing
                     End If
                 Case 12
-                    If CUIT.ElementAt(2) = "-" And CUIT.ElementAt(9) = "-" Then
-                        If CUITLimpio.Length < 10 Then
+                    If Cuit.ElementAt(2) = "-" And Cuit.ElementAt(9) = "-" Then
+                        If CuitLimpio.Length < 10 Then
                             Return Nothing
                         End If
                     Else
@@ -44,19 +59,19 @@ Namespace CardonerSistemas
                 Case Else
                     Return Nothing
             End Select
-            CUIT = CUITLimpio
+            Cuit = CuitLimpio
 
             ' Individualiza y multiplica los dígitos
-            Total = CInt(CUIT.ElementAt(0).ToString) * 5
-            Total += CInt(CUIT.ElementAt(1).ToString) * 4
-            Total += CInt(CUIT.ElementAt(2).ToString) * 3
-            Total += CInt(CUIT.ElementAt(3).ToString) * 2
-            Total += CInt(CUIT.ElementAt(4).ToString) * 7
-            Total += CInt(CUIT.ElementAt(5).ToString) * 6
-            Total += CInt(CUIT.ElementAt(6).ToString) * 5
-            Total += CInt(CUIT.ElementAt(7).ToString) * 4
-            Total += CInt(CUIT.ElementAt(8).ToString) * 3
-            Total += CInt(CUIT.ElementAt(9).ToString) * 2
+            Total = CInt(Cuit.ElementAt(0).ToString) * 5
+            Total += CInt(Cuit.ElementAt(1).ToString) * 4
+            Total += CInt(Cuit.ElementAt(2).ToString) * 3
+            Total += CInt(Cuit.ElementAt(3).ToString) * 2
+            Total += CInt(Cuit.ElementAt(4).ToString) * 7
+            Total += CInt(Cuit.ElementAt(5).ToString) * 6
+            Total += CInt(Cuit.ElementAt(6).ToString) * 5
+            Total += CInt(Cuit.ElementAt(7).ToString) * 4
+            Total += CInt(Cuit.ElementAt(8).ToString) * 3
+            Total += CInt(Cuit.ElementAt(9).ToString) * 2
 
             ' Calcula el dígito verificador
             Digito = CByte((11 - (Total Mod 11)) Mod 11)
@@ -67,7 +82,7 @@ Namespace CardonerSistemas
             End If
         End Function
 
-        Friend Function ObtenerCUIT(ByVal tipoPersona As TipoPersonas, ByVal numeroDocumento As String) As String
+        Friend Function ObtenerCuit(ByVal tipoPersona As TipoPersonas, ByVal numeroDocumento As String) As String
             Dim prefijo As String
             Dim prefijoAlternativo1 As String
             Dim prefijoAlternativo2 As String
@@ -76,15 +91,15 @@ Namespace CardonerSistemas
             ' Selecciono el prefijo estándar
             Select Case tipoPersona
                 Case TipoPersonas.Femenino
-                    prefijo = CUIT_PEFIJO_FEMENINO
-                    prefijoAlternativo1 = CUIT_PEFIJO_FEMENINO_ALTERNATIVO
+                    prefijo = CuitPrefijoFemenino
+                    prefijoAlternativo1 = CuitPrefijoFemeninoAlternativo
                 Case TipoPersonas.Masculino
-                    prefijo = CUIT_PEFIJO_MASCULINO
-                    prefijoAlternativo1 = CUIT_PEFIJO_MASCULINO_ALTERNATIVO
+                    prefijo = CuitPrefijoMasculino
+                    prefijoAlternativo1 = CuitPrefijoMasculinoAlternativo
                 Case TipoPersonas.PersonaJurdica
-                    prefijo = CUIT_PEFIJO_PERSONAJURIDICA
-                    prefijoAlternativo1 = CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO1
-                    prefijoAlternativo2 = CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO2
+                    prefijo = CuitPrefijoPersonaJuridica
+                    prefijoAlternativo1 = CuitPrefijoPersonaJuridicaAlternativo1
+                    prefijoAlternativo2 = CuitPrefijoPersonaJuridicaAlternativo2
                 Case Else
                     Return String.Empty
             End Select
@@ -98,14 +113,14 @@ Namespace CardonerSistemas
             End Select
 
             ' Obtengo el dígito verificador
-            digitoVerificador = CardonerSistemas.AFIP.ObtenerDigitoVerificadorCUIT(prefijo + numeroDocumento)
+            digitoVerificador = CardonerSistemas.Afip.ObtenerDigitoVerificadorCUIT(prefijo + numeroDocumento)
             If Not digitoVerificador.HasValue Then
                 ' No se pudo obtener, intentar con el prefijo alternativo
-                digitoVerificador = CardonerSistemas.AFIP.ObtenerDigitoVerificadorCUIT(prefijoAlternativo1 + numeroDocumento)
+                digitoVerificador = CardonerSistemas.Afip.ObtenerDigitoVerificadorCUIT(prefijoAlternativo1 + numeroDocumento)
                 If Not digitoVerificador.HasValue Then
                     ' Tampoco se pudo obtener con el prefijo alternativo. Si es empresa, pruebo con el 2º alternativo
                     If tipoPersona = TipoPersonas.PersonaJurdica Then
-                        digitoVerificador = CardonerSistemas.AFIP.ObtenerDigitoVerificadorCUIT(prefijoAlternativo2 + numeroDocumento)
+                        digitoVerificador = CardonerSistemas.Afip.ObtenerDigitoVerificadorCUIT(prefijoAlternativo2 + numeroDocumento)
                         If Not digitoVerificador.HasValue Then
                             ' Tampoco con el alternativo 2
                             Return String.Empty
@@ -117,35 +132,34 @@ Namespace CardonerSistemas
             End If
 
             ' Confirmo el CUIT verificándolo
-            If CardonerSistemas.AFIP.VerificarCUIT(prefijo + numeroDocumento + digitoVerificador.ToString()) Then
+            If CardonerSistemas.Afip.VerificarCuit(prefijo + numeroDocumento + digitoVerificador.ToString()) Then
                 Return prefijo & numeroDocumento & digitoVerificador.ToString()
             Else
                 Return String.Empty
             End If
         End Function
 
-
-        Friend Function VerificarCUIT(ByVal CUIT As String) As Boolean
-            Dim CUITLimpio As String
+        Friend Function VerificarCuit(ByVal Cuit As String) As Boolean
+            Dim CuitLimpio As String
             Dim Prefijo As String
             Dim DigitoVerificador As Byte?
 
             ' Limpio los espacios anterior y posterior que pudiera tener el string
-            CUIT = CUIT.Trim
-            CUITLimpio = Regex.Replace(CUIT, "[^\d]", "")
+            Cuit = Cuit.Trim
+            CuitLimpio = Regex.Replace(Cuit, "[^\d]", "")
 
             ' Verifico que el número tenga el formato correcto de:
             ' 11 dígitos consecutivos o 13 caracteres con guiones según el formato (99-99999999-9)
-            Select Case CUIT.Length
+            Select Case Cuit.Length
                 Case Is < 11
                     Return False
                 Case 11
-                    If CUITLimpio.Length < 11 Then
+                    If CuitLimpio.Length < 11 Then
                         Return False
                     End If
                 Case 13
-                    If CUIT.ElementAt(2) = "-" And CUIT.ElementAt(9) = "-" Then
-                        If CUITLimpio.Length < 11 Then
+                    If Cuit.ElementAt(2) = "-" And Cuit.ElementAt(9) = "-" Then
+                        If CuitLimpio.Length < 11 Then
                             Return False
                         End If
                     Else
@@ -154,22 +168,22 @@ Namespace CardonerSistemas
                 Case Is > 13
                     Return False
             End Select
-            CUIT = CUITLimpio
+            Cuit = CuitLimpio
 
-            Prefijo = CUIT.Substring(0, 2)
-            If Prefijo = CUIT_PEFIJO_FEMENINO _
-                Or Prefijo = CUIT_PEFIJO_FEMENINO_ALTERNATIVO _
-                Or Prefijo = CUIT_PEFIJO_MASCULINO _
-                Or Prefijo = CUIT_PEFIJO_MASCULINO_ALTERNATIVO _
-                Or Prefijo = CUIT_PEFIJO_PERSONAJURIDICA _
-                Or Prefijo = CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO1 _
-                Or Prefijo = CUIT_PEFIJO_PERSONAJURIDICA_ALTERNATIVO2 Then
+            Prefijo = Cuit.Substring(0, 2)
+            If Prefijo = CuitPrefijoFemenino _
+                Or Prefijo = CuitPrefijoFemeninoAlternativo _
+                Or Prefijo = CuitPrefijoMasculino _
+                Or Prefijo = CuitPrefijoMasculinoAlternativo _
+                Or Prefijo = CuitPrefijoPersonaJuridica _
+                Or Prefijo = CuitPrefijoPersonaJuridicaAlternativo1 _
+                Or Prefijo = CuitPrefijoPersonaJuridicaAlternativo2 Then
 
-                DigitoVerificador = ObtenerDigitoVerificadorCUIT(CUIT.Substring(0, 10))
+                DigitoVerificador = ObtenerDigitoVerificadorCUIT(Cuit.Substring(0, 10))
                 If DigitoVerificador Is Nothing Then
                     Return False
                 Else
-                    Return CBool(CByte(CUIT.Chars(10).ToString) = DigitoVerificador)
+                    Return CBool(CByte(Cuit.Chars(10).ToString) = DigitoVerificador)
                 End If
             Else
                 Return False
