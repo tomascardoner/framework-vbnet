@@ -7,6 +7,8 @@ Namespace CardonerSistemas
         Private Const FieldDelimiterCharacterStart As Char = "{"c
         Private Const FieldDelimiterCharacterEnd As Char = "}"c
 
+#Region "Files"
+
         Friend Function GetFileNameFromFullPath(ByVal fullPath As String) As String
             Dim LastSeparator As Integer
 
@@ -51,6 +53,8 @@ Namespace CardonerSistemas
         Friend Function GetTempFileName(fileExtension As String) As String
             Return GetTempFileName().Replace(".tmp", "." + fileExtension)
         End Function
+
+#End Region
 
 #Region "Process folder name"
 
@@ -118,7 +122,7 @@ Namespace CardonerSistemas
             End If
 
             ' No hay campos en el nombre de la carpeta, por ende, no hay nada que procesar.
-            If Not (folderNameProcessed.Contains(FieldDelimiterCharacterStart) AndAlso folderNameProcessed.Contains(FieldDelimiterCharacterEnd)) Then
+            If Not (folderName.Contains(FieldDelimiterCharacterStart) AndAlso folderName.Contains(FieldDelimiterCharacterEnd)) Then
                 Return folderName
             End If
 

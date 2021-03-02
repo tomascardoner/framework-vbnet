@@ -266,7 +266,7 @@ Namespace CardonerSistemas
                     ' Conectar al Servicio Web de Facturación. Proxy: usuario:clave@localhost:8000
                     WSFEv1.Conectar("", WSFEv1_URL.ToString, InternetProxy.ToString)
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se ejecutó el método 'Conectar'")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "DebugLog: " & WSFEv1.DebugLog)
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "DebugLog: " & WSFEv1.DebugLog.Trim())
 
                     ' Llamo a un servicio nulo, para obtener el estado del servidor (opcional)
                     WSFEv1.Dummy()
@@ -279,9 +279,9 @@ Namespace CardonerSistemas
                     Return True
 
                 Catch ex As Exception
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ocurrió un error.")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Excepción: " & WSFEv1.Excepcion)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Traza:     " & WSFEv1.Traceback)
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ha ocurrido un error:")
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "    Excepción: " & WSFEv1.Excepcion)
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "    Traza:     " & WSFEv1.Traceback)
                     CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al conectar con el Servicio de Factura Electrónica.")
                     WSFEv1 = Nothing
                     Return False
