@@ -418,11 +418,11 @@ Namespace CardonerSistemas
                             .ComprobanteDesde = WSFEv1.ObtenerCampoFactura("cbt_desde")
                             .ComprobanteHasta = WSFEv1.ObtenerCampoFactura("cbt_hasta")
                             .ComprobanteFecha = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_cbte"), "yyyyMMdd", Nothing)
-                            .ImporteTotal = WSFEv1.ObtenerCampoFactura("imp_total") / 10
-                            .ImporteTotalConc = WSFEv1.ObtenerCampoFactura("imp_tot_conc") / 10
-                            .ImporteNeto = WSFEv1.ObtenerCampoFactura("imp_neto") / 10
-                            .ImporteTributos = WSFEv1.ObtenerCampoFactura("imp_trib") / 10
-                            .ImporteIVA = WSFEv1.ObtenerCampoFactura("imp_iva") / 10
+                            .ImporteTotal = WSFEv1.ObtenerCampoFactura("imp_total")
+                            .ImporteTotalConc = WSFEv1.ObtenerCampoFactura("imp_tot_conc")
+                            .ImporteNeto = WSFEv1.ObtenerCampoFactura("imp_neto")
+                            .ImporteTributos = WSFEv1.ObtenerCampoFactura("imp_trib")
+                            .ImporteIVA = WSFEv1.ObtenerCampoFactura("imp_iva")
                             .FechaServicioDesde = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_serv_desde"), "yyyyMMdd", Nothing)
                             .FechaServicioHasta = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_serv_hasta"), "yyyyMMdd", Nothing)
                             .FechaVencimientoPago = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_venc_pago"), "yyyyMMdd", Nothing)

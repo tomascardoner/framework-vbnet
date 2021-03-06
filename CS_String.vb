@@ -145,8 +145,8 @@ Module CS_String
     End Function
 
     <Extension()>
-    Friend Function RemoveDiacritics(ByVal StringValue As String) As String
-        Dim NormalizedString As String = StringValue.Normalize(NormalizationForm.FormD)
+    Friend Function RemoveDiacritics(ByVal value As String) As String
+        Dim NormalizedString As String = value.Normalize(NormalizationForm.FormD)
         Dim StringBuilder As New StringBuilder
 
         For Each character As Char In NormalizedString
@@ -158,6 +158,17 @@ Module CS_String
 
         Return StringBuilder.ToString().Normalize(NormalizationForm.FormC)
     End Function
+
+    <Extension()>
+    Friend Function TrimAndReduce(ByVal value As String) As String
+        Return ConvertWhitespacesToSingleSpaces(value).Trim()
+    End Function
+
+    <Extension()>
+    Friend Function ConvertWhitespacesToSingleSpaces(ByVal value As String) As String
+        Return Regex.Replace(value, "\s+", " ")
+    End Function
+
 
     'Public Function ConvertCurrencyToVBNumber(ByVal Value As Decimal) As String
     '    ConvertCurrencyToVBNumber = Replace(Format(Value), pRegionalSettings.CurrencyDecimalSymbol, ".")
