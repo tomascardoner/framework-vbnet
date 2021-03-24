@@ -6,7 +6,7 @@ Module CS_Email
 
     Private invalid As Boolean = False
 
-    Public Function IsValidEmail(ByVal Value As String, Optional ByVal RegularExpression As String = EMAIL_VALIDATION_REGULAREXPRESSION) As Boolean
+    Public Function IsValidEmail(ByVal Value As String, Optional ByVal RegularExpression As String = EmailValidationRegularExpression) As Boolean
         invalid = False
         If String.IsNullOrEmpty(Value) Then
             Return False
