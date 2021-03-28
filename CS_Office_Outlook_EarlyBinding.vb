@@ -134,4 +134,15 @@ Module CS_Office_Outlook_EarlyBinding
     Public Sub FindRejectedEmails_AdvancedSearchComplete() Handles motkApp.AdvancedSearchComplete
         mAsynchronousWaiting = False
     End Sub
+
+    Friend Sub releaseObject(ByVal obj As Object)
+        Try
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(obj)
+            obj = Nothing
+        Catch ex As Exception
+            obj = Nothing
+        Finally
+            GC.Collect()
+        End Try
+    End Sub
 End Module

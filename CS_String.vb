@@ -4,30 +4,6 @@ Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
 Module CS_String
-    Friend Function ReplaceString(ByVal StringToSearchIn As String, ByVal StringToFind As String, ByVal StringToReplace As String, Optional ByVal CaseSensitive As Boolean = False) As String
-        Dim Position As Integer
-        Dim ResultString As String
-
-        If CaseSensitive Then
-            Position = StringToSearchIn.IndexOf(StringToFind, 0, StringComparison.InvariantCulture)
-        Else
-            Position = StringToSearchIn.IndexOf(StringToFind, 0, StringComparison.InvariantCultureIgnoreCase)
-        End If
-
-        If Position = -1 Then
-            Return StringToSearchIn
-        Else
-            ResultString = StringToSearchIn.Remove(Position, StringToFind.Length)
-            ResultString = ResultString.Insert(Position, StringToReplace)
-
-            Return ResultString
-        End If
-    End Function
-
-    Friend Function ReplaceQuote(ByVal Expression As String) As String
-        Return Expression.Replace(",", "''")
-    End Function
-
     Friend Function GetSubString(ByVal MainString As String, ByVal SubStringPosition As Integer, ByVal SubStringSeparator As Char) As String
         Dim aArray() As String
 
@@ -81,7 +57,7 @@ Module CS_String
     End Function
 
     Friend Function GetBooleanString(ByVal Value As Boolean) As String
-        Return IIf(Value, "Sí", "No").ToString
+        Return IIf(Value, My.Resources.STRING_YES, My.Resources.STRING_NO).ToString
     End Function
 
     Friend Function GetBooleanValueFromString(ByVal Value As String) As Boolean
@@ -145,6 +121,11 @@ Module CS_String
     End Function
 
     <Extension()>
+    Friend Function RemoveNotNumbers(ByVal value As String) As String
+        Return New String(value.Where(Function(c) Char.IsDigit(c)).ToArray())
+    End Function
+
+    <Extension()>
     Friend Function RemoveDiacritics(ByVal value As String) As String
         Dim NormalizedString As String = value.Normalize(NormalizationForm.FormD)
         Dim StringBuilder As New StringBuilder
@@ -169,6 +150,14 @@ Module CS_String
         Return Regex.Replace(value, "\s+", " ")
     End Function
 
+    <Extension()>
+    Friend Function Truncate(ByVal value As String, ByVal maxLength As Integer) As String
+        If String.IsNullOrEmpty(value) OrElse value.Length <= maxLength Then
+            Return value
+        Else
+            Return value.Substring(0, maxLength)
+        End If
+    End Function
 
     'Public Function ConvertCurrencyToVBNumber(ByVal Value As Decimal) As String
     '    ConvertCurrencyToVBNumber = Replace(Format(Value), pRegionalSettings.CurrencyDecimalSymbol, ".")
