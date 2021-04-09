@@ -1,13 +1,13 @@
 Namespace CardonerSistemas
 
     Module Constants
-        Friend Const PUBLIC_ENCRYPTION_PASSWORD As String = "CmcaTlMdmA,aTmP,am2CyalhdEb"
+        Friend Const PublicEncryptionPassword As String = "CmcaTlMdmA,aTmP,am2CyalhdEb"
 
-        Friend Const COMBOBOX_ALLYESNO_ALL_LISTINDEX As Byte = 0
-        Friend Const COMBOBOX_ALLYESNO_YES_LISTINDEX As Byte = 1
-        Friend Const COMBOBOX_ALLYESNO_NO_LISTINDEX As Byte = 2
+        Friend Const ComboBoxAllYesNo_AllListindex As Byte = 0
+        Friend Const ComboBoxAllYesNo_YesListindex As Byte = 1
+        Friend Const ComboBoxAllYesNo_NoListindex As Byte = 2
 
-        Friend Const DATETIMEPICKER_MINIMUM_VALUE As Date = #1753/01/01#
+        Friend Const DateTimePickerMinimumValue As Date = #1753/01/01#
 
         '////////////////////
         '    FIELD VALUES
@@ -22,9 +22,9 @@ Namespace CardonerSistemas
         Friend Const FIELD_VALUE_ALL_SHORT As Short = Short.MaxValue
         Friend Const FIELD_VALUE_ALL_INTEGER As Integer = Integer.MaxValue
 
-        Friend Const FIELD_VALUE_OTHER_BYTE As Byte = 254
-        Friend Const FIELD_VALUE_OTHER_SHORT As Short = 32766
-        Friend Const FIELD_VALUE_OTHER_INTEGER As Integer = 2147483646
+        Friend Const FIELD_VALUE_OTHER_BYTE As Byte = Byte.MaxValue - 1
+        Friend Const FIELD_VALUE_OTHER_SHORT As Short = Short.MaxValue - 1
+        Friend Const FIELD_VALUE_OTHER_INTEGER As Integer = Integer.MaxValue - 1
 
         '//////////////////
         '    STRINGS
@@ -34,7 +34,7 @@ Namespace CardonerSistemas
         Friend Const KEY_DELIMITER As String = "|@|"
 
         Friend Const STRING_LIST_SEPARATOR As Char = ";"c
-        'Friend Const STRING_LIST_DELIMITER As String = "¬"
+        Friend Const STRING_LIST_DELIMITER As String = "¬"
     End Module
 
 End Namespace

@@ -173,9 +173,9 @@ Module CS_ValueTranslation
         End If
 
         If ObjectValue Is Nothing Then
-            Return CardonerSistemas.Constants.DATETIMEPICKER_MINIMUM_VALUE
+            Return CardonerSistemas.Constants.DateTimePickerMinimumValue
         Else
-            Return CardonerSistemas.Constants.DATETIMEPICKER_MINIMUM_VALUE.AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
+            Return CardonerSistemas.Constants.DateTimePickerMinimumValue.AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
         End If
     End Function
 #End Region
@@ -194,7 +194,7 @@ Module CS_ValueTranslation
         End If
     End Sub
 
-    Friend Function FromValueDecimalToControlCurrencyTextBox(ByVal value As Decimal?, ByRef control As Syncfusion.Windows.Forms.Tools.CurrencyTextBox) As Object
+    Friend Sub FromValueDecimalToControlCurrencyTextBox(ByVal value As Decimal?, ByRef control As Syncfusion.Windows.Forms.Tools.CurrencyTextBox)
         If value.HasValue Then
             control.DecimalValue = value.Value
         Else
@@ -204,7 +204,19 @@ Module CS_ValueTranslation
                 control.DecimalValue = control.MinValue
             End If
         End If
-    End Function
+    End Sub
+
+    Friend Sub FromValueDecimalToControlPercentTextBox(ByVal value As Decimal?, ByRef control As Syncfusion.Windows.Forms.Tools.PercentTextBox)
+        If value.HasValue Then
+            control.PercentValue = value.Value
+        Else
+            If control.AllowNull Then
+                control.BindableValue = Nothing
+            Else
+                control.PercentValue = control.MinValue
+            End If
+        End If
+    End Sub
 
 #End Region
 
@@ -399,6 +411,14 @@ Module CS_ValueTranslation
             Return Nothing
         Else
             Return control.DecimalValue
+        End If
+    End Function
+
+    Friend Function FromControlPercentTextBoxToObjectDecimal(ByRef control As Syncfusion.Windows.Forms.Tools.PercentTextBox) As Decimal?
+        If control.AllowNull AndAlso control.IsNull Then
+            Return Nothing
+        Else
+            Return Convert.ToDecimal(control.PercentValue)
         End If
     End Function
 
