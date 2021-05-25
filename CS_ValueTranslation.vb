@@ -173,9 +173,9 @@ Module CS_ValueTranslation
         End If
 
         If ObjectValue Is Nothing Then
-            Return CardonerSistemas.Constants.DateTimePickerMinimumValue
+            Return New Date(Now.Year, Now.Month, Now.Day, 0, 0, 0)
         Else
-            Return CardonerSistemas.Constants.DateTimePickerMinimumValue.AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
+            Return New Date(Now.Year, Now.Month, Now.Day).AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
         End If
     End Function
 #End Region
