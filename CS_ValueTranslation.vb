@@ -222,16 +222,16 @@ Module CS_ValueTranslation
 
 #Region "De Controles a Objectos - Misc"
 
-    Friend Function FromControlUpDownToObjectByte(ByVal UpDownValue As Decimal) As Byte?
-        If UpDownValue = 0 Then
+    Friend Function FromControlUpDownToObjectByte(ByVal UpDownValue As Decimal, Optional valueForNothing As Decimal = 0) As Byte?
+        If UpDownValue = valueForNothing Then
             Return Nothing
         Else
             Return CByte(UpDownValue)
         End If
     End Function
 
-    Friend Function FromControlUpDownToObjectShort(ByVal UpDownValue As Decimal) As Short?
-        If UpDownValue = 0 Then
+    Friend Function FromControlUpDownToObjectShort(ByVal UpDownValue As Decimal, Optional valueForNothing As Decimal = 0) As Short?
+        If UpDownValue = valueForNothing Then
             Return Nothing
         Else
             Return CShort(UpDownValue)
