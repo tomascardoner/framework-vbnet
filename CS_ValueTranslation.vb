@@ -470,8 +470,15 @@ Module CS_ValueTranslation
 
 #Region "Cambios de Formato"
 
-    Friend Function FromDecimalToUString(ByVal Value As Decimal) As String
-        Return Value.ToString.Replace(","c, "."c)
+    Friend Function DecimalToUString(ByVal value As Decimal) As String
+        Return value.ToString.Replace(","c, "."c)
+    End Function
+
+    Friend Function UStringToDecimal(ByVal value As String) As Decimal
+        Dim result As Decimal
+
+        Decimal.TryParse(value.ToString.Replace("."c, ","c), result)
+        Return result
     End Function
 
     Friend Function FromStringToPreventSQLInjection(ByVal Value As String) As String

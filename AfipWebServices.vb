@@ -300,8 +300,8 @@ Namespace CardonerSistemas
                     With FacturaAGenerar
                         ' Creo la factura
                         WSFEv1.CrearFactura(.Concepto, .TipoDocumento, .DocumentoNumero, .TipoComprobante, .PuntoVenta, .ComprobanteDesde, .ComprobanteHasta,
-                                        CS_ValueTranslation.FromDecimalToUString(.ImporteTotal), CS_ValueTranslation.FromDecimalToUString(.ImporteTotalConc), CS_ValueTranslation.FromDecimalToUString(.ImporteNeto), CS_ValueTranslation.FromDecimalToUString(.ImporteIVA), CS_ValueTranslation.FromDecimalToUString(.ImporteTributos), CS_ValueTranslation.FromDecimalToUString(.ImporteOperacionesExentas),
-                                        CS_ValueTranslation.FromDateToUString(.ComprobanteFecha), CS_ValueTranslation.FromDateToUString(.FechaVencimientoPago), CS_ValueTranslation.FromDateToUString(.FechaServicioDesde), CS_ValueTranslation.FromDateToUString(.FechaServicioHasta), .MonedaID, CS_ValueTranslation.FromDecimalToUString(.MonedaCotizacion))
+                                        CS_ValueTranslation.DecimalToUString(.ImporteTotal), CS_ValueTranslation.DecimalToUString(.ImporteTotalConc), CS_ValueTranslation.DecimalToUString(.ImporteNeto), CS_ValueTranslation.DecimalToUString(.ImporteIVA), CS_ValueTranslation.DecimalToUString(.ImporteTributos), CS_ValueTranslation.DecimalToUString(.ImporteOperacionesExentas),
+                                        CS_ValueTranslation.FromDateToUString(.ComprobanteFecha), CS_ValueTranslation.FromDateToUString(.FechaVencimientoPago), CS_ValueTranslation.FromDateToUString(.FechaServicioDesde), CS_ValueTranslation.FromDateToUString(.FechaServicioHasta), .MonedaID, CS_ValueTranslation.DecimalToUString(.MonedaCotizacion))
 
                         ' Agrego los comprobantes asociados:
                         For Each ComprobanteAsociadoActual In .ComprobantesAsociados
@@ -310,12 +310,12 @@ Namespace CardonerSistemas
 
                         ' Agrego los tributos (impuestos varios)
                         For Each TributoActual In .Tributos
-                            WSFEv1.AgregarTributo(TributoActual.ID, TributoActual.Descripcion, CS_ValueTranslation.FromDecimalToUString(TributoActual.BaseImponible), CS_ValueTranslation.FromDecimalToUString(TributoActual.Alicuota), CS_ValueTranslation.FromDecimalToUString(TributoActual.Importe))
+                            WSFEv1.AgregarTributo(TributoActual.ID, TributoActual.Descripcion, CS_ValueTranslation.DecimalToUString(TributoActual.BaseImponible), CS_ValueTranslation.DecimalToUString(TributoActual.Alicuota), CS_ValueTranslation.DecimalToUString(TributoActual.Importe))
                         Next
 
                         ' Agrego tasas de IVA
                         For Each IVAActual In .IVAs
-                            WSFEv1.AgregarIva(IVAActual.ID, CS_ValueTranslation.FromDecimalToUString(IVAActual.BaseImponible), CS_ValueTranslation.FromDecimalToUString(IVAActual.Importe))
+                            WSFEv1.AgregarIva(IVAActual.ID, CS_ValueTranslation.DecimalToUString(IVAActual.BaseImponible), CS_ValueTranslation.DecimalToUString(IVAActual.Importe))
                         Next
                     End With
 
@@ -418,11 +418,11 @@ Namespace CardonerSistemas
                             .ComprobanteDesde = WSFEv1.ObtenerCampoFactura("cbt_desde")
                             .ComprobanteHasta = WSFEv1.ObtenerCampoFactura("cbt_hasta")
                             .ComprobanteFecha = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_cbte"), "yyyyMMdd", Nothing)
-                            .ImporteTotal = WSFEv1.ObtenerCampoFactura("imp_total")
-                            .ImporteTotalConc = WSFEv1.ObtenerCampoFactura("imp_tot_conc")
-                            .ImporteNeto = WSFEv1.ObtenerCampoFactura("imp_neto")
-                            .ImporteTributos = WSFEv1.ObtenerCampoFactura("imp_trib")
-                            .ImporteIVA = WSFEv1.ObtenerCampoFactura("imp_iva")
+                            .ImporteTotal = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_total"))
+                            .ImporteTotalConc = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_tot_conc"))
+                            .ImporteNeto = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_neto"))
+                            .ImporteTributos = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_trib"))
+                            .ImporteIVA = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_iva"))
                             .FechaServicioDesde = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_serv_desde"), "yyyyMMdd", Nothing)
                             .FechaServicioHasta = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_serv_hasta"), "yyyyMMdd", Nothing)
                             .FechaVencimientoPago = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_venc_pago"), "yyyyMMdd", Nothing)
