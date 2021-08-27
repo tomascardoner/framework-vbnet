@@ -85,7 +85,7 @@ Namespace CardonerSistemas
         Friend Function ObtenerCuit(ByVal tipoPersona As TipoPersonas, ByVal numeroDocumento As String) As String
             Dim prefijo As String
             Dim prefijoAlternativo1 As String
-            Dim prefijoAlternativo2 As String
+            Dim prefijoAlternativo2 As String = ""
             Dim digitoVerificador As Byte?
 
             ' Selecciono el prefijo estándar

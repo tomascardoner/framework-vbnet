@@ -9,7 +9,7 @@ Namespace CardonerSistemas
             Dim bmp As New Bitmap(21, 21)
 
             'Get the graphics object to manipulate the bitmap
-            Dim gr As System.Drawing.Graphics = System.Drawing.Graphics.FromImage(bmp)
+            Dim gr As Drawing.Graphics = System.Drawing.Graphics.FromImage(bmp)
 
             'Set the background of the bitmap to white
             gr.FillRectangle(Brushes.White, 0, 0, 21, 21)
@@ -44,6 +44,8 @@ Namespace CardonerSistemas
             bmp.SetPixel(6, 12, Color.Black)
 
             'Add code here to set the rest of the pixels as needed
+
+            Return bmp
         End Function
 
     End Module

@@ -113,7 +113,7 @@ Namespace CardonerSistemas
             Const FolderTagDropbox As String = FieldDelimiterCharacterStart & "Dropbox" & FieldDelimiterCharacterEnd
             Const FolderTagGoogleDrive As String = FieldDelimiterCharacterStart & "GoogleDrive" & FieldDelimiterCharacterEnd
             Const FolderTagOneDrive As String = FieldDelimiterCharacterStart & "OneDrive" & FieldDelimiterCharacterEnd
-            Const FolderTagICloudDrive As String = FieldDelimiterCharacterStart & "iCloudDrive" & FieldDelimiterCharacterEnd
+            'Const FolderTagICloudDrive As String = FieldDelimiterCharacterStart & "iCloudDrive" & FieldDelimiterCharacterEnd
 
             Dim folderNameProcessed As String
 
