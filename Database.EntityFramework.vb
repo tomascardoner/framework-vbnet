@@ -35,11 +35,13 @@ Namespace CardonerSistemas.Database
 
                 SQLException = CType(ex.InnerException.InnerException, SqlClient.SqlException)
 
-                For Each Err As System.Data.SqlClient.SqlError In SQLException.Errors
-                    If [Enum].IsDefined(GetType(Errors), Err.Number) Then
-                        Return CType([Enum].ToObject(GetType(Errors), Err.Number), Errors)
-                    End If
-                Next
+                If SQLException IsNot Nothing Then
+                    For Each Err As System.Data.SqlClient.SqlError In SQLException.Errors
+                        If [Enum].IsDefined(GetType(Errors), Err.Number) Then
+                            Return CType([Enum].ToObject(GetType(Errors), Err.Number), Errors)
+                        End If
+                    Next
+                End If
 
                 Return Errors.Unknown
             Else

@@ -3,7 +3,7 @@ Namespace CardonerSistemas
     Module ErrorHandler
         Friend Const ActiveXCreateError As Integer = -2146233088
 
-        Friend Sub ProcessError(ByRef Exception As Exception, Optional ByVal FriendlyMessageText As String = "", Optional ByVal ShowMessageBox As Boolean = True)
+        Friend Sub ProcessError(ByRef Exception As Exception, Optional ByVal FriendlyMessageText As String = "", Optional ByVal ShowMessageBox As Boolean = True, Optional UseCustomDialogForErrorMessage As Boolean = True)
             Dim ExceptionMessageText As String
             Dim MessageTextToLog As String
             Dim formErrorMessageBox As CardonerSistemas.ErrorHandlerMessageBox
@@ -45,7 +45,7 @@ Namespace CardonerSistemas
             Cursor.Current = Cursors.Default
 
             If ShowMessageBox Then
-                If pAppearanceConfig.UseCustomDialogForErrorMessage Then
+                If UseCustomDialogForErrorMessage Then
                     formErrorMessageBox = New CardonerSistemas.ErrorHandlerMessageBox
                     With formErrorMessageBox
                         .lblFriendlyMessage.Text = FriendlyMessageText

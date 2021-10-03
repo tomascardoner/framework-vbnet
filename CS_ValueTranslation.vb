@@ -178,90 +178,6 @@ Module CS_ValueTranslation
             Return New Date(Now.Year, Now.Month, Now.Day).AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
         End If
     End Function
-#End Region
-
-#Region "De Controles a Objectos - Misc"
-
-    Friend Function FromControlUpDownToObjectByte(ByVal UpDownValue As Decimal, Optional valueForNothing As Decimal = 0) As Byte?
-        If UpDownValue = valueForNothing Then
-            Return Nothing
-        Else
-            Return CByte(UpDownValue)
-        End If
-    End Function
-
-    Friend Function FromControlUpDownToObjectShort(ByVal UpDownValue As Decimal, Optional valueForNothing As Decimal = 0) As Short?
-        If UpDownValue = valueForNothing Then
-            Return Nothing
-        Else
-            Return CShort(UpDownValue)
-        End If
-    End Function
-
-    Friend Function FromControlCheckBoxToObjectBoolean(ByVal CheckBoxCheckState As CheckState) As Boolean
-        Select Case CheckBoxCheckState
-            Case CheckState.Indeterminate
-                Return Nothing
-            Case CheckState.Checked
-                Return True
-            Case CheckState.Unchecked
-                Return False
-            Case Else
-                Return Nothing
-        End Select
-    End Function
-
-    Friend Function FromControlTagToObjectInteger(ByVal TagValue As Object) As Integer?
-        If TypeOf (TagValue) Is Integer Then
-            Return CInt(TagValue)
-        Else
-            Return Nothing
-        End If
-    End Function
-
-#End Region
-
-#Region "De Controles a Objectos - ComboBox"
-
-    Friend Function FromControlComboBoxToObjectByte(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Byte = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_BYTE) As Byte?
-        If ComboBoxSelectedValue Is Nothing Then
-            Return Nothing
-        ElseIf CByte(ComboBoxSelectedValue) = ValueForNull Then
-            Return Nothing
-        Else
-            Return CByte(ComboBoxSelectedValue)
-        End If
-    End Function
-
-    Friend Function FromControlComboBoxToObjectShort(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Short = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_SHORT) As Short?
-        If ComboBoxSelectedValue Is Nothing Then
-            Return Nothing
-        ElseIf CShort(ComboBoxSelectedValue) = ValueForNull Then
-            Return Nothing
-        Else
-            Return CShort(ComboBoxSelectedValue)
-        End If
-    End Function
-
-    Friend Function FromControlComboBoxToObjectInteger(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Integer = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_INTEGER) As Integer?
-        If ComboBoxSelectedValue Is Nothing Then
-            Return Nothing
-        ElseIf CInt(ComboBoxSelectedValue) = ValueForNull Then
-            Return Nothing
-        Else
-            Return CInt(ComboBoxSelectedValue)
-        End If
-    End Function
-
-    Friend Function FromControlComboBoxToObjectString(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As String = Nothing) As String
-        If ComboBoxSelectedValue Is Nothing Then
-            Return Nothing
-        ElseIf ComboBoxSelectedValue.ToString = ValueForNull Then
-            Return Nothing
-        Else
-            Return ComboBoxSelectedValue.ToString
-        End If
-    End Function
 
 #End Region
 
@@ -324,6 +240,50 @@ Module CS_ValueTranslation
 
 #End Region
 
+#Region "De Controles a Objectos - ComboBox"
+
+    Friend Function FromControlComboBoxToObjectByte(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Byte = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_BYTE) As Byte?
+        If ComboBoxSelectedValue Is Nothing Then
+            Return Nothing
+        ElseIf CByte(ComboBoxSelectedValue) = ValueForNull Then
+            Return Nothing
+        Else
+            Return CByte(ComboBoxSelectedValue)
+        End If
+    End Function
+
+    Friend Function FromControlComboBoxToObjectShort(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Short = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_SHORT) As Short?
+        If ComboBoxSelectedValue Is Nothing Then
+            Return Nothing
+        ElseIf CShort(ComboBoxSelectedValue) = ValueForNull Then
+            Return Nothing
+        Else
+            Return CShort(ComboBoxSelectedValue)
+        End If
+    End Function
+
+    Friend Function FromControlComboBoxToObjectInteger(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As Integer = CardonerSistemas.Constants.FIELD_VALUE_NOTSPECIFIED_INTEGER) As Integer?
+        If ComboBoxSelectedValue Is Nothing Then
+            Return Nothing
+        ElseIf CInt(ComboBoxSelectedValue) = ValueForNull Then
+            Return Nothing
+        Else
+            Return CInt(ComboBoxSelectedValue)
+        End If
+    End Function
+
+    Friend Function FromControlComboBoxToObjectString(ByVal ComboBoxSelectedValue As Object, Optional ValueForNull As String = Nothing) As String
+        If ComboBoxSelectedValue Is Nothing Then
+            Return Nothing
+        ElseIf ComboBoxSelectedValue.ToString = ValueForNull Then
+            Return Nothing
+        Else
+            Return ComboBoxSelectedValue.ToString
+        End If
+    End Function
+
+#End Region
+
 #Region "De Controles a Objectos - DateTimePicker"
 
     Friend Function FromControlDateTimePickerToObjectDate(ByVal DateTimePickerValue As Date, Optional DateTimePickerChecked As Boolean = True) As Date?
@@ -345,6 +305,47 @@ Module CS_ValueTranslation
     Friend Function FromControlDateTimePickerToObjectTimeSpan(ByVal DateTimePickerValue As Date, Optional DateTimePickerChecked As Boolean = True) As TimeSpan?
         If DateTimePickerChecked Then
             Return New TimeSpan(DateTimePickerValue.Hour, DateTimePickerValue.Minute, 0)
+        Else
+            Return Nothing
+        End If
+    End Function
+
+#End Region
+
+#Region "De Controles a Objectos - Misc"
+
+    Friend Function FromControlUpDownToObjectByte(ByVal UpDownValue As Decimal, Optional valueForNothing As Decimal = 0) As Byte?
+        If UpDownValue = valueForNothing Then
+            Return Nothing
+        Else
+            Return CByte(UpDownValue)
+        End If
+    End Function
+
+    Friend Function FromControlUpDownToObjectShort(ByVal UpDownValue As Decimal, Optional valueForNothing As Decimal = 0) As Short?
+        If UpDownValue = valueForNothing Then
+            Return Nothing
+        Else
+            Return CShort(UpDownValue)
+        End If
+    End Function
+
+    Friend Function FromControlCheckBoxToObjectBoolean(ByVal CheckBoxCheckState As CheckState) As Boolean
+        Select Case CheckBoxCheckState
+            Case CheckState.Indeterminate
+                Return Nothing
+            Case CheckState.Checked
+                Return True
+            Case CheckState.Unchecked
+                Return False
+            Case Else
+                Return Nothing
+        End Select
+    End Function
+
+    Friend Function FromControlTagToObjectInteger(ByVal TagValue As Object) As Integer?
+        If TypeOf (TagValue) Is Integer Then
+            Return CInt(TagValue)
         Else
             Return Nothing
         End If
