@@ -122,7 +122,9 @@ Module CS_String
 
     <Extension()>
     Friend Function RemoveNotNumbers(ByVal value As String) As String
-        Return New String(value.Where(Function(c) Char.IsDigit(c)).ToArray())
+        If value IsNot Nothing Then
+            Return New String(value.Where(Function(c) Char.IsDigit(c)).ToArray())
+        End If
     End Function
 
     <Extension()>
