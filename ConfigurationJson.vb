@@ -39,6 +39,35 @@ Namespace CardonerSistemas
 
         End Function
 
+        Friend Function SaveFile(Of T)(configFolder As String, ByVal fileName As String, ByRef configObject As T, Optional writeIndented As Boolean = True) As Boolean
+
+            Dim jsonConfigFileString As String
+
+            Try
+                jsonConfigFileString = JsonSerializer.Serialize(Of T)(configObject, New JsonSerializerOptions() With {.WriteIndented = writeIndented})
+            Catch ex As System.Exception
+                Dim message As String = String.Format("Error al serializar el objeto en archivo de configuración.{0}{0}{1}", Environment.NewLine, ex.Message)
+                If ex.InnerException IsNot Nothing Then
+                    message += String.Format("{0}{0}Inner message:{0}{1}", Environment.NewLine, ex.InnerException.Message)
+                End If
+                MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
+            End Try
+
+            Try
+                File.WriteAllText(Path.Combine(configFolder, fileName), jsonConfigFileString)
+            Catch ex As System.Exception
+                Dim message As String = String.Format("Error al guardar el archivo de configuración {1}.{0}{0}{2}", Environment.NewLine, fileName, ex.Message)
+                If ex.InnerException IsNot Nothing Then
+                    message += String.Format("{0}{0}Inner message:{0}{1}", Environment.NewLine, ex.InnerException.Message)
+                End If
+                MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
+            End Try
+
+            Return True
+        End Function
+
     End Module
 
 End Namespace

@@ -1,8 +1,10 @@
 Imports System.Data.SqlClient
 Imports System.IO
 
-Namespace CardonerSistemas.Database.ADO
-    Friend Class SQLServer
+Namespace CardonerSistemas.Database.Ado
+
+    Friend Class SqlServer
+
         Friend Property ApplicationName As String
         Friend Property AttachDBFilename As String
         Friend Property Datasource As String
@@ -23,15 +25,15 @@ Namespace CardonerSistemas.Database.ADO
 
             With scsb
                 .ApplicationName = ApplicationName
-                .DataSource = DataSource
+                .DataSource = Datasource
                 If (Not AttachDBFilename Is Nothing) AndAlso AttachDBFilename.Trim.Length > 0 Then
                     .AttachDBFilename = AttachDBFilename
                 End If
                 If (Not InitialCatalog Is Nothing) AndAlso InitialCatalog.Trim.Length > 0 Then
                     .InitialCatalog = InitialCatalog
                 End If
-                If (Not UserID Is Nothing) AndAlso UserID.Trim.Length > 0 Then
-                    .UserID = UserID
+                If (Not UserId Is Nothing) AndAlso UserId.Trim.Length > 0 Then
+                    .UserID = UserId
                 End If
                 If (Not Password Is Nothing) AndAlso Password.Trim.Length > 0 Then
                     .Password = Password

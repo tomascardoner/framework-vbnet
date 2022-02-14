@@ -21,11 +21,15 @@ Module CS_ValueTranslation
         End If
     End Function
 
-    Friend Function FromObjectIntegerToControlTextBox(ByVal ObjectValue As Integer?) As String
-        If ObjectValue.HasValue Then
-            Return FormatNumber(ObjectValue.Value, 0)
+    Friend Function FromObjectIntegerToControlTextBox(ByVal value As Integer?, Optional leftPaddingZeroes As Byte = 0) As String
+        If value.HasValue Then
+            If leftPaddingZeroes = 0 Then
+                Return FormatNumber(value.Value, 0)
+            Else
+                Return value.Value.ToString(StrDup(leftPaddingZeroes, "0"))
+            End If
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
