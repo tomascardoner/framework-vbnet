@@ -10,7 +10,7 @@
             End If
         End Sub
 
-        Private Sub buttonAceptar_Click() Handles buttonAceptar.Click
+        Private Sub ButtonAceptar_Click() Handles buttonAceptar.Click
             If String.IsNullOrWhiteSpace(textboxUsuario.Text) Then
                 MessageBox.Show("Debe ingresar el usuario.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Information)
                 textboxUsuario.Focus()
@@ -20,7 +20,7 @@
             Me.DialogResult = Windows.Forms.DialogResult.OK
         End Sub
 
-        Private Sub buttonCancelar_Click() Handles buttonCancelar.Click
+        Private Sub ButtonCancelar_Click() Handles buttonCancelar.Click
             Me.DialogResult = Windows.Forms.DialogResult.Cancel
         End Sub
 
