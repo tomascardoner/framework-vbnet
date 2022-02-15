@@ -5,39 +5,119 @@ Namespace CardonerSistemas.Database.Ado
 
     Friend Class SqlServer
 
+        Private Const ErrorLoginFailed As String = "Login failed for user "
+
+#Region "Properties"
+
         Friend Property ApplicationName As String
         Friend Property AttachDBFilename As String
         Friend Property Datasource As String
         Friend Property InitialCatalog As String
         Friend Property UserId As String
+        Friend Property PasswordEncrypted As String
         Friend Property Password As String
         Friend Property MultipleActiveResultsets As Boolean
         Friend Property WorkstationID As String
-
+        Friend Property ConnectTimeout As Byte
+        Friend Property ConnectRetryCount As Byte
+        Friend Property ConnectRetryInterval As Byte
         Friend Property ConnectionString As String
 
         Friend Property Connection As SqlConnection
 
+        Friend Function PasswordEncrypt() As Boolean
+            Dim encryptedPassword As String = String.Empty
+            If Encrypt.StringCipher.Encrypt(Password, Constants.PublicEncryptionPassword, encryptedPassword) Then
+                PasswordEncrypted = encryptedPassword
+                Return True
+            Else
+                Return False
+            End If
+        End Function
+
+        Friend Function PasswordUnencrypt() As Boolean
+            Dim unencryptedPassword As String = String.Empty
+            If Encrypt.StringCipher.Decrypt(PasswordEncrypted, Constants.PublicEncryptionPassword, unencryptedPassword) Then
+                Password = unencryptedPassword
+                Return True
+            Else
+                Return False
+            End If
+        End Function
+
+#End Region
+
 #Region "Connection"
 
+        Friend Function SetProperties(datasourceValue As String, initialCatalogValue As String, userIdValue As String, passwordEncryptedValue As String, connectTimeoutValue As Byte, connectRetryCountValue As Byte, connectRetryIntervalValue As Byte) As Boolean
+            Dim selectedDatasourceIndex As Integer
+
+            If datasourceValue.Contains(Constants.StringListSeparator) Then
+                ' Muestro la ventana de selección del Datasource
+                Dim selectDatasource As New SelectDatasource()
+                selectDatasource.comboboxDataSource.Items.AddRange(datasourceValue.Split(Convert.ToChar(Constants.StringListSeparator)))
+                If selectDatasource.ShowDialog() <> DialogResult.OK Then
+                    Return False
+                End If
+                selectedDatasourceIndex = selectDatasource.comboboxDataSource.SelectedIndex
+                selectDatasource.Close()
+
+                ' Asigno las propiedades
+                Datasource = SelectProperty(datasourceValue, selectedDatasourceIndex)
+                InitialCatalog = SelectProperty(initialCatalogValue, selectedDatasourceIndex)
+                UserId = SelectProperty(userIdValue, selectedDatasourceIndex)
+                PasswordEncrypted = SelectProperty(passwordEncryptedValue, selectedDatasourceIndex)
+            Else
+                Datasource = datasourceValue
+                InitialCatalog = initialCatalogValue
+                UserId = userIdValue
+                PasswordEncrypted = passwordEncryptedValue
+            End If
+            ConnectTimeout = connectTimeoutValue
+            ConnectRetryCount = connectRetryCountValue
+            ConnectRetryInterval = connectRetryIntervalValue
+            ApplicationName = My.Application.Info.Title
+            MultipleActiveResultsets = True
+            WorkstationID = Environment.MachineName
+
+            Return True
+        End Function
+
+        Private Shared Function SelectProperty(value As String, selectedIndex As Integer) As String
+            If value.Contains(Constants.StringListSeparator) Then
+                Dim values() As String
+                values = value.Split(Convert.ToChar(Constants.StringListSeparator))
+                If (values.GetUpperBound(0) >= selectedIndex) Then
+                    Return values(selectedIndex)
+                Else
+                    Return String.Empty
+                End If
+            Else
+                Return value
+            End If
+        End Function
+
         Friend Sub CreateConnectionString()
-            Dim scsb As SqlConnectionStringBuilder = New SqlConnectionStringBuilder()
+            Dim scsb As New SqlConnectionStringBuilder()
 
             With scsb
                 .ApplicationName = ApplicationName
                 .DataSource = Datasource
-                If (Not AttachDBFilename Is Nothing) AndAlso AttachDBFilename.Trim.Length > 0 Then
+                If (AttachDBFilename IsNot Nothing) AndAlso AttachDBFilename.Trim.Length > 0 Then
                     .AttachDBFilename = AttachDBFilename
                 End If
-                If (Not InitialCatalog Is Nothing) AndAlso InitialCatalog.Trim.Length > 0 Then
+                If (InitialCatalog IsNot Nothing) AndAlso InitialCatalog.Trim.Length > 0 Then
                     .InitialCatalog = InitialCatalog
                 End If
-                If (Not UserId Is Nothing) AndAlso UserId.Trim.Length > 0 Then
+                If (UserId IsNot Nothing) AndAlso UserId.Trim.Length > 0 Then
                     .UserID = UserId
                 End If
-                If (Not Password Is Nothing) AndAlso Password.Trim.Length > 0 Then
+                If (Password IsNot Nothing) AndAlso Password.Trim.Length > 0 Then
                     .Password = Password
                 End If
+                .ConnectTimeout = ConnectTimeout
+                .ConnectRetryCount = ConnectRetryCount
+                .ConnectRetryInterval = ConnectRetryInterval
                 .MultipleActiveResultSets = MultipleActiveResultsets
                 .WorkstationID = WorkstationID
 
@@ -47,17 +127,55 @@ Namespace CardonerSistemas.Database.Ado
 
         Friend Function Connect() As Boolean
             Try
-
                 Connection = New SqlConnection(ConnectionString)
                 Connection.Open()
                 Return True
-
             Catch ex As Exception
-
-                CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al conectarse a la Base de Datos.")
+                ErrorHandler.ProcessError(ex, "Error al conectarse a la Base de Datos.")
                 Return False
-
             End Try
+        End Function
+
+        Friend Function Connect(ByRef databaseConfig As DatabaseConfig, ByRef newLoginData As Boolean) As Boolean
+            newLoginData = False
+
+            Do While True
+                Try
+                    Connection = New SqlConnection(ConnectionString)
+                    Connection.Open()
+                    Return True
+                Catch ex As Exception
+                    If ex.HResult = -2146232060 AndAlso ex.Message.Contains(ErrorLoginFailed) Then
+                        ' Los datos de inicio de sesión en la base de datos son incorrectos.
+                        MessageBox.Show("Los datos de inicio de sesión a la base de datos son incorrectos.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+
+                        ' Pido datos nuevos.
+                        Dim loginInfo As LoginInfo = New LoginInfo()
+                        loginInfo.textboxUsuario.Text = UserId
+                        loginInfo.textboxPassword.Text = Password
+                        If loginInfo.ShowDialog() <> DialogResult.OK Then
+                            Return False
+                        End If
+                        UserId = loginInfo.textboxUsuario.Text.TrimAndReduce()
+                        databaseConfig.UserId = loginInfo.textboxUsuario.Text.TrimAndReduce()
+                        Password = loginInfo.textboxPassword.Text.Trim()
+                        If Password.Length > 0 Then
+                            If PasswordEncrypt() Then
+                                databaseConfig.Password = PasswordEncrypted
+                            End If
+                        Else
+                            databaseConfig.Password = String.Empty
+                        End If
+                        CreateConnectionString()
+                        loginInfo.Close()
+                        loginInfo.Dispose()
+                        newLoginData = True
+                    Else
+                        ErrorHandler.ProcessError(ex, "Error al conectarse a la Base de Datos.")
+                        Return False
+                    End If
+                End Try
+            Loop
         End Function
 
         Friend Function IsConnected() As Boolean

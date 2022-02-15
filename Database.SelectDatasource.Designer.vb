@@ -1,6 +1,6 @@
 ﻿Namespace CardonerSistemas.Database
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-    Partial Class SelectSource
+    Partial Class SelectDatasource
         Inherits System.Windows.Forms.Form
 
         'Form overrides dispose to clean up the component list.

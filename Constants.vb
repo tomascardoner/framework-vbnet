@@ -32,12 +32,11 @@ Namespace CardonerSistemas
         '//////////////////
         '    STRINGS
         '//////////////////
-        Friend Const KEY_STRINGER As String = "@"
+        Friend Const KeyStringer As String = "@"
+        Friend Const KeyDelimiter As String = "|@|"
 
-        Friend Const KEY_DELIMITER As String = "|@|"
-
-        Friend Const STRING_LIST_SEPARATOR As Char = ";"c
-        Friend Const STRING_LIST_DELIMITER As String = "¬"
+        Friend Const StringListSeparator As Char = ";"c
+        Friend Const StringListDelimiter As String = "¬"
     End Module
 
 End Namespace

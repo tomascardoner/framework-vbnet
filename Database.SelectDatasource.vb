@@ -1,6 +1,6 @@
 ﻿Namespace CardonerSistemas.Database
 
-    Public Class SelectSource
+    Public Class SelectDatasource
 
         Private Sub Me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
             If e.KeyChar = ChrW(Keys.Return) Then
