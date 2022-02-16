@@ -191,7 +191,7 @@ Namespace CardonerSistemas.Database.Ado
 
                 Catch ex As Exception
 
-                    CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al cerrar la conexión a la Base de Datos.")
+                    ErrorHandler.ProcessError(ex, "Error al cerrar la conexión a la Base de Datos.")
                     Return False
                 End Try
             Else
@@ -210,7 +210,7 @@ Namespace CardonerSistemas.Database.Ado
                 Return True
 
             Catch ex As Exception
-                CardonerSistemas.ErrorHandler.ProcessError(ex, errorMessage)
+                ErrorHandler.ProcessError(ex, errorMessage)
                 Return False
 
             End Try
@@ -231,7 +231,7 @@ Namespace CardonerSistemas.Database.Ado
                 Return True
 
             Catch ex As Exception
-                CardonerSistemas.ErrorHandler.ProcessError(ex, errorMessage)
+                ErrorHandler.ProcessError(ex, errorMessage)
                 Return False
 
             End Try
@@ -242,7 +242,7 @@ Namespace CardonerSistemas.Database.Ado
 
                 dataSet = New DataSet()
                 dataAdapter = New SqlDataAdapter(selectCommandText, Connection)
-                Dim commandBuilder As SqlCommandBuilder = New SqlCommandBuilder(dataAdapter)
+                Dim commandBuilder As New SqlCommandBuilder(dataAdapter)
                 dataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey
                 dataAdapter.Fill(dataSet, sourceTable)
 
@@ -250,7 +250,7 @@ Namespace CardonerSistemas.Database.Ado
 
             Catch ex As Exception
 
-                CardonerSistemas.ErrorHandler.ProcessError(ex, errorMessage)
+                ErrorHandler.ProcessError(ex, errorMessage)
                 Return False
 
             End Try
@@ -272,11 +272,10 @@ Namespace CardonerSistemas.Database.Ado
 
             Catch ex As Exception
 
-                CardonerSistemas.ErrorHandler.ProcessError(ex, errorMessage)
+                ErrorHandler.ProcessError(ex, errorMessage)
                 Return False
 
             End Try
-
         End Function
 
 
@@ -291,7 +290,7 @@ Namespace CardonerSistemas.Database.Ado
                 Return True
 
             Catch ex As Exception
-                CardonerSistemas.ErrorHandler.ProcessError(ex, errorMessage)
+                ErrorHandler.ProcessError(ex, errorMessage)
                 Return False
 
             End Try
@@ -311,7 +310,7 @@ Namespace CardonerSistemas.Database.Ado
                 Return True
 
             Catch ex As Exception
-                CardonerSistemas.ErrorHandler.ProcessError(ex, errorMessage)
+                ErrorHandler.ProcessError(ex, errorMessage)
                 Return False
 
             End Try

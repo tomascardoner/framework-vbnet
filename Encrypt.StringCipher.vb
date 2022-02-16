@@ -1,4 +1,3 @@
-Imports System.Text
 Imports System.Security.Cryptography
 Imports System.IO
 
@@ -20,7 +19,7 @@ Namespace CardonerSistemas.Encrypt
             ' so that the same Salt and IV values can be used when decrypting.  
             Dim saltStringBytes = Generate256BitsOfRandomEntropy()
             Dim ivStringBytes = Generate256BitsOfRandomEntropy()
-            Dim plainTextBytes = Encoding.UTF8.GetBytes(plainText)
+            Dim plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText)
 
             Try
                 Using password = New Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations)
@@ -82,7 +81,7 @@ Namespace CardonerSistemas.Encrypt
                                     Dim decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length)
                                     memoryStream.Close()
                                     cryptoStream.Close()
-                                    decryptedText = Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount)
+                                    decryptedText = System.Text.Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount)
                                     Return True
                                 End Using
                             End Using
