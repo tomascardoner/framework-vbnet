@@ -11,7 +11,7 @@ Module CS_String
         If SubStringPosition <= aArray.Length Then
             Return aArray(SubStringPosition - 1)
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
@@ -43,7 +43,7 @@ Module CS_String
 
         SubStringIndex = MainString.LastIndexOf(SubStringSeparator)
         If SubStringIndex = -1 Then
-            Return ""
+            Return String.Empty
         Else
             Return MainString.Remove(SubStringIndex)
         End If
@@ -69,7 +69,7 @@ Module CS_String
     Friend Function CleanInvalidCharsByAllowed(ByVal Value As String, ByVal AllowedChars As String) As String
         Dim CharIndex As Integer
         Dim CharBeingAnalyzed As Char
-        Dim CleanedString As String = ""
+        Dim CleanedString As String = String.Empty
 
         For CharIndex = 0 To Value.Length - 1
             CharBeingAnalyzed = Value.Chars(CharIndex)
@@ -83,7 +83,7 @@ Module CS_String
     Friend Function CleanInvalidCharsByNotAllowed(ByVal Value As String, ByVal NotAllowedChars As String) As String
         Dim CharIndex As Integer
         Dim CharBeingAnalyzed As Char
-        Dim CleanedString As String = ""
+        Dim CleanedString As String = String.Empty
 
         For CharIndex = 0 To Value.Length - 1
             CharBeingAnalyzed = Value.Chars(CharIndex)
@@ -113,11 +113,11 @@ Module CS_String
     End Function
 
     Friend Function CleanNullChars(ByVal Value As String) As String
-        Return Value.Replace(vbNullChar, "")
+        Return Value.Replace(vbNullChar, String.Empty)
     End Function
 
-    Friend Function StripHTML(ByVal str As String) As String
-        Return System.Text.RegularExpressions.Regex.Replace(str, "<(.|\n)*?>", String.Empty)
+    Friend Function StripHTML(ByVal value As String) As String
+        Return System.Text.RegularExpressions.Regex.Replace(value, "<(.|\n)*?>", String.Empty)
     End Function
 
     <Extension()>

@@ -21,6 +21,18 @@ Module CS_ValueTranslation
         End If
     End Function
 
+    Friend Function FromObjectLongToControlTextBox(ByVal value As Long?, Optional leftPaddingZeroes As Byte = 0) As String
+        If value.HasValue Then
+            If leftPaddingZeroes = 0 Then
+                Return FormatNumber(value.Value, 0)
+            Else
+                Return value.Value.ToString(StrDup(leftPaddingZeroes, "0"))
+            End If
+        Else
+            Return String.Empty
+        End If
+    End Function
+
     Friend Function FromObjectIntegerToControlTextBox(ByVal value As Integer?, Optional leftPaddingZeroes As Byte = 0) As String
         If value.HasValue Then
             If leftPaddingZeroes = 0 Then
@@ -227,6 +239,17 @@ Module CS_ValueTranslation
             Return Nothing
         Else
             Integer.TryParse(TextBoxText.Trim, Globalization.NumberStyles.AllowThousands, My.Application.Culture, ConvertedValue)
+            Return ConvertedValue
+        End If
+    End Function
+
+    Friend Function FromControlTextBoxToObjectLong(ByVal TextBoxText As String) As Long?
+        Dim ConvertedValue As Long
+
+        If TextBoxText = "" Then
+            Return Nothing
+        Else
+            Long.TryParse(TextBoxText.Trim, Globalization.NumberStyles.AllowThousands, My.Application.Culture, ConvertedValue)
             Return ConvertedValue
         End If
     End Function
