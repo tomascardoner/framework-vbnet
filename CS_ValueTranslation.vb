@@ -6,8 +6,8 @@ Module CS_ValueTranslation
 #Region "De Objectos a Controles - TextBox (standard)"
 
     Friend Function FromObjectStringToControlTextBox(ByVal ObjectValue As String) As String
-        If String.IsNullOrEmpty(ObjectValue) Then
-            Return ""
+        If String.IsNullOrWhiteSpace(ObjectValue) Then
+            Return String.Empty
         Else
             Return ObjectValue
         End If
@@ -17,7 +17,7 @@ Module CS_ValueTranslation
         If ObjectValue.HasValue Then
             Return FormatCurrency(ObjectValue.Value)
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
@@ -49,7 +49,7 @@ Module CS_ValueTranslation
         If ObjectValue.HasValue Then
             Return FormatNumber(ObjectValue.Value, 0)
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
@@ -57,7 +57,7 @@ Module CS_ValueTranslation
         If ObjectValue.HasValue Then
             Return FormatNumber(ObjectValue.Value, 0)
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
@@ -65,7 +65,7 @@ Module CS_ValueTranslation
         If ObjectValue.HasValue Then
             Return FormatNumber(ObjectValue.Value, 0)
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
@@ -89,7 +89,7 @@ Module CS_ValueTranslation
         If ObjectValue.HasValue Then
             Return ObjectValue.Value.ToString
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
@@ -97,7 +97,7 @@ Module CS_ValueTranslation
         If ObjectValue.HasValue Then
             Return ObjectValue.Value.ToString
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
@@ -105,7 +105,7 @@ Module CS_ValueTranslation
         If ObjectValue.HasValue Then
             Return FormatNumber(ObjectValue.Value)
         Else
-            Return ""
+            Return String.Empty
         End If
     End Function
 
@@ -203,7 +203,7 @@ Module CS_ValueTranslation
         If TrimText Then
             TextBoxText = TextBoxText.Trim
         End If
-        If TextBoxText = "" Then
+        If TextBoxText = String.Empty Then
             Return Nothing
         Else
             Return StrConv(TextBoxText, Conversion)
@@ -224,7 +224,7 @@ Module CS_ValueTranslation
     Friend Function FromControlTextBoxToObjectShort(ByVal TextBoxText As String) As Short?
         Dim ConvertedValue As Short
 
-        If TextBoxText = "" Then
+        If TextBoxText = String.Empty Then
             Return Nothing
         Else
             Short.TryParse(TextBoxText.Trim, Globalization.NumberStyles.None, My.Application.Culture, ConvertedValue)
@@ -235,7 +235,7 @@ Module CS_ValueTranslation
     Friend Function FromControlTextBoxToObjectInteger(ByVal TextBoxText As String) As Integer?
         Dim ConvertedValue As Integer
 
-        If TextBoxText = "" Then
+        If TextBoxText = String.Empty Then
             Return Nothing
         Else
             Integer.TryParse(TextBoxText.Trim, Globalization.NumberStyles.AllowThousands, My.Application.Culture, ConvertedValue)
@@ -246,7 +246,7 @@ Module CS_ValueTranslation
     Friend Function FromControlTextBoxToObjectLong(ByVal TextBoxText As String) As Long?
         Dim ConvertedValue As Long
 
-        If TextBoxText = "" Then
+        If TextBoxText = String.Empty Then
             Return Nothing
         Else
             Long.TryParse(TextBoxText.Trim, Globalization.NumberStyles.AllowThousands, My.Application.Culture, ConvertedValue)
@@ -257,7 +257,7 @@ Module CS_ValueTranslation
     Friend Function FromControlTextBoxToObjectDecimal(ByVal TextBoxText As String) As Decimal?
         Dim ConvertedValue As Decimal
 
-        If TextBoxText = "" Then
+        If TextBoxText = String.Empty Then
             Return Nothing
         Else
             Decimal.TryParse(TextBoxText.Trim, Globalization.NumberStyles.Currency, My.Application.Culture, ConvertedValue)
@@ -422,7 +422,7 @@ Module CS_ValueTranslation
     End Function
 
     Friend Function FromStringToOnlyDigitsString(ByVal Value As String) As String
-        Return Regex.Replace(Value, "\D", "")
+        Return Regex.Replace(Value, "\D", String.Empty)
     End Function
 
     Friend Function FromDateTimeToDate(ByVal Value As Date) As Date
