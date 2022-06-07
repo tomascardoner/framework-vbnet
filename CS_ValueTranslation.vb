@@ -69,6 +69,10 @@ Module CS_ValueTranslation
         End If
     End Function
 
+#End Region
+
+#Region "De Objectos a Controles - Misc"
+
     Friend Function FromObjectByteToControlUpDown(ByVal ObjectValue As Byte?) As Decimal
         If ObjectValue.HasValue Then
             Return ObjectValue.Value
@@ -192,6 +196,17 @@ Module CS_ValueTranslation
             Return New Date(Now.Year, Now.Month, Now.Day, 0, 0, 0)
         Else
             Return New Date(Now.Year, Now.Month, Now.Day).AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
+        End If
+    End Function
+
+    Friend Function FromObjectImageToPictureBox(ByRef image As Byte()) As System.Drawing.Image
+        If image Is Nothing Then
+            Return Nothing
+        Else
+            Dim aFoto As Byte() = image
+            Dim memstr As New System.IO.MemoryStream(aFoto, 0, aFoto.Length)
+            memstr.Write(aFoto, 0, aFoto.Length)
+            Return System.Drawing.Image.FromStream(memstr, True)
         End If
     End Function
 
@@ -375,6 +390,18 @@ Module CS_ValueTranslation
             Return CInt(TagValue)
         Else
             Return Nothing
+        End If
+    End Function
+
+    Friend Function FromControlPictureBoxToObjectImage(ByRef image As System.Drawing.Image) As Byte()
+        If image Is Nothing Then
+            Return Nothing
+        Else
+            Dim memstr As New IO.MemoryStream()
+            image.Save(memstr, image.RawFormat)
+            Dim aFoto As Byte() = memstr.GetBuffer()
+            memstr.Dispose()
+            Return aFoto
         End If
     End Function
 
