@@ -3,13 +3,22 @@ Imports System.Text
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
-Module CS_String
-    Friend Function GetSubString(ByVal MainString As String, ByVal SubStringPosition As Integer, ByVal SubStringSeparator As Char) As String
+
+Friend Module CS_String
+
+    ''' <summary>
+    ''' Gets a sub-string given it's zero-based order position and separator
+    ''' </summary>
+    ''' <param name="mainString"></param>
+    ''' <param name="orderPosition"></param>
+    ''' <param name="separato"></param>
+    ''' <returns></returns>
+    Friend Function GetSubString(mainString As String, orderPosition As Integer, ByVal separator As Char) As String
         Dim aArray() As String
 
-        aArray = MainString.Split(SubStringSeparator)
-        If SubStringPosition <= aArray.Length Then
-            Return aArray(SubStringPosition - 1)
+        aArray = mainString.Split(separator)
+        If orderPosition <= aArray.Length Then
+            Return aArray(orderPosition - 1)
         Else
             Return String.Empty
         End If
@@ -155,7 +164,7 @@ Module CS_String
     End Function
 
     <Extension()>
-    Friend Function Truncate(ByVal value As String, ByVal maxLength As Integer) As String
+    Friend Function Truncate(value As String, maxLength As Integer) As String
         If String.IsNullOrEmpty(value) OrElse value.Length <= maxLength Then
             Return value
         Else
@@ -163,52 +172,26 @@ Module CS_String
         End If
     End Function
 
-    'Public Function ConvertCurrencyToVBNumber(ByVal Value As Decimal) As String
-    '    ConvertCurrencyToVBNumber = Replace(Format(Value), pRegionalSettings.CurrencyDecimalSymbol, ".")
-    'End Function
+    ''' <summary>
+    ''' Converts the specified string to title case (except for words that are entirely in uppercase, which are considered to be acronyms).
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
+    <Extension()>
+    Friend Function ToTitleCase(value As String) As String
+        Return Application.CurrentCulture.TextInfo.ToTitleCase(value)
+    End Function
 
-    'Public Function ConvertDoubleToVBNumber(ByVal Value As Double) As String
-    '    ConvertDoubleToVBNumber = Replace(Format(Value), pRegionalSettings.NumberDecimalSymbol, ".")
-    'End Function
+    ''' <summary>
+    ''' Converts the specified string to title case (also the words that are entirely in uppercase).
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
+    <Extension()>
+    Friend Function ToTitleCaseAll(value As String) As String
+        Return Application.CurrentCulture.TextInfo.ToTitleCase(value.ToLower())
+    End Function
 
-    'Public Function ConvertCurrencyToSQLNumber(ByVal Value As Currency) As String
-    '    ConvertCurrencyToSQLNumber = Replace(Replace(Value, pRegionalSettings.CurrencyDigitGroupingSymbol, ""), pRegionalSettings.CurrencyDecimalSymbol, ".")
-    'End Function
-
-    'Public Function ConvertDoubleToSQLNumber(ByVal Value As Double) As String
-    '    ConvertDoubleToSQLNumber = Replace(Replace(Value, pRegionalSettings.NumberDigitGroupingSymbol, ""), pRegionalSettings.NumberDecimalSymbol, ".")
-    'End Function
-
-    'Public Function FormatCurrencyToSQLString(ByVal Value As Currency) As String
-    '    FormatCurrencyToSQLString = Replace(CStr(Value), pRegionalSettings.CurrencyDecimalSymbol, ".")
-    'End Function
-
-    'Public Function FormatDoubleToString_NoGrouping_DotAsDecimal(ByVal Value As Double, ByVal FormatExpression As String) As String
-    '    FormatDoubleToString_NoGrouping_DotAsDecimal = Replace(Replace(Format(Value, FormatExpression), pRegionalSettings.NumberDigitGroupingSymbol, ""), pRegionalSettings.NumberDecimalSymbol, ".")
-    'End Function
-
-    'Public Function FormatDoubleToString_NoGrouping_CommaAsDecimal(ByVal Value As Double, ByVal FormatExpression As String) As String
-    '    FormatDoubleToString_NoGrouping_CommaAsDecimal = Replace(Replace(Format(Value, FormatExpression), pRegionalSettings.NumberDigitGroupingSymbol, ""), pRegionalSettings.NumberDecimalSymbol, ",")
-    'End Function
-
-    'Public Function GetStringExtentInPixels(ByVal hdc As Long, ByVal Value As String) As Long
-    '    Dim TextSize As POINTAPI
-    '    Dim lngResult As Integer
-
-    '    lngResult = GetTextExtentPoint32(hdc, Value, Len(Value), TextSize)
-    '    If lngResult <> 0 Then
-    '        GetStringExtentInPixels = TextSize.X
-    '    End If
-    'End Function
-
-    'Public Function RemoveNullChars(ByVal Value As String) As String
-    '    Dim FirstNullPosition As Integer
-
-    '    FirstNullPosition = InStr(1, Value, vbNullChar)
-    '    If FirstNullPosition > 0 Then
-    '        RemoveNullChars = Left(Value, FirstNullPosition - 1)
-    '    Else
-    '        RemoveNullChars = Value
-    '    End If
-    'End Function
 End Module
+
+
