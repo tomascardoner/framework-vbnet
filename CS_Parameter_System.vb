@@ -11,13 +11,13 @@
         End If
     End Function
 
-    Friend Function GetIntegerAsByte(ByVal IDParametro As String, Optional ByVal DefaultValue As Byte = Nothing) As Byte
+    Friend Function GetIntegerAsByte(idParametro As String, Optional defaultValue As Byte = Nothing) As Byte
         Dim ParametroCurrent As Parametro
 
-        ParametroCurrent = pParametros.Find(Function(param) param.IDParametro.TrimEnd = IDParametro)
+        ParametroCurrent = pParametros.Find(Function(param) param.IDParametro.TrimEnd = idParametro)
         If ParametroCurrent Is Nothing OrElse Not ParametroCurrent.NumeroEntero.HasValue Then
             ParametroCurrent = Nothing
-            Return DefaultValue
+            Return defaultValue
         Else
             Return CByte(ParametroCurrent.NumeroEntero.Value)
         End If
@@ -51,8 +51,9 @@
 
         ParametroCurrent = pParametros.Find(Function(param) param.IDParametro.TrimEnd = IDParametro)
         If ParametroCurrent Is Nothing Then
-            ParametroCurrent = New Parametro
-            ParametroCurrent.IDParametro = IDParametro
+            ParametroCurrent = New Parametro With {
+                .IDParametro = IDParametro
+            }
         End If
         ParametroCurrent.NumeroEntero = Value
         Return Parametros.SaveParameter(ParametroCurrent)
