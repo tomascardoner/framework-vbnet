@@ -15,11 +15,11 @@ Namespace CardonerSistemas
         End Enum
 
         Friend Enum EnrollmentMaskValues As Integer
-            LeftThumb = 1
-            LeftIndex = 2
+            LeftLittle = 1
+            LeftRing = 2
             LeftMiddle = 4
-            LeftRing = 8
-            LeftLittle = 16
+            LeftIndex = 8
+            LeftThumb = 16
             RightThumb = 32
             RightIndex = 64
             RightMiddle = 128
