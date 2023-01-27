@@ -9,7 +9,7 @@ Namespace CardonerSistemas
             If File.Exists(Path.Combine(configFolder, fileName)) Then
                 Return True
             Else
-                MsgBox(String.Format("No se encontró el archivo de configuración '{1}', el cual debe estar ubicado dentro de la carpeta '{0}'.", configFolder, fileName), MsgBoxStyle.Critical, My.Application.Info.Title)
+                MessageBox.Show($"No se encontró el archivo de configuración '{fileName}', el cual debe estar ubicado dentro de la carpeta '{configFolder}'.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return False
             End If
         End Function
@@ -24,14 +24,14 @@ Namespace CardonerSistemas
             Try
                 jsonConfigFileString = File.ReadAllText(Path.Combine(configFolder, fileName))
             Catch ex As Exception
-                CardonerSistemas.ProcessError(ex, String.Format("Error al leer el archivo de configuración '{0}'.", fileName))
+                CardonerSistemas.ProcessError(ex, $"Error al leer el archivo de configuración '{fileName}'.")
                 Return False
             End Try
 
             Try
                 config = JsonSerializer.Deserialize(Of T)(jsonConfigFileString)
             Catch ex As Exception
-                CardonerSistemas.ProcessError(ex, String.Format("Error al interpretar el archivo de configuración '{0}'.", fileName))
+                CardonerSistemas.ProcessError(ex, $"Error al interpretar el archivo de configuración '{fileName}'.")
                 Return False
             End Try
 
@@ -46,9 +46,9 @@ Namespace CardonerSistemas
             Try
                 jsonConfigFileString = JsonSerializer.Serialize(Of T)(configObject, New JsonSerializerOptions() With {.WriteIndented = writeIndented})
             Catch ex As System.Exception
-                Dim message As String = String.Format("Error al serializar el objeto en archivo de configuración.{0}{0}{1}", Environment.NewLine, ex.Message)
+                Dim message As String = $"Error al serializar el objeto en archivo de configuración.{vbCrLf}{vbCrLf}{ex.Message}"
                 If ex.InnerException IsNot Nothing Then
-                    message += String.Format("{0}{0}Inner message:{0}{1}", Environment.NewLine, ex.InnerException.Message)
+                    message += $"{vbCrLf}{vbCrLf}Inner message:{vbCrLf}{ex.InnerException.Message}"
                 End If
                 MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return False
@@ -57,9 +57,9 @@ Namespace CardonerSistemas
             Try
                 File.WriteAllText(Path.Combine(configFolder, fileName), jsonConfigFileString)
             Catch ex As System.Exception
-                Dim message As String = String.Format("Error al guardar el archivo de configuración {1}.{0}{0}{2}", Environment.NewLine, fileName, ex.Message)
+                Dim message As String = $"Error al guardar el archivo de configuración {fileName}.{vbCrLf}{vbCrLf}{ex.Message}"
                 If ex.InnerException IsNot Nothing Then
-                    message += String.Format("{0}{0}Inner message:{0}{1}", Environment.NewLine, ex.InnerException.Message)
+                    message += $"{vbCrLf}{vbCrLf}Inner message:{vbCrLf}{ex.InnerException.Message}"
                 End If
                 MessageBox.Show(message, My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return False

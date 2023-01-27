@@ -11,7 +11,7 @@ Friend Module CS_String
     ''' </summary>
     ''' <param name="mainString"></param>
     ''' <param name="orderPosition"></param>
-    ''' <param name="separato"></param>
+    ''' <param name="separator"></param>
     ''' <returns></returns>
     Friend Function GetSubString(mainString As String, orderPosition As Integer, ByVal separator As Char) As String
         Dim aArray() As String
@@ -24,7 +24,7 @@ Friend Module CS_String
         End If
     End Function
 
-    Friend Function GetParameterValueFromString(ByVal FullString As String, ByVal ParameterName As String, Optional ByVal DefaultValue As String = "", Optional ByVal ParametersSeparator As Char = ";"c, Optional ByVal ParameterNameDelimiter As Char = "="c) As String
+    Friend Function GetParameterValueFromString(ByVal FullString As String, ByVal ParameterName As String, Optional ByVal DefaultValue As String = "", Optional ByVal ParametersSeparator As Char = ";"c) As String
         Dim CParameters() As String
         Dim ParameterFull As String
         Dim ParameterValue As String = Nothing
@@ -75,7 +75,7 @@ Friend Module CS_String
         Return testAgainst.Contains(Value.ToLowerInvariant)
     End Function
 
-    Friend Function CleanInvalidCharsByAllowed(ByVal Value As String, ByVal AllowedChars As String) As String
+    Friend Function RemoveInvalidCharsByAllowed(ByVal Value As String, ByVal AllowedChars As String) As String
         Dim CharIndex As Integer
         Dim CharBeingAnalyzed As Char
         Dim CleanedString As String = String.Empty
@@ -89,7 +89,7 @@ Friend Module CS_String
         Return CleanedString
     End Function
 
-    Friend Function CleanInvalidCharsByNotAllowed(ByVal Value As String, ByVal NotAllowedChars As String) As String
+    Friend Function RemoveInvalidCharsByNotAllowed(ByVal Value As String, ByVal NotAllowedChars As String) As String
         Dim CharIndex As Integer
         Dim CharBeingAnalyzed As Char
         Dim CleanedString As String = String.Empty
@@ -103,11 +103,7 @@ Friend Module CS_String
         Return CleanedString
     End Function
 
-    Friend Function CleanNotNumericChars(ByVal Value As String) As String
-        Return Regex.Replace(Value, "[^0-9]", String.Empty)
-    End Function
-
-    Friend Function CleanInvalidSpaces(ByVal Value As String, Optional TrimValue As Boolean = True) As String
+    Friend Function RemoveInvalidSpaces(ByVal Value As String, Optional TrimValue As Boolean = True) As String
         Dim CleanedString As String
 
         If TrimValue Then
@@ -121,20 +117,25 @@ Friend Module CS_String
         Return CleanedString
     End Function
 
-    Friend Function CleanNullChars(ByVal Value As String) As String
+    Friend Function RemoveNullChars(ByVal Value As String) As String
         Return Value.Replace(vbNullChar, String.Empty)
-    End Function
-
-    Friend Function StripHTML(ByVal value As String) As String
-        Return System.Text.RegularExpressions.Regex.Replace(value, "<(.|\n)*?>", String.Empty)
     End Function
 
     <Extension()>
     Friend Function RemoveNotNumbers(ByVal value As String) As String
         If value IsNot Nothing Then
-            Return New String(value.Where(Function(c) Char.IsDigit(c)).ToArray())
+            Return Regex.Replace(value, "[^0-9]", String.Empty)
         Else
             Return value
+        End If
+    End Function
+
+    <Extension()>
+    Friend Function IsAllDigits(ByVal value As String) As Boolean
+        If value IsNot Nothing Then
+            Return (value.Length = RemoveNotNumbers(value).Length)
+        Else
+            Return False
         End If
     End Function
 
@@ -190,6 +191,10 @@ Friend Module CS_String
     <Extension()>
     Friend Function ToTitleCaseAll(value As String) As String
         Return Application.CurrentCulture.TextInfo.ToTitleCase(value.ToLower())
+    End Function
+
+    Friend Function StripHtml(ByVal value As String) As String
+        Return Regex.Replace(value, "<(.|\n)*?>", String.Empty)
     End Function
 
 End Module

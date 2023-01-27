@@ -150,7 +150,7 @@ Namespace CardonerSistemas.Database.Ado
                         MessageBox.Show("Los datos de inicio de sesión a la base de datos son incorrectos.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
 
                         ' Pido datos nuevos.
-                        Dim loginInfo As LoginInfo = New LoginInfo()
+                        Dim loginInfo As New LoginInfo()
                         loginInfo.textboxUsuario.Text = UserId
                         loginInfo.textboxPassword.Text = Password
                         If loginInfo.ShowDialog() <> DialogResult.OK Then
@@ -170,13 +170,16 @@ Namespace CardonerSistemas.Database.Ado
                         loginInfo.Close()
                         loginInfo.Dispose()
                         newLoginData = True
+                        Return True
                     Else
                         ErrorHandler.ProcessError(ex, "Error al conectarse a la Base de Datos.")
                         Return False
                     End If
                 End Try
             Loop
+#Disable Warning BC42353 ' Function doesn't return a value on all code paths
         End Function
+#Enable Warning BC42353 ' Function doesn't return a value on all code paths
 
         Friend Function IsConnected() As Boolean
             Return Not (Connection Is Nothing OrElse Connection.State = ConnectionState.Closed OrElse Connection.State = ConnectionState.Broken)
@@ -219,11 +222,11 @@ Namespace CardonerSistemas.Database.Ado
         Friend Function OpenDataReader(ByRef dataReader As SqlDataReader, ByVal commandText As String, ByVal commandType As CommandType, ByVal commandBehavior As CommandBehavior, ByVal errorMessage As String) As Boolean
 
             Try
-                Dim Command As SqlCommand = New SqlCommand()
-                Command.Connection = Connection
-                Command.CommandText = commandText
-                Command.CommandType = commandType
-
+                Dim Command As New SqlCommand With {
+                    .Connection = Connection,
+                    .CommandText = commandText,
+                    .CommandType = commandType
+                }
                 dataReader = Command.ExecuteReader(commandBehavior)
 
                 Command = Nothing
@@ -281,11 +284,11 @@ Namespace CardonerSistemas.Database.Ado
 
         Friend Function Execute(ByVal commandText As String, ByVal commandType As CommandType, ByVal errorMessage As String) As Boolean
             Try
-                Dim command As SqlCommand = New SqlCommand()
-
-                command.Connection = Connection
-                command.CommandText = commandText
-                command.CommandType = commandType
+                Dim command As New SqlCommand With {
+                    .Connection = Connection,
+                    .CommandText = commandText,
+                    .CommandType = commandType
+                }
                 command.ExecuteNonQuery()
                 Return True
 
@@ -299,10 +302,11 @@ Namespace CardonerSistemas.Database.Ado
 
         Friend Function Execute(ByVal commandText As String, ByVal commandType As CommandType, ByRef sqlParameterCollection As SqlParameterCollection, ByVal errorMessage As String) As Boolean
             Try
-                Dim Command As SqlCommand = New SqlCommand()
-                Command.Connection = Connection
-                Command.CommandText = commandText
-                Command.CommandType = commandType
+                Dim Command As New SqlCommand With {
+                    .Connection = Connection,
+                    .CommandText = commandText,
+                    .CommandType = commandType
+                }
                 For Each parameter As SqlParameter In sqlParameterCollection
                     Command.Parameters.Add(parameter)
                 Next
