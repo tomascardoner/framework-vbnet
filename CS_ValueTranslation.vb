@@ -210,6 +210,35 @@ Module CS_ValueTranslation
         End If
     End Function
 
+    Friend Sub FromObjectIdValueToControlsArray(controls As Control.ControlCollection, value As String)
+        For Each control As Control In controls
+            If control.Tag.ToString() = value Then
+                If TypeOf control Is CheckBox Then
+                    CType(control, CheckBox).Checked = True
+                ElseIf TypeOf control Is RadioButton Then
+                    CType(control, RadioButton).Checked = True
+                    Return
+                End If
+            Else
+                If TypeOf control Is CheckBox Then
+                    CType(control, CheckBox).Checked = False
+                End If
+            End If
+        Next
+    End Sub
+
+    Friend Sub FromObjectIdValueToControlsArray(ByRef controls As Control.ControlCollection, value As Byte)
+        FromObjectIdValueToControlsArray(controls, value.ToString())
+    End Sub
+
+    Friend Sub FromObjectIdValueToControlsArray(ByRef controls As Control.ControlCollection, value As Short)
+        FromObjectIdValueToControlsArray(controls, value.ToString())
+    End Sub
+
+    Friend Sub FromObjectIdValueToControlsArray(ByRef controls As Control.ControlCollection, value As Integer)
+        FromObjectIdValueToControlsArray(controls, value.ToString())
+    End Sub
+
 #End Region
 
 #Region "De Controles a Objectos - TextBox (standard)"
@@ -403,6 +432,28 @@ Module CS_ValueTranslation
             memstr.Dispose()
             Return aFoto
         End If
+    End Function
+
+    Friend Function FromControlArrayToString(ByRef controls As Control.ControlCollection) As String
+        For Each control As Control In controls
+            If TypeOf control Is CheckBox AndAlso CType(control, CheckBox).Checked Then
+                Return control.Tag.ToString()
+            ElseIf TypeOf control Is RadioButton AndAlso CType(control, RadioButton).Checked Then
+                Return control.Tag.ToString()
+            End If
+        Next
+    End Function
+
+    Friend Function FromControlArrayToByte(ByRef controls As Control.ControlCollection) As Byte
+        Return CByte(FromControlArrayToString(controls))
+    End Function
+
+    Friend Function FromControlArrayToShort(ByRef controls As Control.ControlCollection) As Short
+        Return CShort(FromControlArrayToString(controls))
+    End Function
+
+    Friend Function FromControlArrayToInteger(ByRef controls As Control.ControlCollection) As Integer
+        Return CInt(FromControlArrayToString(controls))
     End Function
 
 #End Region

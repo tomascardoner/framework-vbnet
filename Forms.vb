@@ -133,17 +133,17 @@
                 If Not ControlsExcept.Contains(ControlCurrent.Name) Then
                     If Recursive AndAlso ControlCurrent.HasChildren Then
                         ControlsChangeStateEnabled(ControlCurrent.Controls, ValueState, ApplyToLabels, ApplyToPanels, Recursive, ControlsExcept)
-                    ElseIf TypeOf (ControlCurrent) Is Label Then
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.Label Then
                         If ApplyToLabels Then
                             On Error Resume Next
                             ControlCurrent.Enabled = ValueState
                         End If
-                    ElseIf TypeOf (ControlCurrent) Is Panel Then
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.Panel Then
                         If ApplyToPanels Then
                             On Error Resume Next
                             ControlCurrent.Enabled = ValueState
                         End If
-                    ElseIf TypeOf (ControlCurrent) Is Button Then
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.Button Then
                         If ApplyToPanels Then
                             On Error Resume Next
                             ControlCurrent.Enabled = ValueState
@@ -163,19 +163,19 @@
                 If Not ControlsExcept.Contains(ControlCurrent.Name) Then
                     If Recursive AndAlso ControlCurrent.HasChildren Then
                         ControlsChangeStateReadOnly(ControlCurrent.Controls, ValueState, Recursive, ControlsExcept)
-                    ElseIf TypeOf (ControlCurrent) Is TextBox Then
-                        CType(ControlCurrent, TextBox).ReadOnly = ValueState
-                    ElseIf TypeOf (ControlCurrent) Is MaskedTextBox Then
-                        CType(ControlCurrent, MaskedTextBox).ReadOnly = ValueState
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.TextBox Then
+                        CType(ControlCurrent, System.Windows.Forms.TextBox).ReadOnly = ValueState
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.MaskedTextBox Then
+                        CType(ControlCurrent, System.Windows.Forms.MaskedTextBox).ReadOnly = ValueState
                     ElseIf TypeOf (ControlCurrent) Is Windows.Forms.ComboBox Then
                         ControlCurrent.Enabled = Not ValueState
-                    ElseIf TypeOf (ControlCurrent) Is CheckBox Then
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.CheckBox Then
                         ControlCurrent.Enabled = Not ValueState
-                    ElseIf TypeOf (ControlCurrent) Is DateTimePicker Then
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.DateTimePicker Then
                         ControlCurrent.Enabled = Not ValueState
-                    ElseIf TypeOf (ControlCurrent) Is Button Then
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.Button Then
                         ControlCurrent.Enabled = Not ValueState
-                    ElseIf TypeOf (ControlCurrent) Is ToolStrip Then
+                    ElseIf TypeOf (ControlCurrent) Is System.Windows.Forms.ToolStrip Then
                         ControlCurrent.Enabled = Not ValueState
                     End If
                 End If

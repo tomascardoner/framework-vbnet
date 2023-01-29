@@ -197,6 +197,13 @@ Friend Module CS_String
         Return Regex.Replace(value, "<(.|\n)*?>", String.Empty)
     End Function
 
+
+    Friend Function GetExtends(ByRef graphicObject As System.Drawing.Graphics, text As String, font As System.Drawing.Font) As Integer
+        Dim size As SizeF = graphicObject.MeasureString(text, font)
+
+        Return CInt(Math.Ceiling(size.Width))
+    End Function
+
 End Module
 
 

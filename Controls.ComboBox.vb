@@ -1,4 +1,4 @@
-Namespace CardonerSistemas
+Namespace CardonerSistemas.Controls
 
     Module ComboBox
 
