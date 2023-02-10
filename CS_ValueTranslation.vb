@@ -442,6 +442,7 @@ Module CS_ValueTranslation
                 Return control.Tag.ToString()
             End If
         Next
+        Return Nothing
     End Function
 
     Friend Function FromControlArrayToByte(ByRef controls As Control.ControlCollection) As Byte
