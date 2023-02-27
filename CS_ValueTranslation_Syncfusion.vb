@@ -1,11 +1,11 @@
-Imports System.Text
-Imports System.Text.RegularExpressions
+Imports Syncfusion.Windows.Forms.Tools
 
 Module CS_ValueTranslation_Syncfusion
 
 #Region "De Objectos a Controles - TextBox (SyncFusion)"
 
-    Friend Sub FromValueByteToControlIntegerTextBox(ByVal value As Byte?, ByRef control As Syncfusion.Windows.Forms.Tools.IntegerTextBox)
+    ' Integer as Byte
+    Friend Sub FromValueToControl(ByVal value As Byte?, ByRef control As IntegerTextBox)
         If value.HasValue Then
             control.IntegerValue = value.Value
         Else
@@ -17,7 +17,34 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Sub
 
-    Friend Sub FromValueDecimalToControlCurrencyTextBox(ByVal value As Decimal?, ByRef control As Syncfusion.Windows.Forms.Tools.CurrencyTextBox)
+    ' Integer as Short
+    Friend Sub FromValueToControl(ByVal value As Short?, ByRef control As IntegerTextBox)
+        If value.HasValue Then
+            control.IntegerValue = value.Value
+        Else
+            If control.AllowNull Then
+                control.BindableValue = Nothing
+            Else
+                control.IntegerValue = control.MinValue
+            End If
+        End If
+    End Sub
+
+    ' Double
+    Friend Sub FromValueToControl(ByVal value As Decimal?, ByRef control As DoubleTextBox)
+        If value.HasValue Then
+            control.DoubleValue = value.Value
+        Else
+            If control.AllowNull Then
+                control.BindableValue = Nothing
+            Else
+                control.DoubleValue = control.MinValue
+            End If
+        End If
+    End Sub
+
+    ' Currency
+    Friend Sub FromValueToControl(ByVal value As Decimal?, ByRef control As CurrencyTextBox)
         If value.HasValue Then
             control.DecimalValue = value.Value
         Else
@@ -29,7 +56,8 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Sub
 
-    Friend Sub FromValueDecimalToControlPercentTextBox(ByVal value As Decimal?, ByRef control As Syncfusion.Windows.Forms.Tools.PercentTextBox)
+    ' Percent
+    Friend Sub FromValueToControl(ByVal value As Decimal?, ByRef control As PercentTextBox)
         If value.HasValue Then
             control.PercentValue = value.Value
         Else
@@ -45,7 +73,8 @@ Module CS_ValueTranslation_Syncfusion
 
 #Region "De Controles a Objectos - TextBox (SyncFusion)"
 
-    Friend Function FromControlIntegerTextBoxToValueByte(ByRef control As Syncfusion.Windows.Forms.Tools.IntegerTextBox) As Byte?
+    ' Byte
+    Friend Function FromControlToByte(ByRef control As IntegerTextBox) As Byte?
         If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
@@ -53,7 +82,8 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Function
 
-    Friend Function FromControlIntegerTextBoxToValueShort(ByRef control As Syncfusion.Windows.Forms.Tools.IntegerTextBox) As Short?
+    ' Short
+    Friend Function FromControlToShort(ByRef control As IntegerTextBox) As Short?
         If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
@@ -61,7 +91,8 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Function
 
-    Friend Function FromControlIntegerTextBoxToValueInteger(ByRef control As Syncfusion.Windows.Forms.Tools.IntegerTextBox) As Integer?
+    ' Integer
+    Friend Function FromControlToInteger(ByRef control As IntegerTextBox) As Integer?
         If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
@@ -69,23 +100,16 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Function
 
-    Friend Function FromControlDoubleTextBoxToObjectDouble(ByVal BindableValue As Object) As Double?
-        If BindableValue Is Nothing Or Not IsNumeric(BindableValue) Then
+    ' Decimal
+    Friend Function FromControlToDecimal(ByVal control As DoubleTextBox) As Decimal?
+        If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
-            Return Convert.ToDouble(BindableValue)
+            Return Convert.ToDecimal(control.DoubleValue)
         End If
     End Function
 
-    Friend Function FromControlDoubleTextBoxToObjectDecimal(ByVal BindableValue As Object) As Decimal?
-        If BindableValue Is Nothing Or Not IsNumeric(BindableValue) Then
-            Return Nothing
-        Else
-            Return Convert.ToDecimal(BindableValue)
-        End If
-    End Function
-
-    Friend Function FromControlCurrencyTextBoxToObjectDecimal(ByRef control As Syncfusion.Windows.Forms.Tools.CurrencyTextBox) As Decimal?
+    Friend Function FromControlToDecimal(ByRef control As CurrencyTextBox) As Decimal?
         If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
@@ -93,11 +117,11 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Function
 
-    Friend Function FromControlPercentTextBoxToObjectDecimal(ByRef control As Syncfusion.Windows.Forms.Tools.PercentTextBox) As Decimal?
+    Friend Function FromControlToDecimal(ByRef control As PercentTextBox) As Decimal?
         If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
-            Return Convert.ToDecimal(control.PercentValue)
+            Return Convert.ToDecimal(control.DoubleValue)
         End If
     End Function
 

@@ -78,8 +78,4 @@
         End If
     End Function
 
-    Friend Sub UsuarioSaveBoolean(ByVal IDParametro As String, ByVal Value As Boolean)
-
-    End Sub
-
 End Module

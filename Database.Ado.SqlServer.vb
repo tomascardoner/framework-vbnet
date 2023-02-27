@@ -177,9 +177,7 @@ Namespace CardonerSistemas.Database.Ado
                     End If
                 End Try
             Loop
-#Disable Warning BC42353 ' Function doesn't return a value on all code paths
         End Function
-#Enable Warning BC42353 ' Function doesn't return a value on all code paths
 
         Friend Function IsConnected() As Boolean
             Return Not (Connection Is Nothing OrElse Connection.State = ConnectionState.Closed OrElse Connection.State = ConnectionState.Broken)
@@ -358,11 +356,11 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetByte(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Byte
+        Friend Shared Function DataReaderGetByte(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Byte
             Return dataReader.GetByte(dataReader.GetOrdinal(columnName))
         End Function
 
-        Friend Function DataReaderGetByteSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Byte
+        Friend Shared Function DataReaderGetByteSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Byte
             Dim result As Byte? = DataReaderGetByteSafeAsNull(dataReader, columnName)
 
             If result.HasValue Then
@@ -372,7 +370,7 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetByteSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Byte?
+        Friend Shared Function DataReaderGetByteSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Byte?
             Dim columnIndex As Integer = dataReader.GetOrdinal(columnName)
 
             If dataReader.IsDBNull(columnIndex) Then
@@ -382,11 +380,11 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetShort(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Short
+        Friend Shared Function DataReaderGetShort(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Short
             Return dataReader.GetInt16(dataReader.GetOrdinal(columnName))
         End Function
 
-        Friend Function DataReaderGetShortSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Short
+        Friend Shared Function DataReaderGetShortSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Short
             Dim result As Short? = DataReaderGetShortSafeAsNull(dataReader, columnName)
 
             If result.HasValue Then
@@ -396,7 +394,7 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetShortSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Short?
+        Friend Shared Function DataReaderGetShortSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Short?
             Dim columnIndex As Integer = dataReader.GetOrdinal(columnName)
 
             If dataReader.IsDBNull(columnIndex) Then
@@ -406,11 +404,11 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetInteger(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Integer
+        Friend Shared Function DataReaderGetInteger(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Integer
             Return dataReader.GetInt32(dataReader.GetOrdinal(columnName))
         End Function
 
-        Friend Function DataReaderGetIntegerSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Integer
+        Friend Shared Function DataReaderGetIntegerSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Integer
             Dim result As Integer? = DataReaderGetIntegerSafeAsNull(dataReader, columnName)
 
             If result.HasValue Then
@@ -420,7 +418,7 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetIntegerSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Integer?
+        Friend Shared Function DataReaderGetIntegerSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Integer?
             Dim columnIndex As Integer = dataReader.GetOrdinal(columnName)
 
             If dataReader.IsDBNull(columnIndex) Then
@@ -430,11 +428,11 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetLong(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Long
+        Friend Shared Function DataReaderGetLong(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Long
             Return dataReader.GetInt64(dataReader.GetOrdinal(columnName))
         End Function
 
-        Friend Function DataReaderGetLongSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Long
+        Friend Shared Function DataReaderGetLongSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Long
             Dim result As Long? = DataReaderGetLongSafeAsNull(dataReader, columnName)
 
             If result.HasValue Then
@@ -444,7 +442,7 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetLongSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Long?
+        Friend Shared Function DataReaderGetLongSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Long?
             Dim columnIndex As Integer = dataReader.GetOrdinal(columnName)
 
             If dataReader.IsDBNull(columnIndex) Then
@@ -454,11 +452,11 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetDecimal(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Decimal
+        Friend Shared Function DataReaderGetDecimal(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Decimal
             Return dataReader.GetDecimal(dataReader.GetOrdinal(columnName))
         End Function
 
-        Friend Function DataReaderGetDecimalSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Decimal
+        Friend Shared Function DataReaderGetDecimalSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Decimal
             Dim result As Decimal? = DataReaderGetDecimalSafeAsNull(dataReader, columnName)
             If result.HasValue Then
                 Return result.Value
@@ -467,7 +465,7 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetDecimalSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Decimal?
+        Friend Shared Function DataReaderGetDecimalSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Decimal?
             Dim columnIndex As Integer = dataReader.GetOrdinal(columnName)
 
             If dataReader.IsDBNull(columnIndex) Then
@@ -477,11 +475,11 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetBoolean(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Boolean
+        Friend Shared Function DataReaderGetBoolean(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Boolean
             Return dataReader.GetBoolean(dataReader.GetOrdinal(columnName))
         End Function
 
-        Friend Function DataReaderGetBooleanSafeAsByte(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Byte
+        Friend Shared Function DataReaderGetBooleanSafeAsByte(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Byte
             Dim result As Boolean? = DataReaderGetBooleanSafeAsNull(dataReader, columnName)
 
             If result.HasValue Then
@@ -495,7 +493,7 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetBooleanSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Boolean?
+        Friend Shared Function DataReaderGetBooleanSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Boolean?
             Dim columnIndex As Integer = dataReader.GetOrdinal(columnName)
 
             If dataReader.IsDBNull(columnIndex) Then
@@ -505,11 +503,11 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetDateTime(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime
+        Friend Shared Function DataReaderGetDateTime(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime
             Return dataReader.GetDateTime(dataReader.GetOrdinal(columnName))
         End Function
 
-        Friend Function DataReaderGetDateTimeSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime
+        Friend Shared Function DataReaderGetDateTimeSafeAsMinValue(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime
             Dim result As System.DateTime? = DataReaderGetDateTimeSafeAsNull(dataReader, columnName)
 
             If result.HasValue Then
@@ -519,7 +517,7 @@ Namespace CardonerSistemas.Database.Ado
             End If
         End Function
 
-        Friend Function DataReaderGetDateTimeSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime?
+        Friend Shared Function DataReaderGetDateTimeSafeAsNull(ByRef dataReader As SqlDataReader, ByVal columnName As String) As System.DateTime?
             Dim columnIndex As Integer = dataReader.GetOrdinal(columnName)
 
             If dataReader.IsDBNull(columnIndex) Then
@@ -533,7 +531,7 @@ Namespace CardonerSistemas.Database.Ado
 
 #Region "Data reader - Get varbinary"
 
-        Friend Function DataReaderGetStream(ByRef dataReader As SqlDataReader, ByVal columnName As String, Optional ByVal errorMessage As String = "") As Stream
+        Friend Shared Function DataReaderGetStream(ByRef dataReader As SqlDataReader, ByVal columnName As String, Optional ByVal errorMessage As String = "") As Stream
             Try
                 Return dataReader.GetStream(dataReader.GetOrdinal(columnName))
             Catch ex As Exception
@@ -544,7 +542,7 @@ Namespace CardonerSistemas.Database.Ado
             End Try
         End Function
 
-        Friend Function DataReaderGetStreamAsImage(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Image
+        Friend Shared Function DataReaderGetStreamAsImage(ByRef dataReader As SqlDataReader, ByVal columnName As String) As Image
             Dim stream As Stream = DataReaderGetStream(dataReader, columnName)
 
             If stream Is Nothing Then

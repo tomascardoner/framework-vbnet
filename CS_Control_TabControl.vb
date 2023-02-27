@@ -65,6 +65,7 @@ Public Class CS_Control_TabControl
             mTabPagesOrder = Nothing
             Dispose(False)
         End If
+        MyBase.Dispose(Disposing)
     End Sub
 
 End Class

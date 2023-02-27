@@ -481,11 +481,14 @@ Module CS_ValueTranslation
         Return value.ToString.Replace(","c, "."c)
     End Function
 
-    Friend Function UStringToDecimal(ByVal value As String) As Decimal
+    Friend Function UStringToDecimal(ByVal value As String) As Decimal?
         Dim result As Decimal
 
-        Decimal.TryParse(value.ToString.Replace("."c, ","c), result)
-        Return result
+        If Decimal.TryParse(value.ToString.Replace("."c, ","c), result) Then
+            Return result
+        Else
+            Return Nothing
+        End If
     End Function
 
     Friend Function FromStringToPreventSQLInjection(ByVal Value As String) As String

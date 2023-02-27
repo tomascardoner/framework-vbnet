@@ -85,54 +85,55 @@ Module CS_Office_Outlook_LateBinding
 #End Region
 
 #Region "e-Mail"
-    Friend Function SendMail(ByVal SMTPAddress As String, ByRef MailItem As MailItem) As Boolean
-        'Dim oApplication As Object
-        'Dim oMail As Object
-        'Dim oAccount As Object
 
-        'Try
-        '    oApplication = Activator.CreateInstance(, "Outlook.Application")
-        'Catch ex As Exception
-        '    MsgBox("No se ha podido crear una instancia de la aplicación Microsoft Outlook. Verifique que esté instalado en esta computadora.", MsgBoxStyle.Critical, My.Application.Info.Title)
-        '    Return False
-        'End Try
+    'Friend Function SendMail(ByVal SMTPAddress As String, ByRef MailItem As MailItem) As Boolean
+    '    Dim oApplication As Object
+    '    Dim oMail As Object
+    '    Dim oAccount As Object
 
-        'Try
-        '    ' Obtengo la cuenta de Outlook a través de la cual se enviará el mail
-        '    oAccount = GetAccountForEmailAddress(oApplication, SMTPAddress)
-        '    If oAccount Is Nothing Then
-        '        Return False
-        '    End If
-        '    ' Creo el mail
-        '    oMail = oApplication.CreateItem(OlItemType.olMailItem)
-        '    With oMail
-        '        .SendUsingAccount = oAccount
-        '        .[To] = MailItem.To
-        '        .CC = MailItem.CC
-        '        .BCC = MailItem.BCC
-        '        .Subject = MailItem.Subject
-        '        .BodyFormat = MailItem.BodyFormat
-        '        .Body = MailItem.Body
-        '        If Not MailItem.RTFBody Is Nothing Then
-        '            .RTFBody = MailItem.RTFBody
-        '        End If
-        '        For Each Attachment As Attachment In MailItem.Attachments
-        '            If Attachment.ContentStream Is Nothing Then
-        '                .Attachments.Add(Attachment.PathName & Attachment.FileName, Attachment.Type, Attachment.Position, Attachment.DisplayName)
-        '            Else
-        '                '.Attachments.Add( CreateObject( New createo Attachment.ContentStream, Attachment.DisplayName)
-        '            End If
-        '        Next
-        '        .Send()
-        '    End With
-        '    Return True
+    '    Try
+    '        oApplication = Activator.CreateInstance(, "Outlook.Application")
+    '    Catch ex As Exception
+    '        MsgBox("No se ha podido crear una instancia de la aplicación Microsoft Outlook. Verifique que esté instalado en esta computadora.", MsgBoxStyle.Critical, My.Application.Info.Title)
+    '        Return False
+    '    End Try
 
-        'Catch ex As Exception
-        '    CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al enviar el e-mail a través de Microsoft Outlook.")
-        '    Return False
-        'End Try
-        Return False
-    End Function
+    '    Try
+    '        ' Obtengo la cuenta de Outlook a través de la cual se enviará el mail
+    '        oAccount = GetAccountForEmailAddress(oApplication, SMTPAddress)
+    '        If oAccount Is Nothing Then
+    '            Return False
+    '        End If
+    '        ' Creo el mail
+    '        oMail = oApplication.CreateItem(OlItemType.olMailItem)
+    '        With oMail
+    '            .SendUsingAccount = oAccount
+    '            .[To] = MailItem.To
+    '            .CC = MailItem.CC
+    '            .BCC = MailItem.BCC
+    '            .Subject = MailItem.Subject
+    '            .BodyFormat = MailItem.BodyFormat
+    '            .Body = MailItem.Body
+    '            If Not MailItem.RTFBody Is Nothing Then
+    '                .RTFBody = MailItem.RTFBody
+    '            End If
+    '            For Each Attachment As Attachment In MailItem.Attachments
+    '                If Attachment.ContentStream Is Nothing Then
+    '                    .Attachments.Add(Attachment.PathName & Attachment.FileName, Attachment.Type, Attachment.Position, Attachment.DisplayName)
+    '                Else
+    '                    '.Attachments.Add( CreateObject( New createo Attachment.ContentStream, Attachment.DisplayName)
+    '                End If
+    '            Next
+    '            .Send()
+    '        End With
+    '        Return True
+
+    '    Catch ex As Exception
+    '        CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al enviar el e-mail a través de Microsoft Outlook.")
+    '        Return False
+    '    End Try
+    '    Return False
+    'End Function
 
     Friend Function GetAccountForEmailAddress(ByVal oApplication As Object, ByVal SMTPAddress As String) As Object
         Dim oAccounts As Object

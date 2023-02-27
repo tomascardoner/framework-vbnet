@@ -23,8 +23,8 @@ Namespace CardonerSistemas
 
             ' Prepare Exception Message Text counting for Inner Exceptions
             ExceptionMessageText = Exception.Message
-            If Not Exception.InnerException Is Nothing Then
-                If Not Exception.InnerException.InnerException Is Nothing Then
+            If Exception.InnerException IsNot Nothing Then
+                If Exception.InnerException.InnerException IsNot Nothing Then
                     InnerException = Exception.InnerException.InnerException
                 Else
                     InnerException = Exception.InnerException
@@ -54,6 +54,7 @@ Namespace CardonerSistemas
                         .txtMessageData.Text = ExceptionMessageText
                         .ShowDialog()
                     End With
+                    formErrorMessageBox.Dispose()
                 Else
                     MsgBox($"{MessageErrorOccurred}{vbCrLf}{vbCrLf}{FriendlyMessageText}{vbCrLf}{vbCrLf}{ExceptionMessageText}", MsgBoxStyle.Critical, My.Application.Info.Title)
                 End If
