@@ -177,7 +177,9 @@ Namespace CardonerSistemas.Database.Ado
                     End If
                 End Try
             Loop
+#Disable Warning BC42353 ' Function doesn't return a value on all code paths
         End Function
+#Enable Warning BC42353 ' Function doesn't return a value on all code paths
 
         Friend Function IsConnected() As Boolean
             Return Not (Connection Is Nothing OrElse Connection.State = ConnectionState.Closed OrElse Connection.State = ConnectionState.Broken)
