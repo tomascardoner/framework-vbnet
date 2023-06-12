@@ -48,7 +48,7 @@
 
         Friend Function MdiChildIsLoaded(ByRef mdiForm As Form, ByVal formName As String) As Boolean
             For Each ChildForm As Form In mdiForm.MdiChildren
-                If ChildForm.Name = formName Then
+                If ChildForm.Name.ToLower() = formName.ToLower() Then
                     Return True
                 End If
             Next
