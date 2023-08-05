@@ -375,7 +375,7 @@ Module CS_ValueTranslation
 
     Friend Function FromControlDateTimePickerToObjectTimeSpan(ByVal DateTimePickerValue As Date, Optional DateTimePickerChecked As Boolean = True) As TimeSpan?
         If DateTimePickerChecked Then
-            Return New TimeSpan(DateTimePickerValue.Hour, DateTimePickerValue.Minute, 0)
+            Return New TimeSpan(DateTimePickerValue.Hour, DateTimePickerValue.Minute, DateTimePickerValue.Second)
         Else
             Return Nothing
         End If
