@@ -81,6 +81,14 @@ Module CS_ValueTranslation
         End If
     End Function
 
+    Friend Function FromObjectIntegerToControlUpDown(ByVal ObjectValue As Byte?) As Decimal
+        If ObjectValue.HasValue Then
+            Return ObjectValue.Value
+        Else
+            Return Nothing
+        End If
+    End Function
+
     Friend Function FromObjectShortToControlUpDown(ByVal ObjectValue As Short?) As Decimal
         If ObjectValue.HasValue Then
             Return ObjectValue.Value
