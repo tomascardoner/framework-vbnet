@@ -54,13 +54,14 @@ Namespace CardonerSistemas.Database.Ado
 
             If datasourceValue.Contains(Constants.StringListSeparator) Then
                 ' Muestro la ventana de selección del Datasource
-                Dim selectDatasource As New SelectDatasource()
-                selectDatasource.comboboxDataSource.Items.AddRange(datasourceValue.Split(Convert.ToChar(Constants.StringListSeparator)))
-                If selectDatasource.ShowDialog() <> DialogResult.OK Then
-                    Return False
-                End If
-                selectedDatasourceIndex = selectDatasource.comboboxDataSource.SelectedIndex
-                selectDatasource.Close()
+                Using selectDatasource As New SelectDatasource()
+                    selectDatasource.comboboxDataSource.Items.AddRange(datasourceValue.Split(Convert.ToChar(Constants.StringListSeparator)))
+                    If selectDatasource.ShowDialog() <> DialogResult.OK Then
+                        Return False
+                    End If
+                    selectedDatasourceIndex = selectDatasource.comboboxDataSource.SelectedIndex
+                    selectDatasource.Close()
+                End Using
 
                 ' Asigno las propiedades
                 Datasource = SelectProperty(datasourceValue, selectedDatasourceIndex)
@@ -85,7 +86,7 @@ Namespace CardonerSistemas.Database.Ado
 
         Private Shared Function SelectProperty(value As String, selectedIndex As Integer) As String
             If value.Contains(Constants.StringListSeparator) Then
-                Dim values() As String
+                Dim values As String()
                 values = value.Split(Convert.ToChar(Constants.StringListSeparator))
                 If (values.GetUpperBound(0) >= selectedIndex) Then
                     Return values(selectedIndex)
@@ -150,25 +151,25 @@ Namespace CardonerSistemas.Database.Ado
                         MessageBox.Show("Los datos de inicio de sesión a la base de datos son incorrectos.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
 
                         ' Pido datos nuevos.
-                        Dim loginInfo As New LoginInfo()
-                        loginInfo.textboxUsuario.Text = UserId
-                        loginInfo.textboxPassword.Text = Password
-                        If loginInfo.ShowDialog() <> DialogResult.OK Then
-                            Return False
-                        End If
-                        UserId = loginInfo.textboxUsuario.Text.TrimAndReduce()
-                        databaseConfig.UserId = loginInfo.textboxUsuario.Text.TrimAndReduce()
-                        Password = loginInfo.textboxPassword.Text.Trim()
-                        If Password.Length > 0 Then
-                            If PasswordEncrypt() Then
-                                databaseConfig.Password = PasswordEncrypted
+                        Using loginInfo As New LoginInfo()
+                            loginInfo.textboxUsuario.Text = UserId
+                            loginInfo.textboxPassword.Text = Password
+                            If loginInfo.ShowDialog() <> DialogResult.OK Then
+                                Return False
                             End If
-                        Else
-                            databaseConfig.Password = String.Empty
-                        End If
-                        CreateConnectionString()
-                        loginInfo.Close()
-                        loginInfo.Dispose()
+                            UserId = loginInfo.textboxUsuario.Text.TrimAndReduce()
+                            databaseConfig.UserId = loginInfo.textboxUsuario.Text.TrimAndReduce()
+                            Password = loginInfo.textboxPassword.Text.Trim()
+                            If Password.Length > 0 Then
+                                If PasswordEncrypt() Then
+                                    databaseConfig.Password = PasswordEncrypted
+                                End If
+                            Else
+                                databaseConfig.Password = String.Empty
+                            End If
+                            CreateConnectionString()
+                            loginInfo.Close()
+                        End Using
                         newLoginData = True
                         Return True
                     Else
@@ -191,9 +192,7 @@ Namespace CardonerSistemas.Database.Ado
                     Connection.Close()
                     Connection = Nothing
                     Return True
-
                 Catch ex As Exception
-
                     ErrorHandler.ProcessError(ex, "Error al cerrar la conexión a la Base de Datos.")
                     Return False
                 End Try
