@@ -36,6 +36,11 @@ Namespace CardonerSistemas
         Friend Const FIELD_VALUE_OTHER_INTEGER As Integer = Integer.MaxValue - 1
         Friend Const FIELD_VALUE_OTHER_STRING As String = "@"
 
+        Friend Const FIELD_VALUE_EMPTY_BYTE As Byte = Byte.MaxValue - 2
+        Friend Const FIELD_VALUE_EMPTY_SHORT As Short = Short.MaxValue - 2
+        Friend Const FIELD_VALUE_EMPTY_INTEGER As Integer = Integer.MaxValue - 2
+        Friend Const FIELD_VALUE_EMPTY_STRING As String = "-"
+
         '//////////////////
         '    STRINGS
         '//////////////////
