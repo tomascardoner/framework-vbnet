@@ -57,7 +57,7 @@
 
         Friend Function MdiChildIsLoaded(ByRef mdiForm As Form, ByVal formName As String, ByVal formText As String) As Boolean
             For Each ChildForm As Form In mdiForm.MdiChildren
-                If ChildForm.Name = formName And ChildForm.Text = formText Then
+                If ChildForm.Name = formName AndAlso ChildForm.Text = formText Then
                     Return True
                 End If
             Next
@@ -75,7 +75,7 @@
 
         Friend Function MdiChildGetInstance(ByRef mdiForm As Form, ByVal formName As String, ByVal formText As String) As Form
             For Each ChildForm As Form In mdiForm.MdiChildren
-                If ChildForm.Name = formName And ChildForm.Text = formText Then
+                If ChildForm.Name = formName AndAlso ChildForm.Text = formText Then
                     Return ChildForm
                 End If
             Next
