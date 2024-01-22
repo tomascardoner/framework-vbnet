@@ -9,14 +9,15 @@ Friend Module CS_String
     ''' <summary>
     ''' Gets a sub-string given it's zero-based order position and separator
     ''' </summary>
-    ''' <param name="mainString"></param>
+    ''' <param name="value"></param>
     ''' <param name="orderPosition"></param>
     ''' <param name="separator"></param>
     ''' <returns></returns>
-    Friend Function GetSubString(mainString As String, orderPosition As Integer, ByVal separator As Char) As String
-        Dim aArray() As String
+    <Extension()>
+    Friend Function GetSubString(value As String, orderPosition As Integer, ByVal separator As Char) As String
+        Dim aArray As String()
 
-        aArray = mainString.Split(separator)
+        aArray = value.Split(separator)
         If orderPosition <= aArray.Length Then
             Return aArray(orderPosition - 1)
         Else
@@ -25,7 +26,7 @@ Friend Module CS_String
     End Function
 
     Friend Function GetParameterValueFromString(ByVal FullString As String, ByVal ParameterName As String, Optional ByVal DefaultValue As String = "", Optional ByVal ParametersSeparator As Char = ";"c) As String
-        Dim CParameters() As String
+        Dim CParameters As String()
         Dim ParameterFull As String
         Dim ParameterValue As String = Nothing
 
@@ -59,7 +60,7 @@ Friend Module CS_String
     End Function
 
     Friend Function CountSubString(ByVal MainString As String, ByVal SubStringSeparator As String) As Integer
-        Dim aArray() As String
+        Dim aArray As String()
 
         aArray = Split(MainString, SubStringSeparator)
         Return aArray.Length
@@ -75,32 +76,32 @@ Friend Module CS_String
         Return testAgainst.Contains(Value.ToLowerInvariant)
     End Function
 
-    Friend Function RemoveInvalidCharsByAllowed(ByVal Value As String, ByVal AllowedChars As String) As String
-        Dim CharIndex As Integer
-        Dim CharBeingAnalyzed As Char
-        Dim CleanedString As String = String.Empty
+    Friend Function RemoveInvalidCharsByAllowed(ByVal value As String, ByVal allowedChars As String) As String
+        Dim charIndex As Integer
+        Dim charBeingAnalyzed As Char
+        Dim sb As New StringBuilder()
 
-        For CharIndex = 0 To Value.Length - 1
-            CharBeingAnalyzed = Value.Chars(CharIndex)
-            If AllowedChars.Contains(CharBeingAnalyzed) Then
-                CleanedString &= CharBeingAnalyzed
+        For charIndex = 0 To value.Length - 1
+            charBeingAnalyzed = value.Chars(charIndex)
+            If allowedChars.Contains(charBeingAnalyzed) Then
+                sb.Append(charBeingAnalyzed)
             End If
-        Next CharIndex
-        Return CleanedString
+        Next charIndex
+        Return sb.ToString()
     End Function
 
-    Friend Function RemoveInvalidCharsByNotAllowed(ByVal Value As String, ByVal NotAllowedChars As String) As String
-        Dim CharIndex As Integer
-        Dim CharBeingAnalyzed As Char
-        Dim CleanedString As String = String.Empty
+    Friend Function RemoveInvalidCharsByNotAllowed(ByVal value As String, ByVal notAllowedChars As String) As String
+        Dim charIndex As Integer
+        Dim charBeingAnalyzed As Char
+        Dim sb As New StringBuilder()
 
-        For CharIndex = 0 To Value.Length - 1
-            CharBeingAnalyzed = Value.Chars(CharIndex)
-            If Not NotAllowedChars.Contains(CharBeingAnalyzed) Then
-                CleanedString &= CharBeingAnalyzed
+        For charIndex = 0 To value.Length - 1
+            charBeingAnalyzed = value.Chars(charIndex)
+            If Not notAllowedChars.Contains(charBeingAnalyzed) Then
+                sb.Append(charBeingAnalyzed)
             End If
-        Next CharIndex
-        Return CleanedString
+        Next charIndex
+        Return sb.ToString()
     End Function
 
     Friend Function RemoveInvalidSpaces(ByVal Value As String, Optional TrimValue As Boolean = True) As String
@@ -197,6 +198,22 @@ Friend Module CS_String
         Return Regex.Replace(value, "<(.|\n)*?>", String.Empty)
     End Function
 
+    <Extension>
+    Friend Function GetEnclosedSubString(value As String, openChar As Char, closeChar As Char) As String
+        Dim startIndex As Integer
+        Dim endIndex As Integer
+
+        startIndex = value.IndexOf(openChar)
+        If startIndex > -1 Then
+            endIndex = value.IndexOf(closeChar, startIndex + 1)
+            If endIndex > -1 AndAlso (endIndex - startIndex - 1) > 0 Then
+                Return value.Substring(startIndex + 1, endIndex - startIndex - 1)
+            End If
+        End If
+
+        Return String.Empty
+    End Function
+
 
     Friend Function GetExtends(ByRef graphicObject As System.Drawing.Graphics, text As String, font As System.Drawing.Font) As Integer
         Dim size As SizeF = graphicObject.MeasureString(text, font)
@@ -205,5 +222,3 @@ Friend Module CS_String
     End Function
 
 End Module
-
-
