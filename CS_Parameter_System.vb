@@ -1,15 +1,31 @@
 ﻿Module CS_Parameter_System
 
-    Friend Function GetString(ByVal IDParametro As String, Optional ByVal DefaultValue As String = Nothing) As String
-        Dim ParametroCurrent As Parametro
+    Friend Function GetString(idParametro As String, Optional defaultValue As String = Nothing) As String
+        Dim parametroActual As Parametro
 
-        ParametroCurrent = pParametros.Find(Function(param) param.IDParametro.TrimEnd = IDParametro)
-        If ParametroCurrent Is Nothing OrElse ParametroCurrent.Texto Is Nothing Then
-            Return DefaultValue
+        parametroActual = pParametros.Find(Function(p) p.IDParametro.TrimEnd = idParametro)
+        If parametroActual Is Nothing OrElse parametroActual.Texto Is Nothing Then
+            Return defaultValue
         Else
-            Return ParametroCurrent.Texto.Trim
+            Return parametroActual.Texto.Trim
         End If
     End Function
+
+    Friend Sub SetString(idParametro As String, value As String)
+        Dim parametroNuevo As New Parametro With {.IDParametro = idParametro, .Texto = value}
+
+        ' Lo guardo en la base de datos
+        Parametros.SaveParameter(parametroNuevo)
+
+        ' Actualizo la colección en memoria
+        Dim parametroActual As Parametro = pParametros.Find(Function(p) p.IDParametro.TrimEnd = idParametro)
+        If parametroActual Is Nothing Then
+            pParametros.Add(parametroNuevo)
+        Else
+            parametroActual.Texto = value
+        End If
+        parametroNuevo = Nothing
+    End Sub
 
     Friend Function GetIntegerAsByte(idParametro As String, Optional defaultValue As Byte = Nothing) As Byte
         Dim ParametroCurrent As Parametro

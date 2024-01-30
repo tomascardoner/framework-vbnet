@@ -28,20 +28,16 @@ Friend Module CS_String
     Friend Function GetParameterValueFromString(ByVal FullString As String, ByVal ParameterName As String, Optional ByVal DefaultValue As String = "", Optional ByVal ParametersSeparator As Char = ";"c) As String
         Dim CParameters As String()
         Dim ParameterFull As String
-        Dim ParameterValue As String = Nothing
+        Dim ParameterValue As String
 
         CParameters = FullString.Split(ParametersSeparator)
         For Each ParameterFull In CParameters
             If ParameterFull.Substring(0, ParameterName.Length) = ParameterName Then
                 ParameterValue = ParameterFull.Substring(ParameterName.Length + 1)
-                Exit For
+                Return ParameterValue
             End If
         Next
-        If ParameterValue Is Nothing Then
-            Return DefaultValue
-        Else
-            Return ParameterValue
-        End If
+        Return DefaultValue
     End Function
 
     Friend Function RemoveFirstSubString(ByVal MainString As String, ByVal SubStringSeparator As String) As String
