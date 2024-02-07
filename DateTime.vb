@@ -172,7 +172,7 @@ Namespace CardonerSistemas
                             dateTo = New Date(System.DateTime.Today.Year, 1, 1).AddMilliseconds(-1)
                     End Select
 
-                    ' Range
+                ' Range
                 Case PeriodTypes.Range
                     Dim periodRangeValue As PeriodRangeValues = CType(periodValue, PeriodRangeValues)
 
@@ -200,7 +200,7 @@ Namespace CardonerSistemas
             Dim elapsedYears As Long
 
             elapsedYears = DateAndTime.DateDiff(DateInterval.Year, startDate, endDate)
-            If (startDate.Month > endDate.Month) Or (startDate.Month = endDate.Month AndAlso startDate.Day > endDate.Day) Then
+            If (startDate.Month > endDate.Month) OrElse (startDate.Month = endDate.Month AndAlso startDate.Day > endDate.Day) Then
                 elapsedYears -= 1
             End If
 

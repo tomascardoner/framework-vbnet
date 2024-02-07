@@ -124,10 +124,8 @@
             End With
         End Sub
 
-        Friend Sub ControlsChangeStateEnabled(ByRef ControlsContainer As System.Windows.Forms.Control.ControlCollection, ByVal ValueState As Boolean, ByVal ApplyToLabels As Boolean, ByVal ApplyToPanels As Boolean, ByVal Recursive As Boolean, ByVal ParamArray ControlsExcept() As Object)
+        Friend Sub ControlsChangeStateEnabled(ControlsContainer As System.Windows.Forms.Control.ControlCollection, ValueState As Boolean, ApplyToLabels As Boolean, ApplyToPanels As Boolean, Recursive As Boolean, ParamArray ControlsExcept() As Object)
             Dim ControlCurrent As Control
-            Dim ControlName As Object
-            Dim ExceptCurrent As Boolean
 
             For Each ControlCurrent In ControlsContainer
                 If Not ControlsExcept.Contains(ControlCurrent.Name) Then

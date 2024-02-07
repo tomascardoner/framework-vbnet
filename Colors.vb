@@ -42,17 +42,15 @@ Namespace CardonerSistemas
                 value = valueDefault
             End If
 
-            If String.IsNullOrWhiteSpace(value) Then
+            If Not String.IsNullOrWhiteSpace(value) Then
                 value = value.Trim()
-                If value.StartsWith("#") Then
-                    If IsValidHexColor(value, evaluateExpression) Then
-                        Try
-                            color = ColorTranslator.FromHtml(value)
-                            Return True
-                        Catch ex As Exception
-                            ErrorHandler.ProcessError(ex, "Error al convertir el valor en un color.")
-                        End Try
-                    End If
+                If value.StartsWith("#") AndAlso IsValidHexColor(value, evaluateExpression) Then
+                    Try
+                        color = ColorTranslator.FromHtml(value)
+                        Return True
+                    Catch ex As Exception
+                        ErrorHandler.ProcessError(ex, "Error al convertir el valor en un color.")
+                    End Try
                 End If
             End If
             Return False

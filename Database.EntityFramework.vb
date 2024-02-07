@@ -30,7 +30,7 @@ Namespace CardonerSistemas.Database
         End Function
 
         Friend Shared Function TryDecodeDbUpdateException(ByRef ex As System.Data.Entity.Infrastructure.DbUpdateException) As Errors
-            If (TypeOf (ex.InnerException) Is System.Data.Entity.Core.UpdateException) Or (TypeOf (ex.InnerException.InnerException) Is System.Data.SqlClient.SqlException) Then
+            If (TypeOf (ex.InnerException) Is System.Data.Entity.Core.UpdateException) OrElse (TypeOf (ex.InnerException.InnerException) Is System.Data.SqlClient.SqlException) Then
                 Dim SQLException As System.Data.SqlClient.SqlException
 
                 SQLException = CType(ex.InnerException.InnerException, SqlClient.SqlException)

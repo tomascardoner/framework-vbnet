@@ -18,12 +18,12 @@ Module CS_FileLog
             Case LogEntryType.Critical
                 Return "ERR"
             Case Else
-                Return ""
+                Return String.Empty
         End Select
     End Function
 
     Private Sub Write_Internal(ByVal LogFolder As String, ByVal LogFileName As String, ByVal EntryType As LogEntryType, ByVal LogMessage As String, ByVal WriteLine As Boolean)
-        If LogFolder <> "" And LogFileName <> "" Then
+        If LogFolder <> String.Empty AndAlso LogFileName <> String.Empty Then
             Try
                 If Not LogFolder.EndsWith("\") Then
                     LogFolder &= "\"

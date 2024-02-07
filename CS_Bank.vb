@@ -103,7 +103,7 @@ Module CS_Bank
                     Return 0
                 End If
             Case 25
-                If CBU.ElementAt(7) = "-" And CBU.ElementAt(9) = " " And CBU.ElementAt(23) = "-" Then
+                If CBU.ElementAt(7) = "-" AndAlso CBU.ElementAt(9) = " " AndAlso CBU.ElementAt(23) = "-" Then
                     If CBU_Limpio.Length < 22 Then
                         Return 0
                     End If

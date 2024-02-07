@@ -49,7 +49,7 @@ Namespace CardonerSistemas
                         Return Nothing
                     End If
                 Case 12
-                    If Cuit.ElementAt(2) = "-" And Cuit.ElementAt(9) = "-" Then
+                    If Cuit.ElementAt(2) = "-" AndAlso Cuit.ElementAt(9) = "-" Then
                         If CuitLimpio.Length < 10 Then
                             Return Nothing
                         End If
@@ -158,7 +158,7 @@ Namespace CardonerSistemas
                         Return False
                     End If
                 Case 13
-                    If Cuit.ElementAt(2) = "-" And Cuit.ElementAt(9) = "-" Then
+                    If Cuit.ElementAt(2) = "-" AndAlso Cuit.ElementAt(9) = "-" Then
                         If CuitLimpio.Length < 11 Then
                             Return False
                         End If
@@ -172,12 +172,12 @@ Namespace CardonerSistemas
 
             Prefijo = Cuit.Substring(0, 2)
             If Prefijo = CuitPrefijoFemenino _
-                Or Prefijo = CuitPrefijoFemeninoAlternativo _
-                Or Prefijo = CuitPrefijoMasculino _
-                Or Prefijo = CuitPrefijoMasculinoAlternativo _
-                Or Prefijo = CuitPrefijoPersonaJuridica _
-                Or Prefijo = CuitPrefijoPersonaJuridicaAlternativo1 _
-                Or Prefijo = CuitPrefijoPersonaJuridicaAlternativo2 Then
+                OrElse Prefijo = CuitPrefijoFemeninoAlternativo _
+                OrElse Prefijo = CuitPrefijoMasculino _
+                OrElse Prefijo = CuitPrefijoMasculinoAlternativo _
+                OrElse Prefijo = CuitPrefijoPersonaJuridica _
+                OrElse Prefijo = CuitPrefijoPersonaJuridicaAlternativo1 _
+                OrElse Prefijo = CuitPrefijoPersonaJuridicaAlternativo2 Then
 
                 DigitoVerificador = ObtenerDigitoVerificadorCUIT(Cuit.Substring(0, 10))
                 If DigitoVerificador Is Nothing Then

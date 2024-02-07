@@ -29,7 +29,7 @@ Module CS_Office_Outlook_EarlyBinding
     '      'oMsg.To = "tomas@cardoner.com.ar"
     '      oMsg.To = "movimientos@minagri.gob.ar"
 
-    '      If AttachmentFilename <> "" Then
+    '      If AttachmentFilename <> String.Empty Then
 
     '          oMsg.Attachments.Add(AttachmentFilename)
 
