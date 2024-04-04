@@ -1,14 +1,17 @@
 Imports System.Security.Cryptography
 
 Friend Class CS_Encrypt_TripleDES
-    Private TripleDes As New TripleDESCryptoServiceProvider
+
+#Disable Warning S5547 ' Cipher algorithms should be robust
+    Private ReadOnly TripleDes As New TripleDESCryptoServiceProvider
+#Enable Warning S5547 ' Cipher algorithms should be robust
 
     Private Function TruncateHash(ByVal key As String, ByVal length As Integer) As Byte()
         Dim sha1 As New SHA1CryptoServiceProvider
 
         ' Hash the key.
-        Dim keyBytes() As Byte = System.Text.Encoding.Unicode.GetBytes(key)
-        Dim hash() As Byte = sha1.ComputeHash(keyBytes)
+        Dim keyBytes As Byte() = System.Text.Encoding.Unicode.GetBytes(key)
+        Dim hash As Byte() = sha1.ComputeHash(keyBytes)
 
         ' Truncate or pad the hash.
         ReDim Preserve hash(length - 1)
@@ -25,7 +28,7 @@ Friend Class CS_Encrypt_TripleDES
     Friend Function Encrypt(ByVal plaintext As String) As String
 
         ' Convert the plaintext string to a byte array.
-        Dim plaintextBytes() As Byte = System.Text.Encoding.Unicode.GetBytes(plaintext)
+        Dim plaintextBytes As Byte() = System.Text.Encoding.Unicode.GetBytes(plaintext)
 
         ' Create the stream.
         Dim ms As New System.IO.MemoryStream
@@ -47,7 +50,7 @@ Friend Class CS_Encrypt_TripleDES
         Else
             Try
                 ' Convert the encrypted text string to a byte array.
-                Dim encryptedBytes() As Byte = Convert.FromBase64String(encryptedText)
+                Dim encryptedBytes As Byte() = Convert.FromBase64String(encryptedText)
 
                 ' Create the stream.
                 Dim ms As New System.IO.MemoryStream
