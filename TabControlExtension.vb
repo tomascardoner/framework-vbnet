@@ -56,7 +56,7 @@
                 For tabNameIndex = tabPageIndex To tabPagesOrder.Count - 1
                     tabNameCurrent = tabPagesOrder(tabNameIndex)
                     If tabNameCurrent = tabPageCurrent.Name Then
-                        Exit For
+                        Return tabPageIndex
                     End If
                     If tabNameCurrent = tabPageName Then
                         Return tabPageIndex
