@@ -109,11 +109,15 @@ Namespace CardonerSistemas
             Const FolderTagUserProfile As String = FieldDelimiterCharacterStart & "UserProfile" & FieldDelimiterCharacterEnd
             Const FolderTagWindows As String = FieldDelimiterCharacterStart & "Windows" & FieldDelimiterCharacterEnd
 
+            ' Date time fields
+            Const FolderTagYear As String = FieldDelimiterCharacterStart & "Year" & FieldDelimiterCharacterEnd
+            Const FolderTagMonth As String = FieldDelimiterCharacterStart & "Month" & FieldDelimiterCharacterEnd
+            Const FolderTagDay As String = FieldDelimiterCharacterStart & "Day" & FieldDelimiterCharacterEnd
+
             ' Cloud drives
             Const FolderTagDropbox As String = FieldDelimiterCharacterStart & "Dropbox" & FieldDelimiterCharacterEnd
             Const FolderTagGoogleDrive As String = FieldDelimiterCharacterStart & "GoogleDrive" & FieldDelimiterCharacterEnd
             Const FolderTagOneDrive As String = FieldDelimiterCharacterStart & "OneDrive" & FieldDelimiterCharacterEnd
-            'Const FolderTagICloudDrive As String = FieldDelimiterCharacterStart & "iCloudDrive" & FieldDelimiterCharacterEnd
 
             Dim folderNameProcessed As String
 
@@ -177,6 +181,11 @@ Namespace CardonerSistemas
             folderNameProcessed = folderNameProcessed.Replace(FolderTagTemplates, Environment.GetFolderPath(Environment.SpecialFolder.Templates))
             folderNameProcessed = folderNameProcessed.Replace(FolderTagUserProfile, Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))
             folderNameProcessed = folderNameProcessed.Replace(FolderTagWindows, Environment.GetFolderPath(Environment.SpecialFolder.Windows))
+
+            ' Reemplazo los campos date time
+            folderNameProcessed = folderNameProcessed.Replace(FolderTagYear, System.DateTime.Today.Year.ToString())
+            folderNameProcessed = folderNameProcessed.Replace(FolderTagMonth, System.DateTime.Today.Month.ToString("00"))
+            folderNameProcessed = folderNameProcessed.Replace(FolderTagDay, System.DateTime.Today.Day.ToString("00"))
 
             ' Replace Dropbox path
             If folderNameProcessed.Contains(FolderTagDropbox) Then
