@@ -46,11 +46,23 @@ Module CS_FileLog
         End If
     End Sub
 
-    Friend Sub Write(ByVal LogFolder As String, ByVal LogFileName As String, ByVal EntryType As LogEntryType, ByVal LogMessage As String)
-        Write_Internal(LogFolder, LogFileName, EntryType, LogMessage, False)
+    Friend Sub Write(logFolder As String, logFileName As String, entryType As LogEntryType, logMessage As String)
+        Write_Internal(logFolder, logFileName, entryType, logMessage, False)
     End Sub
 
-    Friend Sub WriteLine(ByVal LogFolder As String, ByVal LogFileName As String, ByVal EntryType As LogEntryType, ByVal LogMessage As String)
-        Write_Internal(LogFolder, LogFileName, EntryType, LogMessage, True)
+    Friend Sub WriteLine(logFolder As String, logFileName As String, entryType As LogEntryType, logMessage As String)
+        Write_Internal(logFolder, logFileName, entryType, logMessage, True)
+    End Sub
+
+    Friend Sub Write(logEnabled As Boolean, logFolder As String, logFileName As String, entryType As LogEntryType, logMessage As String)
+        If logEnabled Then
+            Write_Internal(logFolder, logFileName, entryType, logMessage, False)
+        End If
+    End Sub
+
+    Friend Sub WriteLine(logEnabled As Boolean, logFolder As String, logFileName As String, entryType As LogEntryType, logMessage As String)
+        If logEnabled Then
+            Write_Internal(logFolder, logFileName, entryType, logMessage, True)
+        End If
     End Sub
 End Module
