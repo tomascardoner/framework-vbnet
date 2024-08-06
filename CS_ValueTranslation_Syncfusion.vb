@@ -30,6 +30,19 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Sub
 
+    ' Decimal as Integer (Percent)
+    Friend Sub FromValueToControl(ByVal value As Decimal?, ByRef control As IntegerTextBox)
+        If value.HasValue Then
+            control.IntegerValue = Convert.ToInt64(value.Value * 100)
+        Else
+            If control.AllowNull Then
+                control.BindableValue = Nothing
+            Else
+                control.IntegerValue = control.MinValue
+            End If
+        End If
+    End Sub
+
     ' Double
     Friend Sub FromValueToControl(ByVal value As Decimal?, ByRef control As DoubleTextBox)
         If value.HasValue Then
@@ -100,8 +113,17 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Function
 
+    ' Integer as Decimal (Percent)
+    Friend Function FromControlToDecimal(control As IntegerTextBox) As Decimal?
+        If control.AllowNull AndAlso control.IsNull Then
+            Return Nothing
+        Else
+            Return Convert.ToDecimal(control.IntegerValue / 100)
+        End If
+    End Function
+
     ' Decimal
-    Friend Function FromControlToDecimal(ByVal control As DoubleTextBox) As Decimal?
+    Friend Function FromControlToDecimal(control As DoubleTextBox) As Decimal?
         If control.AllowNull AndAlso control.IsNull Then
             Return Nothing
         Else
