@@ -147,6 +147,14 @@ Module CS_ValueTranslation_Syncfusion
         End If
     End Function
 
+    Friend Function FromControlPercentToDecimal(ByRef control As PercentTextBox) As Decimal?
+        If control.AllowNull AndAlso control.IsNull Then
+            Return Nothing
+        Else
+            Return Convert.ToDecimal(control.PercentValue)
+        End If
+    End Function
+
 #End Region
 
 End Module
