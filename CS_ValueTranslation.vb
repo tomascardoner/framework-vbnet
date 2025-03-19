@@ -73,6 +73,31 @@ Module CS_ValueTranslation
 
 #Region "De Objectos a Controles - Misc"
 
+    Private Function ToShort(value As String) As Short?
+        Dim result As Short
+        If String.IsNullOrWhiteSpace(value) OrElse Not Short.TryParse(value, result) Then
+            Return Nothing
+        Else
+            Return result
+        End If
+    End Function
+
+    Friend Function ToShort(textBox As TextBox) As Short?
+        Return ToShort(textBox.Text)
+    End Function
+
+    Friend Function ToShort(maskedTextBox As MaskedTextBox) As Short?
+        Return ToShort(maskedTextBox.Text)
+    End Function
+
+    Friend Function ToShort(numericUpDown As NumericUpDown, Optional valueForNothing As Short = 0) As Short?
+        If numericUpDown.Value = valueForNothing Then
+            Return Nothing
+        Else
+            Return Convert.ToInt16(numericUpDown.Value)
+        End If
+    End Function
+
     Friend Function FromObjectByteToControlUpDown(ByVal ObjectValue As Byte?) As Decimal
         If ObjectValue.HasValue Then
             Return ObjectValue.Value

@@ -47,7 +47,7 @@ Namespace CardonerSistemas.Controls
         ''' <param name="widthValue">Sets the width of every radioButton</param>
         ''' <param name="heightValue"></param>
         Friend Sub CreateArray(ByRef form As Form, ByRef containter As System.Windows.Forms.Panel, maximumContainerHeight As Integer, count As Integer, clickHandler As EventHandler, widthValue As Integer, heightValue As Integer, autoSize As Boolean, appearance As Windows.Forms.Appearance, Optional reSizeContainerAndForm As Boolean = True)
-            Dim radioButton As System.Windows.Forms.RadioButton
+            Dim radioButton As System.Windows.Forms.RadioButton = Nothing
 
             If count = 0 Then
                 Return
@@ -88,7 +88,7 @@ Namespace CardonerSistemas.Controls
         ''' <param name="widthValue">Sets the width of every radioButton when Fixed size specified or the minimum width when AutoSizeByTextIndividually or AutoSizeByTextToWidest</param>
         ''' <param name="heightValue"></param>
         Friend Sub CreateArray(ByRef form As Form, ByRef containter As System.Windows.Forms.Panel, maximumContainerHeight As Integer, list As List(Of ValueForList), clickHandler As EventHandler, widthSizeMode As WidthSizeModes, widthValue As Integer, heightValue As Integer, appearance As Windows.Forms.Appearance)
-            Dim radioButton As System.Windows.Forms.RadioButton
+            Dim radioButton As System.Windows.Forms.RadioButton = Nothing
             Dim widestSize As Integer
 
             If list Is Nothing OrElse list.Count = 0 Then
@@ -123,7 +123,7 @@ Namespace CardonerSistemas.Controls
                 End Select
             Next index
 
-            If widthSizeMode = WidthSizeModes.AutoSizeByTextToWidest And widestSize > 0 Then
+            If widthSizeMode = WidthSizeModes.AutoSizeByTextToWidest AndAlso widestSize > 0 Then
                 For index As Integer = 0 To list.Count - 1
                     CType(containter.Controls(index), System.Windows.Forms.RadioButton).Width = widestSize
                 Next index
