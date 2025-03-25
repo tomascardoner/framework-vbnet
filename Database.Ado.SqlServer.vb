@@ -49,7 +49,7 @@ Namespace CardonerSistemas.Database.Ado
 
 #Region "Connection"
 
-        Friend Function SetProperties(datasourceValue As String, initialCatalogValue As String, userIdValue As String, passwordEncryptedValue As String, connectTimeoutValue As Byte, connectRetryCountValue As Byte, connectRetryIntervalValue As Byte) As Boolean
+        Friend Function SetProperties(datasourceValue As String, initialCatalogValue As String, attachDBFilenameValue As String, userIdValue As String, passwordEncryptedValue As String, connectTimeoutValue As Byte, connectRetryCountValue As Byte, connectRetryIntervalValue As Byte) As Boolean
             Dim selectedDatasourceIndex As Integer
 
             If datasourceValue.Contains(Constants.StringListSeparator) Then
@@ -74,6 +74,7 @@ Namespace CardonerSistemas.Database.Ado
                 UserId = userIdValue
                 PasswordEncrypted = passwordEncryptedValue
             End If
+            AttachDBFilename = attachDBFilenameValue
             ConnectTimeout = connectTimeoutValue
             ConnectRetryCount = connectRetryCountValue
             ConnectRetryInterval = connectRetryIntervalValue

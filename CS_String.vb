@@ -108,7 +108,7 @@ Friend Module CS_String
         Else
             CleanedString = Value
         End If
-        Do While Value.Contains("  ")
+        Do While CleanedString.Contains("  ")
             CleanedString = CleanedString.Replace("  ", " ")
         Loop
         Return CleanedString
