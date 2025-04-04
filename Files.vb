@@ -43,15 +43,15 @@ Namespace CardonerSistemas
         End Function
 
         Friend Function GetGuidTempFileName(fileExtension As String) As String
-            Return System.IO.Path.GetTempPath() + Guid.NewGuid().ToString() + fileExtension
+            Return $"{System.IO.Path.GetTempPath()}{Guid.NewGuid()}{fileExtension}"
         End Function
 
         Friend Function GetTempFileName() As String
-            Return System.IO.Path.GetTempFileName()
+            Return IO.Path.GetRandomFileName()
         End Function
 
         Friend Function GetTempFileName(fileExtension As String) As String
-            Return GetTempFileName().Replace(".tmp", "." + fileExtension)
+            Return GetTempFileName().Replace(".tmp", "." & fileExtension)
         End Function
 
 #End Region

@@ -143,20 +143,20 @@ Namespace CardonerSistemas
 
                     Select Case periodMonthValue
                         Case PeriodMonthValues.MonthCurrent
-                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1)
-                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1)
+                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local)
+                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMonths(1).AddMilliseconds(-1)
                         Case PeriodMonthValues.MonthBeforeCurrent
-                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(-1)
-                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMilliseconds(-1)
+                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMonths(-1)
+                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMilliseconds(-1)
                         Case PeriodMonthValues.MonthLast2
-                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(-1)
-                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1)
+                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMonths(-1)
+                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMonths(1).AddMilliseconds(-1)
                         Case PeriodMonthValues.MonthLast3
-                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(-2)
-                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1)
+                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMonths(-2)
+                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMonths(1).AddMilliseconds(-1)
                         Case PeriodMonthValues.MonthLast6
-                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(-5)
-                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1).AddMonths(1).AddMilliseconds(-1)
+                            dateFrom = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMonths(-5)
+                            dateTo = New Date(System.DateTime.Today.Year, System.DateTime.Today.Month, 1, 0, 0, 0, DateTimeKind.Local).AddMonths(1).AddMilliseconds(-1)
                     End Select
 
                 ' Years
@@ -165,11 +165,11 @@ Namespace CardonerSistemas
 
                     Select Case periodYearValue
                         Case PeriodYearValues.YearCurrent
-                            dateFrom = New Date(System.DateTime.Today.Year, 1, 1)
-                            dateTo = New Date(System.DateTime.Today.Year, 1, 1).AddYears(1).AddMilliseconds(-1)
+                            dateFrom = New Date(System.DateTime.Today.Year, 1, 1, 0, 0, 0, DateTimeKind.Local)
+                            dateTo = New Date(System.DateTime.Today.Year, 1, 1, 0, 0, 0, DateTimeKind.Local).AddYears(1).AddMilliseconds(-1)
                         Case PeriodYearValues.YearBeforeCurrent
-                            dateFrom = New Date(System.DateTime.Today.Year, 1, 1).AddYears(-1)
-                            dateTo = New Date(System.DateTime.Today.Year, 1, 1).AddMilliseconds(-1)
+                            dateFrom = New Date(System.DateTime.Today.Year, 1, 1, 0, 0, 0, DateTimeKind.Local).AddYears(-1)
+                            dateTo = New Date(System.DateTime.Today.Year, 1, 1, 0, 0, 0, DateTimeKind.Local).AddMilliseconds(-1)
                     End Select
 
                 ' Range

@@ -14,7 +14,7 @@
             If comboboxDataSource.SelectedIndex = -1 Then
                 MsgBox("Debe seleccionar el origen de los datos.", vbInformation, My.Application.Info.Title)
                 comboboxDataSource.Focus()
-                Exit Sub
+                Return
             End If
 
             Me.DialogResult = Windows.Forms.DialogResult.OK

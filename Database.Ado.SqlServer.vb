@@ -127,15 +127,20 @@ Namespace CardonerSistemas.Database.Ado
             End With
         End Sub
 
-        Friend Function Connect() As Boolean
+        Friend Function Connect(ByVal errorMessage As String) As Boolean
             Try
                 Connection = New SqlConnection(ConnectionString)
                 Connection.Open()
                 Return True
+
             Catch ex As Exception
-                ErrorHandler.ProcessError(ex, "Error al conectarse a la Base de Datos.")
+                ErrorHandler.ProcessError(ex, errorMessage)
                 Return False
             End Try
+        End Function
+
+        Friend Function Connect() As Boolean
+            Return Connect("Error al conectarse a la Base de Datos.")
         End Function
 
         Friend Function Connect(ByRef databaseConfig As DatabaseConfig, ByRef newLoginData As Boolean) As Boolean
@@ -206,19 +211,6 @@ Namespace CardonerSistemas.Database.Ado
 
 #Region "Retrieve data"
 
-        Friend Function Connect(ByVal errorMessage As String) As Boolean
-            Try
-                Connection = New SqlConnection(ConnectionString)
-                Connection.Open()
-                Return True
-
-            Catch ex As Exception
-                ErrorHandler.ProcessError(ex, errorMessage)
-                Return False
-
-            End Try
-        End Function
-
         Friend Function OpenDataReader(ByRef dataReader As SqlDataReader, ByVal commandText As String, ByVal commandType As CommandType, ByVal commandBehavior As CommandBehavior, ByVal errorMessage As String) As Boolean
 
             Try
@@ -244,11 +236,10 @@ Namespace CardonerSistemas.Database.Ado
             Try
 
                 dataSet = New DataSet()
-                dataAdapter = New SqlDataAdapter(selectCommandText, Connection)
-                Dim commandBuilder As New SqlCommandBuilder(dataAdapter)
-                dataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey
+                dataAdapter = New SqlDataAdapter(selectCommandText, Connection) With {
+                    .MissingSchemaAction = MissingSchemaAction.AddWithKey
+                }
                 dataAdapter.Fill(dataSet, sourceTable)
-
                 Return True
 
             Catch ex As Exception

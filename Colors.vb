@@ -97,7 +97,7 @@ Namespace CardonerSistemas
             If color.IsEmpty Then
                 Return String.Empty
             Else
-                Return "#" + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2")
+                Return $"#{color.R:X2}{color.G:X2}{color.B:X2}"
             End If
         End Function
 
@@ -105,7 +105,7 @@ Namespace CardonerSistemas
             If color.IsEmpty Then
                 Return String.Empty
             Else
-                Return "#" + color.A.ToString("X2") + color.R.ToString("X2") + color.G.ToString("X2") + color.B.ToString("X2")
+                Return $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}"
             End If
         End Function
 

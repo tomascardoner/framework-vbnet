@@ -113,14 +113,14 @@ Namespace CardonerSistemas
             End Select
 
             ' Obtengo el dígito verificador
-            digitoVerificador = CardonerSistemas.Afip.ObtenerDigitoVerificadorCUIT(prefijo + numeroDocumento)
+            digitoVerificador = Afip.ObtenerDigitoVerificadorCuit(prefijo & numeroDocumento)
             If Not digitoVerificador.HasValue Then
                 ' No se pudo obtener, intentar con el prefijo alternativo
-                digitoVerificador = CardonerSistemas.Afip.ObtenerDigitoVerificadorCUIT(prefijoAlternativo1 + numeroDocumento)
+                digitoVerificador = CardonerSistemas.Afip.ObtenerDigitoVerificadorCuit(prefijoAlternativo1 & numeroDocumento)
                 If Not digitoVerificador.HasValue Then
                     ' Tampoco se pudo obtener con el prefijo alternativo. Si es empresa, pruebo con el 2º alternativo
                     If tipoPersona = TipoPersonas.PersonaJurdica Then
-                        digitoVerificador = CardonerSistemas.Afip.ObtenerDigitoVerificadorCUIT(prefijoAlternativo2 + numeroDocumento)
+                        digitoVerificador = CardonerSistemas.Afip.ObtenerDigitoVerificadorCuit(prefijoAlternativo2 & numeroDocumento)
                         If Not digitoVerificador.HasValue Then
                             ' Tampoco con el alternativo 2
                             Return String.Empty
@@ -132,7 +132,7 @@ Namespace CardonerSistemas
             End If
 
             ' Confirmo el CUIT verificándolo
-            If CardonerSistemas.Afip.VerificarCuit(prefijo + numeroDocumento + digitoVerificador.ToString()) Then
+            If CardonerSistemas.Afip.VerificarCuit(prefijo & numeroDocumento & digitoVerificador.ToString()) Then
                 Return prefijo & numeroDocumento & digitoVerificador.ToString()
             Else
                 Return String.Empty

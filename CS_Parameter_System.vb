@@ -65,12 +65,9 @@
     Friend Function SetIntegerAsInteger(ByVal IDParametro As String, ByVal Value As Integer) As Boolean
         Dim ParametroCurrent As Parametro
 
-        ParametroCurrent = pParametros.Find(Function(param) param.IDParametro.TrimEnd = IDParametro)
-        If ParametroCurrent Is Nothing Then
-            ParametroCurrent = New Parametro With {
+        ParametroCurrent = If(pParametros.Find(Function(param) param.IDParametro.TrimEnd = IDParametro), New Parametro With {
                 .IDParametro = IDParametro
-            }
-        End If
+            })
         ParametroCurrent.NumeroEntero = Value
         Return Parametros.SaveParameter(ParametroCurrent)
     End Function

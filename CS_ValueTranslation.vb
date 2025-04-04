@@ -226,9 +226,9 @@ Module CS_ValueTranslation
         End If
 
         If ObjectValue Is Nothing Then
-            Return New Date(Now.Year, Now.Month, Now.Day, 0, 0, 0)
+            Return New Date(Now.Year, Now.Month, Now.Day, 0, 0, 0, DateTimeKind.Local)
         Else
-            Return New Date(Now.Year, Now.Month, Now.Day).AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
+            Return New Date(Now.Year, Now.Month, Now.Day, 0, 0, 0, DateTimeKind.Local).AddHours(ObjectValue.Value.Hours).AddMinutes(ObjectValue.Value.Minutes)
         End If
     End Function
 
@@ -541,11 +541,11 @@ Module CS_ValueTranslation
     End Function
 
     Friend Function FromDateTimeToDate(ByVal Value As Date) As Date
-        Return New Date(Value.Year, Value.Month, Value.Day)
+        Return New Date(Value.Year, Value.Month, Value.Day, 0, 0, 0, DateTimeKind.Local)
     End Function
 
     Friend Function FromDateTimeToTime(ByVal Value As Date) As Date
-        Return New Date(1, 1, 1, Value.Hour, Value.Minute, Value.Second, Value.Millisecond)
+        Return New Date(1, 1, 1, Value.Hour, Value.Minute, Value.Second, Value.Millisecond, DateTimeKind.Local)
     End Function
 
     Friend Function FromDecimalToRoundedCurrency(ByVal Value As Decimal) As Decimal

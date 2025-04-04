@@ -127,6 +127,7 @@
         Friend Sub ControlsChangeStateEnabled(ControlsContainer As System.Windows.Forms.Control.ControlCollection, ValueState As Boolean, ApplyToLabels As Boolean, ApplyToPanels As Boolean, Recursive As Boolean, ParamArray ControlsExcept() As Object)
             Dim ControlCurrent As Control
 
+#Disable Warning S2359 ' "On Error" statements should not be used
             For Each ControlCurrent In ControlsContainer
                 If Not ControlsExcept.Contains(ControlCurrent.Name) Then
                     If Recursive AndAlso ControlCurrent.HasChildren Then
@@ -152,6 +153,7 @@
                     End If
                 End If
             Next ControlCurrent
+#Enable Warning S2359 ' "On Error" statements should not be used
         End Sub
 
         Friend Sub ControlsChangeStateReadOnly(ByRef ControlsContainer As System.Windows.Forms.Control.ControlCollection, ByVal ValueState As Boolean, ByVal Recursive As Boolean, ByVal ParamArray ControlsExcept() As String)

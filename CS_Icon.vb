@@ -10,7 +10,7 @@ Module CS_Icon
 
         asm = Assembly.GetExecutingAssembly()
         rnames = asm.GetManifestResourceNames()
-        tofind = IconName + ".ICO"
+        tofind = $"{IconName}.ico"
 
         For Each rname As String In rnames
             If rname.EndsWith(tofind, StringComparison.CurrentCultureIgnoreCase) Then

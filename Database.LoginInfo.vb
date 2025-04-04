@@ -14,7 +14,7 @@
             If String.IsNullOrWhiteSpace(textboxUsuario.Text) Then
                 MessageBox.Show("Debe ingresar el usuario.", My.Application.Info.Title, MessageBoxButtons.OK, MessageBoxIcon.Information)
                 textboxUsuario.Focus()
-                Exit Sub
+                Return
             End If
 
             Me.DialogResult = Windows.Forms.DialogResult.OK
