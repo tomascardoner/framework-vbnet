@@ -12,10 +12,12 @@ Namespace CardonerSistemas.Database.Ado
         Friend Property ApplicationName As String
         Friend Property AttachDBFilename As String
         Friend Property Datasource As String
+        Friend Property IntegratedSecurity As Boolean
         Friend Property InitialCatalog As String
         Friend Property UserId As String
         Friend Property PasswordEncrypted As String
         Friend Property Password As String
+        Friend Property TrustServerCertificate As Boolean
         Friend Property MultipleActiveResultsets As Boolean
         Friend Property WorkstationID As String
         Friend Property ConnectTimeout As Byte
@@ -49,7 +51,7 @@ Namespace CardonerSistemas.Database.Ado
 
 #Region "Connection"
 
-        Friend Function SetProperties(datasourceValue As String, initialCatalogValue As String, attachDBFilenameValue As String, userIdValue As String, passwordEncryptedValue As String, connectTimeoutValue As Byte, connectRetryCountValue As Byte, connectRetryIntervalValue As Byte) As Boolean
+        Friend Function SetProperties(datasourceValue As String, initialCatalogValue As String, attachDBFilenameValue As String, integratedSecurityValue As Boolean, userIdValue As String, passwordEncryptedValue As String, trustServerCertificateValue As Boolean, connectTimeoutValue As Byte, connectRetryCountValue As Byte, connectRetryIntervalValue As Byte) As Boolean
             Dim selectedDatasourceIndex As Integer
 
             If datasourceValue.Contains(Constants.StringListSeparator) Then
@@ -75,6 +77,12 @@ Namespace CardonerSistemas.Database.Ado
                 PasswordEncrypted = passwordEncryptedValue
             End If
             AttachDBFilename = attachDBFilenameValue
+            IntegratedSecurity = integratedSecurityValue
+            If IntegratedSecurity Then
+                UserId = String.Empty
+                PasswordEncrypted = String.Empty
+            End If
+            TrustServerCertificate = trustServerCertificateValue
             ConnectTimeout = connectTimeoutValue
             ConnectRetryCount = connectRetryCountValue
             ConnectRetryInterval = connectRetryIntervalValue
@@ -105,18 +113,20 @@ Namespace CardonerSistemas.Database.Ado
             With scsb
                 .ApplicationName = ApplicationName
                 .DataSource = Datasource
-                If (AttachDBFilename IsNot Nothing) AndAlso AttachDBFilename.Trim.Length > 0 Then
+                If AttachDBFilename IsNot Nothing AndAlso AttachDBFilename.Trim.Length > 0 Then
                     .AttachDBFilename = AttachDBFilename
                 End If
-                If (InitialCatalog IsNot Nothing) AndAlso InitialCatalog.Trim.Length > 0 Then
+                If InitialCatalog IsNot Nothing AndAlso InitialCatalog.Trim.Length > 0 Then
                     .InitialCatalog = InitialCatalog
                 End If
+                .IntegratedSecurity = IntegratedSecurity
                 If (UserId IsNot Nothing) AndAlso UserId.Trim.Length > 0 Then
                     .UserID = UserId
                 End If
                 If (Password IsNot Nothing) AndAlso Password.Trim.Length > 0 Then
                     .Password = Password
                 End If
+                .TrustServerCertificate = TrustServerCertificate
                 .ConnectTimeout = ConnectTimeout
                 .ConnectRetryCount = ConnectRetryCount
                 .ConnectRetryInterval = ConnectRetryInterval
