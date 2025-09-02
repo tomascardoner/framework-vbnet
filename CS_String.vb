@@ -1,7 +1,7 @@
-Imports System.Text.RegularExpressions
-Imports System.Text
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
+Imports System.Text
+Imports System.Text.RegularExpressions
 
 
 Friend Module CS_String

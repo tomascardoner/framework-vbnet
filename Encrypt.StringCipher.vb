@@ -1,5 +1,5 @@
-Imports System.Security.Cryptography
 Imports System.IO
+Imports System.Security.Cryptography
 
 Namespace CardonerSistemas.Encrypt
     Friend Module StringCipher
