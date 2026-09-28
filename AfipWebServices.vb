@@ -1,9 +1,12 @@
-﻿Option Strict Off
+Option Strict Off
+
+Imports System.Linq
 
 Namespace CardonerSistemas
     Module AfipWebServices
 
 #Region "Declarations"
+
         Friend Const ServicioFacturacionElectronica As String = "wsfe"
 
         Friend Const SolicitudCaeResultadoAceptado As String = "A"
@@ -55,6 +58,7 @@ Namespace CardonerSistemas
             Friend Property FechaVencimientoPago As Date
             Friend Property MonedaID As String
             Friend Property MonedaCotizacion As Decimal            ' Para pesos argentinos, debe ser 1.
+            Friend Property CondicionIVAReceptorId As Integer
 
             Friend Property ComprobantesAsociados As List(Of ComprobanteAsociado)
             Friend Property Tributos As List(Of Tributo)
@@ -118,6 +122,7 @@ Namespace CardonerSistemas
             Friend Property WSFEv1_URL As String
             Friend Property InternetProxy As String
             Friend Property CUIT_Emisor As String
+            Friend Property ModoHomologacion As Boolean = True
             Friend Property MonedaLocal As Moneda
             Friend Property MonedaLocalCotizacion As MonedaCotizacion
 
@@ -128,109 +133,49 @@ Namespace CardonerSistemas
             Friend Property UltimoComprobanteAutorizado As String
             Friend Property UltimoResultadoConsultaComprobante As ResultadoConsultaComprobante
 
+            ' Credenciales de ARCA (certificado + clave privada ya cargados), obtenidas en 'Login'.
+            ' Se reutilizan en cada llamada porque Armuna.Framework.Tax cachea internamente el Ticket de Acceso
+            ' (WSAA) por CUIT/entorno/servicio, así que no hace falta administrar el ticket manualmente aquí.
+            Private mCredenciales As Armuna.Framework.Tax.Arca.ArcaCredentials
+
             Friend Sub New()
                 UltimoResultadoCAE = New ResultadoCAE
                 UltimoResultadoConsultaComprobante = New ResultadoConsultaComprobante
             End Sub
 
             Friend Function Login(ByVal ServicioNombre As String) As Boolean
-                Dim WSAA As Object
-                Dim TicketRequerimientoAcceso As String
-                Dim MensajeFirmado As String
+                CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, StrDup(20, "="))
 
-                ' Crear objeto interface Web Service Autenticación y Autorización
+                Dim Entorno As Armuna.Framework.Tax.Arca.ArcaEnvironment = If(ModoHomologacion, Armuna.Framework.Tax.Arca.ArcaEnvironment.Homologacion, Armuna.Framework.Tax.Arca.ArcaEnvironment.Produccion)
+                Dim Credenciales As Armuna.Framework.Tax.Arca.ArcaCredentials = Nothing
+                Dim CredencialesResultMessage As String = Nothing
+
+                If Not Armuna.Framework.Tax.Arca.ArcaCredentialsLoader.TryLoadFromPemFiles(CUIT_Emisor, Certificado, ClavePrivada, Entorno, Credenciales, CredencialesResultMessage) Then
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "No se pudo cargar el certificado: " & CredencialesResultMessage)
+                    CardonerSistemas.ErrorHandler.ProcessError(New Exception(CredencialesResultMessage), "Error al cargar el certificado para el Servicio de AFIP.")
+                    Return False
+                End If
+
                 Try
-                    WSAA = CreateObject("WSAA")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, StrDup(20, "="))
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se ha creado el objeto WSAA.")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Versión de WSAA: " & WSAA.Version)
+                    Dim Resultado = Armuna.Framework.Tax.Arca.Wsaa.WsaaService.GetTicketAsync(Credenciales, ServicioNombre).GetAwaiter().GetResult()
+                    If Resultado.success Then
+                        mCredenciales = Credenciales
+                        TicketAcceso = Resultado.ticket.Token
+                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se autenticó correctamente.")
+                        Return True
+                    Else
+                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Falló la autenticación.")
+                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, Resultado.resultMessage)
+                        CardonerSistemas.ErrorHandler.ProcessError(New Exception(Resultado.resultMessage), "Error al iniciar sesión en el Servidor de AFIP.")
+                        Return False
+                    End If
 
                 Catch ex As Exception
-                    If ex.HResult = CardonerSistemas.ErrorHandler.ActiveXCreateError Then
-                        MsgBox("La librería PyAfipWs para el Servicio WSAA (wsaa.exe), no está instalada correctamente." & vbCrLf & "Contáctese con el personal de Soporte Técnico.", MsgBoxStyle.Critical, My.Application.Info.Title)
-                    Else
-                        CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al crear el objeto WSAA de la librería PyAfipWs.")
-                    End If
-                    Return False
-                End Try
-
-                Try
-                    If WSAA.Version < "2.07" Then
-                        ' Es la versión antigua de WSAA, utilizo los métodos correspondientes
-
-                        ' Generar un Ticket de Requerimiento de Acceso (TRA)
-                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se generará un Ticket de Requerimiento de Acceso utilizando el método 'CreateTRA'.")
-                        TicketRequerimientoAcceso = WSAA.CreateTRA(ServicioNombre, pAfipWebServicesConfig.TtlTicketRequerimientoAcceso)
-                        If TicketRequerimientoAcceso <> "" Then
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Ticket de Requerimiento de Acceso: " & TicketRequerimientoAcceso)
-
-                            ' Generar el mensaje firmado (CMS)
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se generará el Mensaje Firmado utilizando el método 'SignTRA'.")
-                            MensajeFirmado = WSAA.SignTRA(TicketRequerimientoAcceso, Certificado, ClavePrivada)
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Mensaje Firmado: " & MensajeFirmado)
-
-                            If MensajeFirmado <> "" Then
-                                ' Conectar al webservice
-                                CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se ejecutará el método 'Conectar'.")
-                                WSAA.Conectar("", WSAA_URL, InternetProxy)
-                                CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se conectó al WebService.")
-
-                                CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se autenticará utilizando el método 'LoginCMS'.")
-                                TicketAcceso = WSAA.LoginCMS(MensajeFirmado)
-                                If TicketAcceso <> "" Then
-                                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se autenticó correctamente.")
-                                    Return True
-                                Else
-                                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Falló la autenticación.")
-                                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlRequest:  " & WSAA.XmlRequest)
-                                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlResponse: " & WSAA.XmlResponse)
-                                    Return False
-                                End If
-                            Else
-                                Return False
-                            End If
-                        Else
-                            Return False
-                        End If
-                    Else
-                        ' Es la versión nueva de WSAA, utilizo el método Autenticar
-                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se autenticará utilizando el método 'Autenticar'.")
-                        TicketAcceso = WSAA.Autenticar(ServicioNombre, Certificado, ClavePrivada, WSAA_URL)
-                        If TicketAcceso <> "" Then
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se autenticó correctamente.")
-                            Return True
-                        Else
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Falló la autenticación.")
-                            WSAA.AnalizarXml("XmlResponse")
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Codigo de Fallo: " & WSAA.ObtenerTagXml("faultcode"))
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Mensaje de Fallo: " & WSAA.ObtenerTagXml("faultstring"))
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Certificado: " & Certificado)
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Clave Privada: " & ClavePrivada)
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "URL: " & WSAA_URL)
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlRequest:  " & WSAA.XmlRequest)
-                            CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlResponse: " & WSAA.XmlResponse)
-                            CardonerSistemas.ErrorHandler.ProcessError(New Exception("Excepción: " & WSAA.Excepcion), "Error al iniciar sesión en el Servidor de AFIP.")
-                            Return False
-                        End If
-                    End If
-
-                Catch
-                    ' Muestro los errores
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ocurrió un error.")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Excepción: " & WSAA.Excepcion)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Traza: " & WSAA.Traceback)
-                    CardonerSistemas.ErrorHandler.ProcessError(New Exception("Excepción: " & WSAA.Excepcion), "Error al iniciar sesión en el Servidor de AFIP.")
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Excepción: " & ex.Message)
+                    CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al iniciar sesión en el Servidor de AFIP.")
                     Return False
                 End Try
-
-                'En versiones recientes (2.04a o superior), si no hubo excepción es posible revisar y obtener datos avanzados del ticket de acceso (útiles para depuración y solución de errores):
-
-                '        Origen(Source) : WSAA.ObtenerTagXml("source")
-                '        Destino(Destination) : WSAA.ObtenerTagXml("destination")
-                '        ID Único : WSAA.ObtenerTagXml("uniqueId")
-                'Fecha de Generación: WSAA.ObtenerTagXml("generationTime")
-                'Fecha de Expiración: WSAA.ObtenerTagXml("expirationTime")
-                'Si ha ocurrido error (llamar previamente a WSAA.AnalizarXml("XmlResponse") para analizar la respuesta):
             End Function
 
             Friend Function FacturaElectronica_Login() As Boolean
@@ -238,50 +183,27 @@ Namespace CardonerSistemas
             End Function
 
             Friend Function FacturaElectronica_Conectar() As Boolean
-
-                ' Crear objeto interface Web Service Autenticación y Autorización
-                Try
-                    WSFEv1 = CreateObject("WSFEv1")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, StrDup(20, "="))
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se ha creado el objeto WSFEv1.")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Versión de WSFEv1: " & WSFEv1.Version)
-
-                Catch ex As Exception
-                    If ex.HResult = -2146233088 Then
-                        MsgBox("La librería PyAfipWs para el Servicio WSFEv1 (wsfev1.exe), no está instalada correctamente." & vbCrLf & "Contáctese con el personal de Soporte Técnico.", MsgBoxStyle.Critical, My.Application.Info.Title)
-                    Else
-                        CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al crear el objeto WSFEv1 de la librería PyAfipWs.")
-                    End If
+                If mCredenciales Is Nothing Then
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "No se ha iniciado sesión. Debe invocar 'Login' o 'FacturaElectronica_Login' antes de conectar.")
                     WSFEv1 = Nothing
                     Return False
-                End Try
+                End If
 
                 Try
-                    ' Establecer Ticket de Acceso en un solo paso
-                    WSFEv1.SetTicketAcceso(TicketAcceso.ToString)
-
-                    ' CUIT del emisor (debe estar registrado en la AFIP)
-                    WSFEv1.Cuit = CUIT_Emisor
-
-                    ' Conectar al Servicio Web de Facturación. Proxy: usuario:clave@localhost:8000
-                    WSFEv1.Conectar("", WSFEv1_URL.ToString, InternetProxy.ToString)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se ejecutó el método 'Conectar'")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "DebugLog: " & WSFEv1.DebugLog.Trim())
-
-                    ' Llamo a un servicio nulo, para obtener el estado del servidor (opcional)
-                    WSFEv1.Dummy()
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se ejecutó el método 'Dummy'")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "AppServer status:  " & WSFEv1.AppServerStatus)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "DbServer status:   " & WSFEv1.DbServerStatus)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "AuthServer status: " & WSFEv1.AuthServerStatus)
-
-                    ' Fin
-                    Return True
+                    Dim Resultado = Armuna.Framework.Tax.Arca.Wsaa.WsaaService.GetTicketAsync(mCredenciales, ServicioFacturacionElectronica).GetAwaiter().GetResult()
+                    If Resultado.success Then
+                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se conectó al Servicio de Factura Electrónica.")
+                        WSFEv1 = mCredenciales
+                        Return True
+                    Else
+                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "No se pudo conectar: " & Resultado.resultMessage)
+                        CardonerSistemas.ErrorHandler.ProcessError(New Exception(Resultado.resultMessage), "Error al conectar con el Servicio de Factura Electrónica.")
+                        WSFEv1 = Nothing
+                        Return False
+                    End If
 
                 Catch ex As Exception
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ha ocurrido un error:")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "    Excepción: " & WSFEv1.Excepcion)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "    Traza:     " & WSFEv1.Traceback)
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ha ocurrido un error: " & ex.Message)
                     CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al conectar con el Servicio de Factura Electrónica.")
                     WSFEv1 = Nothing
                     Return False
@@ -289,71 +211,72 @@ Namespace CardonerSistemas
             End Function
 
             Friend Function FacturaElectronica_ObtenerCAE(ByRef FacturaAGenerar As FacturaElectronicaCabecera) As Boolean
-                Dim CAE As String
-
                 If WSFEv1 Is Nothing Then
                     Return False
                 End If
 
                 Try
+                    Dim Detalle As New Armuna.Framework.Tax.Arca.Wsfe.FacturaElectronicaDetalle With {
+                        .Concepto = CType(FacturaAGenerar.Concepto, Armuna.Framework.Tax.Arca.Comprobante.Concepto),
+                        .DocTipo = FacturaAGenerar.TipoDocumento,
+                        .DocNro = FacturaAGenerar.DocumentoNumero,
+                        .CbteDesde = FacturaAGenerar.ComprobanteDesde,
+                        .CbteHasta = FacturaAGenerar.ComprobanteHasta,
+                        .CbteFecha = FacturaAGenerar.ComprobanteFecha,
+                        .ImpTotal = FacturaAGenerar.ImporteTotal,
+                        .ImpTotConc = FacturaAGenerar.ImporteTotalConc,
+                        .ImpNeto = FacturaAGenerar.ImporteNeto,
+                        .ImpOpEx = FacturaAGenerar.ImporteOperacionesExentas,
+                        .ImpTributos = FacturaAGenerar.ImporteTributos,
+                        .ImpIva = FacturaAGenerar.ImporteIVA,
+                        .MonedaId = FacturaAGenerar.MonedaID,
+                        .MonedaCotizacion = FacturaAGenerar.MonedaCotizacion,
+                        .FechaServicioDesde = If(FacturaAGenerar.FechaServicioDesde = Date.MinValue, CType(Nothing, Date?), FacturaAGenerar.FechaServicioDesde),
+                        .FechaServicioHasta = If(FacturaAGenerar.FechaServicioHasta = Date.MinValue, CType(Nothing, Date?), FacturaAGenerar.FechaServicioHasta),
+                        .FechaVencimientoPago = If(FacturaAGenerar.FechaVencimientoPago = Date.MinValue, CType(Nothing, Date?), FacturaAGenerar.FechaVencimientoPago),
+                        .ComprobantesAsociados = FacturaAGenerar.ComprobantesAsociados.Select(Function(c) New Armuna.Framework.Tax.Arca.Wsfe.FacturaElectronicaComprobanteAsociado(c.TipoComprobante, c.PuntoVenta, c.ComprobanteNumero)).ToList(),
+                        .Tributos = FacturaAGenerar.Tributos.Select(Function(t) New Armuna.Framework.Tax.Arca.Wsfe.FacturaElectronicaTributo(t.ID, t.BaseImponible, t.Alicuota, t.Importe, t.Descripcion)).ToList(),
+                        .AlicuotasIva = FacturaAGenerar.IVAs.Select(Function(i) New Armuna.Framework.Tax.Arca.Wsfe.FacturaElectronicaAlicuotaIva(i.ID, i.BaseImponible, i.Importe)).ToList(),
+                        .Opcionales = FacturaAGenerar.Opcionales.Select(Function(o) New Armuna.Framework.Tax.Arca.Wsfe.FacturaElectronicaOpcional(o.ID, o.Valor)).ToList()
+                    }
 
-                    With FacturaAGenerar
-                        ' Creo la factura
-                        WSFEv1.CrearFactura(.Concepto, .TipoDocumento, .DocumentoNumero, .TipoComprobante, .PuntoVenta, .ComprobanteDesde, .ComprobanteHasta,
-                                        CS_ValueTranslation.DecimalToUString(.ImporteTotal), CS_ValueTranslation.DecimalToUString(.ImporteTotalConc), CS_ValueTranslation.DecimalToUString(.ImporteNeto), CS_ValueTranslation.DecimalToUString(.ImporteIVA), CS_ValueTranslation.DecimalToUString(.ImporteTributos), CS_ValueTranslation.DecimalToUString(.ImporteOperacionesExentas),
-                                        CS_ValueTranslation.FromDateToUString(.ComprobanteFecha), CS_ValueTranslation.FromDateToUString(.FechaVencimientoPago), CS_ValueTranslation.FromDateToUString(.FechaServicioDesde), CS_ValueTranslation.FromDateToUString(.FechaServicioHasta), .MonedaID, CS_ValueTranslation.DecimalToUString(.MonedaCotizacion))
+                    Dim Resultado = Armuna.Framework.Tax.Arca.Wsfe.WsfeService.SolicitarCaeAsync(mCredenciales, FacturaAGenerar.PuntoVenta, FacturaAGenerar.TipoComprobante, {Detalle}).GetAwaiter().GetResult()
 
-                        ' Agrego los comprobantes asociados:
-                        For Each ComprobanteAsociadoActual In .ComprobantesAsociados
-                            WSFEv1.AgregarCmpAsoc(ComprobanteAsociadoActual.TipoComprobante, ComprobanteAsociadoActual.PuntoVenta, ComprobanteAsociadoActual.ComprobanteNumero)
-                        Next
+                    If Not Resultado.success Then
+                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ocurrió un error: " & Resultado.resultMessage)
+                        UltimoResultadoCAE.ErrorMessage = Resultado.resultMessage
+                        CardonerSistemas.ErrorHandler.ProcessError(New Exception(Resultado.resultMessage), "Error al crear la Factura Electrónica.")
+                        Return False
+                    End If
 
-                        ' Agrego los tributos (impuestos varios)
-                        For Each TributoActual In .Tributos
-                            WSFEv1.AgregarTributo(TributoActual.ID, TributoActual.Descripcion, CS_ValueTranslation.DecimalToUString(TributoActual.BaseImponible), CS_ValueTranslation.DecimalToUString(TributoActual.Alicuota), CS_ValueTranslation.DecimalToUString(TributoActual.Importe))
-                        Next
+                    Dim DetalleResultado = Resultado.resultado.Detalles.FirstOrDefault()
+                    Dim ResultadoTexto As String = If(DetalleResultado IsNot Nothing, DetalleResultado.Resultado, Resultado.resultado.Resultado)
 
-                        ' Agrego tasas de IVA
-                        For Each IVAActual In .IVAs
-                            WSFEv1.AgregarIva(IVAActual.ID, CS_ValueTranslation.DecimalToUString(IVAActual.BaseImponible), CS_ValueTranslation.DecimalToUString(IVAActual.Importe))
-                        Next
-                    End With
-
-                    ' Habilito reprocesamiento automático (predeterminado):
-                    WSFEv1.Reprocesar = True
-
-                    ' Solicito CAE:
-                    CAE = WSFEv1.CAESolicitar.ToString
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Se ejecutó el método 'CAESolicitar'")
-
-                    UltimoResultadoCAE.Resultado = WSFEv1.Resultado
+                    UltimoResultadoCAE.Resultado = If(String.IsNullOrEmpty(ResultadoTexto), "R"c, ResultadoTexto.Chars(0))
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Resultado: " & UltimoResultadoCAE.Resultado)
-                    If WSFEv1.Resultado = SolicitudCaeResultadoAceptado Then
-                        UltimoResultadoCAE.Numero = CAE
-                        UltimoResultadoCAE.FechaVencimiento = Date.ParseExact(WSFEv1.Vencimiento, "yyyyMMdd", Nothing)
+
+                    If UltimoResultadoCAE.Resultado = SolicitudCaeResultadoAceptado AndAlso DetalleResultado IsNot Nothing Then
+                        UltimoResultadoCAE.Numero = DetalleResultado.Cae
+                        UltimoResultadoCAE.FechaVencimiento = DetalleResultado.CaeFechaVencimiento.GetValueOrDefault()
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Comprobante Tipo:  " & FacturaAGenerar.TipoComprobante)
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Comprobante Nro.:  " & FacturaAGenerar.PuntoVenta & "-" & FacturaAGenerar.ComprobanteDesde)
-                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "CAE:               " & CAE)
+                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "CAE:               " & UltimoResultadoCAE.Numero)
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Fecha Vencimiento: " & UltimoResultadoCAE.FechaVencimiento.ToShortDateString)
                     Else
-                        'TODO: Arreglar el encoding de las Observaciones y el Mensaje de Error
-                        UltimoResultadoCAE.Observaciones = WSFEv1.Obs
-                        UltimoResultadoCAE.ErrorMessage = WSFEv1.ErrMsg
+                        UltimoResultadoCAE.Observaciones = String.Join(vbCrLf, If(DetalleResultado IsNot Nothing, DetalleResultado.Observaciones, New List(Of String)))
+                        UltimoResultadoCAE.ErrorMessage = String.Join(vbCrLf, Resultado.resultado.Errores)
 
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Comprobante Tipo:  " & FacturaAGenerar.TipoComprobante)
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Comprobante Nro.:  " & FacturaAGenerar.PuntoVenta & "-" & FacturaAGenerar.ComprobanteDesde)
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Observaciones: " & UltimoResultadoCAE.Observaciones)
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Error:         " & UltimoResultadoCAE.ErrorMessage)
-                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlRequest:" & vbCrLf & WSFEv1.XmlRequest)
-                        CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlResponse:" & vbCrLf & WSFEv1.XmlResponse)
                     End If
 
                     Return True
 
                 Catch ex As Exception
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Critical, "Ocurrió un error.")
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Excepción: " & WSFEv1.Excepcion)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Traza:     " & WSFEv1.Traceback)
+                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Excepción: " & ex.Message)
                     CardonerSistemas.ErrorHandler.ProcessError(ex, "Error al crear la Factura Electrónica.")
                     Return False
                 End Try
@@ -373,8 +296,13 @@ Namespace CardonerSistemas
                 End If
 
                 Try
-                    UltimoComprobanteAutorizado = WSFEv1.CompUltimoAutorizado(TipoComprobante, PuntoVenta)
-                    Return True
+                    Dim Resultado = Armuna.Framework.Tax.Arca.Wsfe.WsfeService.ObtenerUltimoComprobanteAutorizadoAsync(mCredenciales, PuntoVenta, TipoComprobante).GetAwaiter().GetResult()
+                    If Resultado.success Then
+                        UltimoComprobanteAutorizado = Resultado.ultimoComprobante.ToString()
+                        Return True
+                    Else
+                        Return False
+                    End If
 
                 Catch ex As Exception
                     Return False
@@ -395,45 +323,49 @@ Namespace CardonerSistemas
                 End If
 
                 Try
-                    Dim CAE As String
-                    CAE = WSFEv1.CompConsultar(TipoComprobante, PuntoVenta, ComprobanteNumero)
+                    Dim Resultado = Armuna.Framework.Tax.Arca.Wsfe.WsfeService.ConsultarComprobanteAsync(mCredenciales, PuntoVenta, TipoComprobante, ComprobanteNumero).GetAwaiter().GetResult()
 
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Comprobante Tipo:  " & TipoComprobante)
                     CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Comprobante Nro.:  " & PuntoVenta & "-" & ComprobanteNumero)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Observaciones: " & WSFEv1.Obs)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Error:         " & WSFEv1.ErrMsg)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlRequest:" & vbCrLf & WSFEv1.XmlRequest)
-                    CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "XmlResponse:" & vbCrLf & WSFEv1.XmlResponse)
+
+                    If Not Resultado.success Then
+                        UltimoResultadoConsultaComprobante.ErrorMessage = Resultado.resultMessage
+                        Return True
+                    End If
+
+                    Dim Consulta = Resultado.resultado
 
                     With UltimoResultadoConsultaComprobante
-                        .Resultado = WSFEv1.Resultado
+                        .Resultado = If(String.IsNullOrEmpty(Consulta.Resultado), " "c, Consulta.Resultado.Chars(0))
                         CS_FileLog.WriteLine(LogPath, LogFileName, LogEntryType.Information, "Resultado: " & .Resultado)
-                        .CodigoAutorizacion = CAE
-                        If WSFEv1.Resultado = SolicitudCaeResultadoAceptado Then
-                            .Concepto = WSFEv1.ObtenerCampoFactura("concepto")
-                            .TipoDocumento = WSFEv1.ObtenerCampoFactura("tipo_doc")
-                            .DocumentoNumero = WSFEv1.ObtenerCampoFactura("nro_doc")
-                            .TipoComprobante = WSFEv1.ObtenerCampoFactura("tipo_cbte")
-                            .PuntoVenta = WSFEv1.ObtenerCampoFactura("punto_vta")
-                            .ComprobanteDesde = WSFEv1.ObtenerCampoFactura("cbt_desde")
-                            .ComprobanteHasta = WSFEv1.ObtenerCampoFactura("cbt_hasta")
-                            .ComprobanteFecha = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_cbte"), "yyyyMMdd", Nothing)
-                            .ImporteTotal = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_total"))
-                            .ImporteTotalConc = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_tot_conc"))
-                            .ImporteNeto = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_neto"))
-                            .ImporteTributos = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_trib"))
-                            .ImporteIVA = CS_ValueTranslation.UStringToDecimal(WSFEv1.ObtenerCampoFactura("imp_iva"))
-                            .FechaServicioDesde = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_serv_desde"), "yyyyMMdd", Nothing)
-                            .FechaServicioHasta = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_serv_hasta"), "yyyyMMdd", Nothing)
-                            .FechaVencimientoPago = Date.ParseExact(WSFEv1.ObtenerCampoFactura("fecha_venc_pago"), "yyyyMMdd", Nothing)
-                            .MonedaID = WSFEv1.ObtenerCampoFactura("moneda_id")
-                            .MonedaCotizacion = WSFEv1.ObtenerCampoFactura("moneda_ctz")
-                            '.EmisionTipo = WSFEv1.ObtenerCampoFactura("emision_tipo")
-                            .FechaVencimiento = Date.ParseExact(WSFEv1.Vencimiento, "yyyyMMdd", Nothing)
-                            '.FechaHoraProceso = Date.ParseExact(WSFEv1.ObtenerCampoFactura("FchProceso"), "yyyyMMddhhnnss", Nothing)
+                        .CodigoAutorizacion = Consulta.CodigoAutorizacion
+
+                        If .Resultado = SolicitudCaeResultadoAceptado Then
+                            .Concepto = Consulta.Concepto.GetValueOrDefault()
+                            .TipoDocumento = Consulta.DocumentoTipo.GetValueOrDefault()
+                            .DocumentoNumero = Consulta.DocumentoNro.GetValueOrDefault()
+                            .TipoComprobante = Consulta.ComprobanteTipo.GetValueOrDefault()
+                            .PuntoVenta = Consulta.PuntoVenta.GetValueOrDefault()
+                            .ComprobanteDesde = Consulta.ComprobanteNumero.GetValueOrDefault()
+                            .ComprobanteHasta = Consulta.ComprobanteHasta.GetValueOrDefault()
+                            .ComprobanteFecha = Consulta.ComprobanteFecha.GetValueOrDefault()
+                            .ImporteTotal = Consulta.ImporteTotal.GetValueOrDefault()
+                            .ImporteTotalConc = Consulta.ImporteTotalConc.GetValueOrDefault()
+                            .ImporteNeto = Consulta.ImporteNeto.GetValueOrDefault()
+                            .ImporteTributos = Consulta.ImporteTributos.GetValueOrDefault()
+                            .ImporteIVA = Consulta.ImporteIVA.GetValueOrDefault()
+                            .FechaServicioDesde = Consulta.FechaServicioDesde.GetValueOrDefault()
+                            .FechaServicioHasta = Consulta.FechaServicioHasta.GetValueOrDefault()
+                            .FechaVencimientoPago = Consulta.FechaVencimientoPago.GetValueOrDefault()
+                            .MonedaID = Consulta.MonedaId
+                            .MonedaCotizacion = Consulta.MonedaCotizacion.GetValueOrDefault()
+                            .EmisionTipo = Consulta.EmisionTipo
+                            .FechaVencimiento = Consulta.CaeFechaVencimiento.GetValueOrDefault()
+                            .FechaHoraProceso = Consulta.FechaProceso.GetValueOrDefault()
                         End If
-                        .Observaciones = WSFEv1.Obs
-                        .ErrorMessage = WSFEv1.ErrMsg
+
+                        .Observaciones = String.Join(vbCrLf, Consulta.Observaciones)
+                        .ErrorMessage = String.Join(vbCrLf, Consulta.Errores)
                     End With
 
                 Catch ex As Exception
