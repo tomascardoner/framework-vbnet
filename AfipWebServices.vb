@@ -231,6 +231,7 @@ Namespace CardonerSistemas
                         .ImpIva = FacturaAGenerar.ImporteIVA,
                         .MonedaId = FacturaAGenerar.MonedaID,
                         .MonedaCotizacion = FacturaAGenerar.MonedaCotizacion,
+                        .CondicionIvaReceptorId = FacturaAGenerar.CondicionIVAReceptorId,
                         .FechaServicioDesde = If(FacturaAGenerar.FechaServicioDesde = Date.MinValue, CType(Nothing, Date?), FacturaAGenerar.FechaServicioDesde),
                         .FechaServicioHasta = If(FacturaAGenerar.FechaServicioHasta = Date.MinValue, CType(Nothing, Date?), FacturaAGenerar.FechaServicioHasta),
                         .FechaVencimientoPago = If(FacturaAGenerar.FechaVencimientoPago = Date.MinValue, CType(Nothing, Date?), FacturaAGenerar.FechaVencimientoPago),
