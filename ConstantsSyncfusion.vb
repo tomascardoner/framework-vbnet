@@ -1,5 +1,5 @@
 Namespace CardonerSistemas
     Module ConstantsSyncfusion
-        Friend Const LicenseKey As String = "Ngo9BigBOggjHTQxAR8/V1JAaF5cXmFCd1p/TH5YfUNzdUVEY1ZUTXxaS1ZhSXxVdkJhWH5Yc31VQWVcUkR9XEY="
+        Friend Const LicenseKey As String = "Ngo9BigBOggjGyl/VkN+XU9HcVRLVGpAY1J0WGBYb1xzflBPallYT3RfQFtjQHxad0xgUX9eeXBcQWtfVA=="
     End Module
 End Namespace
